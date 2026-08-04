@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import { ANY_CONTENT_TYPE_SIMPLE_NAME } from './typeResolver';
 
 /**
  * Indexes the mod's own content files (items/, blocks/, liquids/, planets/,
@@ -17,15 +18,46 @@ export class ContentIndex {
 	/** simple type name (e.g. "Item") -> content name -> file URIs (usually one, but nothing stops duplicates). */
 	private byType = new Map<string, Map<string, vscode.Uri[]>>();
 
-	/** Names known for a given content simple type name, e.g. "Item" -> ["copper", "lead", ...]. */
+	/**
+	 * Names known for a given content simple type name, e.g. "Item" ->
+	 * ["copper", "lead", ...]. Passing ANY_CONTENT_TYPE_SIMPLE_NAME
+	 * ("UnlockableContent") returns the union of names across every content
+	 * type - for fields declared as the abstract UnlockableContent base,
+	 * which accept any kind of content.
+	 */
 	namesFor(type: string): string[] {
+		if (type === ANY_CONTENT_TYPE_SIMPLE_NAME) return this.allNames();
 		const m = this.byType.get(type);
 		return m ? [...m.keys()].sort() : [];
 	}
 
-	/** File locations for a given content simple type name + name, e.g. ("Item", "copper"). */
+	/**
+	 * File locations for a given content simple type name + name, e.g.
+	 * ("Item", "copper"). Passing ANY_CONTENT_TYPE_SIMPLE_NAME
+	 * ("UnlockableContent") searches every content type for that name.
+	 */
 	lookup(type: string, name: string): vscode.Uri[] {
+		if (type === ANY_CONTENT_TYPE_SIMPLE_NAME) return this.lookupAny(name);
 		return this.byType.get(type)?.get(name) ?? [];
+	}
+
+	/** Union of every content name across all content types, deduplicated. */
+	private allNames(): string[] {
+		const names = new Set<string>();
+		for (const m of this.byType.values()) {
+			for (const name of m.keys()) names.add(name);
+		}
+		return [...names].sort();
+	}
+
+	/** Union of file locations for `name` across every content type. */
+	private lookupAny(name: string): vscode.Uri[] {
+		const uris: vscode.Uri[] = [];
+		for (const m of this.byType.values()) {
+			const found = m.get(name);
+			if (found) uris.push(...found);
+		}
+		return uris;
 	}
 
 	clear() {

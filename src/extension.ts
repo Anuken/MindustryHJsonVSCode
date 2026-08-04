@@ -8,6 +8,7 @@ import { refreshDiagnostics, makeDiagnosticCollection } from './features/diagnos
 import { MHJsonCompletionProvider } from './features/completion';
 import { MHJsonHoverProvider } from './features/hover';
 import { MHJsonDefinitionProvider } from './features/definition';
+import { MHJsonColorProvider } from './features/colorProvider';
 
 const LANGUAGE_ID = 'mhjson';
 
@@ -91,6 +92,7 @@ export function activate(context: vscode.ExtensionContext) {
 		),
 		vscode.languages.registerHoverProvider({ language: LANGUAGE_ID }, new MHJsonHoverProvider(registry, getContentTypeFolders, contentIndex)),
 		vscode.languages.registerDefinitionProvider({ language: LANGUAGE_ID }, new MHJsonDefinitionProvider(registry, getContentTypeFolders, contentIndex)),
+		vscode.languages.registerColorProvider({ language: LANGUAGE_ID }, new MHJsonColorProvider(registry, getContentTypeFolders)),
 	);
 
 	lintAllOpenDocuments();

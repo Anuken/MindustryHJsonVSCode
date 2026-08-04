@@ -19,12 +19,25 @@ export const CONTENT_TYPE_SIMPLE_NAMES = new Set([
 ]);
 
 /**
+ * A field declared as the abstract `mindustry.ctype.UnlockableContent` (or
+ * just the bare `UnlockableContent` simple name) isn't restricted to one
+ * particular content class - it accepts *any* named content (an Item, a
+ * Block, a Liquid, ...). `contentTypeSimpleName` returns this sentinel for
+ * such fields; `ContentIndex` (schema/contentIndex.ts) knows to search
+ * across every content type, rather than just one, whenever it sees it.
+ */
+export const ANY_CONTENT_TYPE_SIMPLE_NAME = 'UnlockableContent';
+
+/**
  * If `type` (a field type, generic-element type, or map key/value type -
  * already unwrapped of any `Seq<...>`/`ObjectMap<...>` wrapper) names one of
- * the CONTENT_TYPE_SIMPLE_NAMES classes, returns that simple name.
+ * the CONTENT_TYPE_SIMPLE_NAMES classes, returns that simple name. A field
+ * typed as the abstract `UnlockableContent` returns ANY_CONTENT_TYPE_SIMPLE_NAME
+ * instead, meaning "any content type" rather than one specific one.
  */
 export function contentTypeSimpleName(type: string): string | undefined {
 	const name = shortName(type);
+	if (name === ANY_CONTENT_TYPE_SIMPLE_NAME) return ANY_CONTENT_TYPE_SIMPLE_NAME;
 	return CONTENT_TYPE_SIMPLE_NAMES.has(name) ? name : undefined;
 }
 
@@ -38,6 +51,7 @@ export function contentTypeSimpleName(type: string): string | undefined {
 const DEFAULT_TYPE_RESOLUTIONS: Record<string, string> = {
 	BulletType: 'BasicBulletType',
 	Effect: 'ParticleEffect',
+	DrawPart: 'RegionPart',
 };
 
 /**
@@ -148,6 +162,51 @@ export class TypeContext {
 		const resolved = this.registry.getBySimpleName(explicitSimpleName);
 		return resolved ? new TypeContext(this.registry, resolved.fqcn) : this;
 	}
+}
+
+/**
+ * Simple name of an array field's element type, whether the field is
+ * declared with bracket syntax (`Foo[]`, used e.g. for `ItemStack[]`,
+ * `Color[]`) or a generic wrapper (`Seq<Foo>`). Returns undefined if `type`
+ * isn't an array of a single named type.
+ */
+export function arrayElementSimpleName(type: string): string | undefined {
+	const t = type.trim();
+	if (t.endsWith('[]')) return shortName(t.slice(0, -2));
+	const el = unwrapGenericElementType(t);
+	return el ? shortName(el) : undefined;
+}
+
+/**
+ * "Stack" classes that are written in mod HJSON as shorthand strings
+ * `"name/amount"` (e.g. `territe-alloy/1200`, `water/12.5`) rather than
+ * nested `{item/liquid, amount}` objects. Maps the stack's simple class name
+ * to the simple name of the content type its left-hand side names.
+ */
+const STACK_TYPE_CONTENT_TYPES: Record<string, string> = {
+	ItemStack: 'Item',
+	LiquidStack: 'Liquid',
+};
+
+/** If `type` names one of STACK_TYPE_CONTENT_TYPES itself (not an array of it), returns the content type its name portion refers to (e.g. "Item" for `ItemStack`). */
+export function stackContentType(type: string): string | undefined {
+	return STACK_TYPE_CONTENT_TYPES[shortName(type)];
+}
+
+/** If `type` is an array of one of STACK_TYPE_CONTENT_TYPES, returns the content type its elements' name portions refer to (e.g. "Liquid" for `LiquidStack[]`). */
+export function stackArrayContentType(type: string): string | undefined {
+	const el = arrayElementSimpleName(type);
+	return el !== undefined ? STACK_TYPE_CONTENT_TYPES[el] : undefined;
+}
+
+/** True if `type` names `arc.graphics.Color`. */
+export function isColorType(type: string): boolean {
+	return shortName(type) === 'Color';
+}
+
+/** True if `type` is an array of `arc.graphics.Color`. */
+export function isColorArrayType(type: string): boolean {
+	return arrayElementSimpleName(type) === 'Color';
 }
 
 export function shortName(fqcnOrSimple: string): string {

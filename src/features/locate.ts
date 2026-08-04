@@ -1,6 +1,13 @@
-import { Jval, JvalObject, JvalArray, JvalMember, ParseResult, Range } from '../parser/mhjsonParser';
+import { Jval, JvalObject, JvalArray, JvalMember, JvalString, ParseResult, Range } from '../parser/mhjsonParser';
 import { SchemaRegistry } from '../schema/schemaLoader';
-import { TypeContext, findExplicitTypeField, inferImplicitType, contentTypeSimpleName } from '../schema/typeResolver';
+import {
+	TypeContext,
+	findExplicitTypeField,
+	inferImplicitType,
+	contentTypeSimpleName,
+	stackContentType,
+	stackArrayContentType,
+} from '../schema/typeResolver';
 
 /** A bare-string token that refers to named content (an Item, Block, Liquid, ...) by name. */
 export interface ContentRef {
@@ -81,6 +88,37 @@ function checkContentArrayElement(arr: JvalArray, contentType: string, offset: n
 	}
 }
 
+/**
+ * "Stack" values (ItemStack, LiquidStack, ...) are written in mod HJSON as
+ * shorthand strings `"name/amount"` (e.g. `territe-alloy/1200`, a
+ * LiquidStack's `water/12.5`) rather than nested `{item/liquid, amount}`
+ * objects. Given the string node, returns the name and its source range -
+ * the part of the token up to (but not including) the `/`, or the whole
+ * token if no `/` has been typed yet (so completion still works while the
+ * name is being typed). Assumes no escape sequences appear before the `/`,
+ * which holds for any real content name.
+ */
+function stackNameRange(node: JvalString): { name: string; range: Range } {
+	const idx = node.value.indexOf('/');
+	const end = idx < 0 ? node.value.length : idx;
+	const quoteOffset = node.quoted ? 1 : 0;
+	return {
+		name: node.value.slice(0, end),
+		range: { start: node.range.start + quoteOffset, end: node.range.start + quoteOffset + end },
+	};
+}
+
+/** Checks whether a stack-array-typed array (ItemStack[], LiquidStack[], ...) has a string element (shorthand `name/amount`) containing `offset`. If `offset` sits on the name portion (left of the `/`), records it as a ContentRef of `contentType`. */
+function checkStackArrayElement(arr: JvalArray, contentType: string, offset: number, result: LocateResult) {
+	for (const el of arr.elements) {
+		if (contains(el.range, offset) && el.type === 'string') {
+			const { name, range } = stackNameRange(el as JvalString);
+			if (contains(range, offset)) result.contentRef = { type: contentType, name, range };
+			return;
+		}
+	}
+}
+
 function visit(node: Jval, ctx: TypeContext, offset: number, result: LocateResult, registry: SchemaRegistry) {
 	if (!contains(node.range, offset)) return;
 
@@ -112,6 +150,13 @@ function visit(node: Jval, ctx: TypeContext, offset: number, result: LocateResul
 						checkContentArrayElement(member.value as JvalArray, arrayContentType, offset, result);
 						return;
 					}
+					if (field) {
+						const stackType = stackArrayContentType(field.type);
+						if (stackType) {
+							checkStackArrayElement(member.value as JvalArray, stackType, offset, result);
+							return;
+						}
+					}
 					childCtx = ctx.forArrayElement(field);
 				} else {
 					childCtx = new TypeContext(registry, undefined);
@@ -119,6 +164,12 @@ function visit(node: Jval, ctx: TypeContext, offset: number, result: LocateResul
 						const contentType = contentTypeSimpleName(field.type);
 						if (contentType) {
 							result.contentRef = { type: contentType, name: (member.value as any).value, range: member.value.range };
+						} else {
+							const stackType = stackContentType(field.type);
+							if (stackType) {
+								const { name, range } = stackNameRange(member.value as JvalString);
+								if (contains(range, offset)) result.contentRef = { type: stackType, name, range };
+							}
 						}
 					}
 				}
@@ -177,6 +228,12 @@ function visitMapEntries(
 				const valueContentType = contentTypeSimpleName(valueType);
 				if (valueContentType) {
 					result.contentRef = { type: valueContentType, name: (entry.value as any).value, range: entry.value.range };
+				} else {
+					const stackType = stackContentType(valueType);
+					if (stackType) {
+						const { name, range } = stackNameRange(entry.value as JvalString);
+						if (contains(range, offset)) result.contentRef = { type: stackType, name, range };
+					}
 				}
 			}
 			return;

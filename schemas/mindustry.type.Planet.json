@@ -484,5 +484,10 @@
   "removed":{
     "type": "boolean",
     "doc": "If true, this content is invalid (added in a data patch and then removed)."
+  },
+  "research":{
+    "type": "Research",
+    "nullable": true,
+    "doc": "Tech tree research dependencies."
   }
 }
