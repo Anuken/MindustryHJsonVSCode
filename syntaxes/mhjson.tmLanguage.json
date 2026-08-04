@@ -83,7 +83,7 @@
     },
     "bareword": {
       "name": "string.unquoted.mhjson",
-      "match": "[^,\\[\\]{}\\n#]+"
+      "match": "(?:(?!//|/\\*|#)[^,\\[\\]{}\\n])+"
     }
   }
 }
