@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import { Jval, JvalArray, JvalObject, JvalString, parseMHJson } from '../parser/mhjsonParser';
 import { SchemaRegistry } from '../schema/schemaLoader';
-import { TypeContext, findExplicitTypeField, inferImplicitType, isColorArrayType, isColorType, resolveObjectType } from '../schema/typeResolver';
+import { TypeContext, findExplicitTypeField, resolveImplicitTypeContext, isColorArrayType, isColorType, resolveObjectType } from '../schema/typeResolver';
+import { VanillaContentIndex } from '../schema/vanillaContent';
 
 /** Matches a bare (optionally '#'-prefixed) 6- or 8-digit hex color, e.g. "ffbb44" or "c2464666". */
 const HEX_COLOR = /^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
@@ -18,6 +19,7 @@ export class MHJsonColorProvider implements vscode.DocumentColorProvider {
 	constructor(
 		private registry: SchemaRegistry,
 		private getContentTypeFolders: () => Record<string, string>,
+		private vanillaContent: VanillaContentIndex,
 	) {}
 
 	provideDocumentColors(document: vscode.TextDocument): vscode.ColorInformation[] {
@@ -25,10 +27,9 @@ export class MHJsonColorProvider implements vscode.DocumentColorProvider {
 		const parse = parseMHJson(document.getText());
 		if (!parse.root) return [];
 
-		const implicitSimple = inferImplicitType(document.uri.fsPath, this.getContentTypeFolders());
 		let ctx = new TypeContext(this.registry, undefined);
 		if (parse.root.type === 'object') {
-			ctx = ctx.withExplicitType(implicitSimple);
+			ctx = resolveImplicitTypeContext(this.registry, document.uri.fsPath, this.getContentTypeFolders(), this.vanillaContent);
 			const explicit = findExplicitTypeField(parse.root as JvalObject);
 			ctx = resolveObjectType(ctx, explicit);
 		}

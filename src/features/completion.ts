@@ -39,7 +39,7 @@ export class MHJsonCompletionProvider implements vscode.CompletionItemProvider {
 		const text = document.getText();
 		const offset = document.offsetAt(position);
 		const parse = parseMHJson(text);
-		const loc = locate(parse, offset, this.registry, document.uri.fsPath, this.getContentTypeFolders());
+		const loc = locate(parse, offset, this.registry, document.uri.fsPath, this.getContentTypeFolders(), this.vanillaContent);
 		const token = currentToken(text, offset, document);
 
 		// completing a bare-string content reference (e.g. `liquid: `, a Seq<Item> element,

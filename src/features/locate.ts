@@ -1,9 +1,10 @@
 import { Jval, JvalObject, JvalArray, JvalMember, JvalString, ParseResult, Range } from '../parser/mhjsonParser';
 import { SchemaRegistry } from '../schema/schemaLoader';
+import { VanillaContentIndex } from '../schema/vanillaContent';
 import {
 	TypeContext,
 	findExplicitTypeField,
-	inferImplicitType,
+	resolveImplicitTypeContext,
 	contentTypeSimpleName,
 	arrayContentTypeSimpleName,
 	stackContentType,
@@ -64,11 +65,11 @@ export function locate(
 	registry: SchemaRegistry,
 	filePath: string,
 	contentTypeFolders: Record<string, string>,
+	vanillaContent?: VanillaContentIndex,
 ): LocateResult {
-	const implicitSimple = inferImplicitType(filePath, contentTypeFolders);
 	let rootCtx = new TypeContext(registry, undefined);
 	if (parse.root && parse.root.type === 'object') {
-		rootCtx = rootCtx.withExplicitType(implicitSimple);
+		rootCtx = resolveImplicitTypeContext(registry, filePath, contentTypeFolders, vanillaContent);
 		const explicit = findExplicitTypeField(parse.root as JvalObject);
 		rootCtx = resolveObjectType(rootCtx, explicit);
 	}

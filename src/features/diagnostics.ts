@@ -6,7 +6,7 @@ import { VanillaContentIndex } from '../schema/vanillaContent';
 import {
 	TypeContext,
 	findExplicitTypeField,
-	inferImplicitType,
+	resolveImplicitTypeContext,
 	contentTypeSimpleName,
 	arrayContentTypeSimpleName,
 	stackContentType,
@@ -37,10 +37,9 @@ export function refreshDiagnostics(
 	}
 
 	if (parse.root && registry.size > 0) {
-		const implicitSimple = inferImplicitType(doc.uri.fsPath, contentTypeFolders);
 		let ctx = new TypeContext(registry, undefined);
 		if (parse.root.type === 'object') {
-			ctx = ctx.withExplicitType(implicitSimple);
+			ctx = resolveImplicitTypeContext(registry, doc.uri.fsPath, contentTypeFolders, vanillaContent);
 			const explicit = findExplicitTypeField(parse.root as JvalObject);
 			ctx = resolveObjectType(ctx, explicit);
 		}

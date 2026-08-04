@@ -19,7 +19,7 @@ export class MHJsonHoverProvider implements vscode.HoverProvider {
 		const text = document.getText();
 		const offset = document.offsetAt(position);
 		const parse = parseMHJson(text);
-		const loc = locate(parse, offset, this.registry, document.uri.fsPath, this.getContentTypeFolders());
+		const loc = locate(parse, offset, this.registry, document.uri.fsPath, this.getContentTypeFolders(), this.vanillaContent);
 
 		// Hovering a bare-string content reference -> show which file(s) it resolves to.
 		if (loc.contentRef) {

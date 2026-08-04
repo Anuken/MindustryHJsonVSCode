@@ -27,8 +27,13 @@ export function activate(context: vscode.ExtensionContext) {
 	let contentIndexRefreshTimer: ReturnType<typeof setTimeout> | undefined;
 	function scheduleContentIndexRefresh() {
 		if (contentIndexRefreshTimer) clearTimeout(contentIndexRefreshTimer);
-		contentIndexRefreshTimer = setTimeout(() => {
-			contentIndex.refresh(getContentTypeFolders());
+		contentIndexRefreshTimer = setTimeout(async () => {
+			await contentIndex.refresh(getContentTypeFolders());
+			// Only re-lint once the (async, filesystem-scanning) refresh above
+			// has actually finished - otherwise this runs against a
+			// still-being-populated index and reintroduces the same stale
+			// "unknown content" diagnostics we're trying to clear.
+			lintAllOpenDocuments();
 		}, 300);
 	}
 
@@ -94,8 +99,8 @@ export function activate(context: vscode.ExtensionContext) {
 			':', ' ', '"',
 		),
 		vscode.languages.registerHoverProvider({ language: LANGUAGE_ID }, new MHJsonHoverProvider(registry, getContentTypeFolders, contentIndex, vanillaContent)),
-		vscode.languages.registerDefinitionProvider({ language: LANGUAGE_ID }, new MHJsonDefinitionProvider(registry, getContentTypeFolders, contentIndex)),
-		vscode.languages.registerColorProvider({ language: LANGUAGE_ID }, new MHJsonColorProvider(registry, getContentTypeFolders)),
+		vscode.languages.registerDefinitionProvider({ language: LANGUAGE_ID }, new MHJsonDefinitionProvider(registry, getContentTypeFolders, contentIndex, vanillaContent)),
+		vscode.languages.registerColorProvider({ language: LANGUAGE_ID }, new MHJsonColorProvider(registry, getContentTypeFolders, vanillaContent)),
 	);
 
 	lintAllOpenDocuments();

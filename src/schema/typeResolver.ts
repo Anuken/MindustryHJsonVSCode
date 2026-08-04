@@ -1,3 +1,4 @@
+import * as path from 'path';
 import { Jval, JvalObject, JvalArray } from '../parser/mhjsonParser';
 import { SchemaRegistry, unwrapGenericElementType, FieldSchema, ClassSchema } from './schemaLoader';
 
@@ -100,6 +101,45 @@ export function inferImplicitType(filePath: string, contentTypeFolders: Record<s
 		if (segments.includes(folder)) return type;
 	}
 	return undefined;
+}
+
+/**
+ * Structural interface for VanillaContentIndex's override lookup (declared
+ * here rather than importing the class, to avoid a circular import - that
+ * module already imports `shortName` from this one).
+ */
+export interface VanillaOverrideLookup {
+	fqcnFor(simpleType: string, name: string): string | undefined;
+}
+
+/**
+ * Resolves the root TypeContext for a whole file, given its implicit folder
+ * type. A file whose base name (e.g. `arc` for `arc.hjson`) exactly matches
+ * a piece of vanilla content of that implicit type is a *vanilla content
+ * override* - it doesn't declare its own `type:`, so its effective type is
+ * whatever concrete class that vanilla content actually is (e.g. `arc` ->
+ * PowerTurret, not just any Block). Falls back to the plain implicit-folder
+ * type (or no type at all) when there's no such override, or the resolved
+ * class has no schema loaded.
+ */
+export function resolveImplicitTypeContext(
+	registry: SchemaRegistry,
+	filePath: string,
+	contentTypeFolders: Record<string, string>,
+	vanillaContent?: VanillaOverrideLookup,
+): TypeContext {
+	const implicitSimple = inferImplicitType(filePath, contentTypeFolders);
+	if (implicitSimple && vanillaContent) {
+		const base = path.basename(filePath);
+		const dot = base.lastIndexOf('.');
+		const name = dot > 0 ? base.slice(0, dot) : base;
+		const overrideFqcn = vanillaContent.fqcnFor(implicitSimple, name);
+		if (overrideFqcn) {
+			const resolved = resolveClassForType(registry, overrideFqcn);
+			if (resolved) return new TypeContext(registry, resolved.fqcn);
+		}
+	}
+	return new TypeContext(registry, undefined).withExplicitType(implicitSimple);
 }
 
 /**
