@@ -1,181 +1,185 @@
 {
-  "doc": "A craftable/minable resource item.",
   "superclass": "mindustry.ctype.UnlockableContent",
-  "color": {
+  "color":{
     "type": "arc.graphics.Color"
   },
-  "explosiveness": {
+  "explosiveness":{
     "type": "float",
     "doc": "how explosive this item is.",
     "default": "0"
   },
-  "flammability": {
+  "flammability":{
     "type": "float",
     "doc": "flammability above 0.3 makes this eligible for item burners.",
     "default": "0"
   },
-  "radioactivity": {
+  "radioactivity":{
     "type": "float",
     "doc": "how radioactive this item is."
   },
-  "charge": {
+  "charge":{
     "type": "float",
     "doc": "how electrically potent this item is.",
     "default": "0"
   },
-  "hardness": {
+  "hardness":{
     "type": "int",
     "doc": "drill hardness of the item",
     "default": "0"
   },
-  "cost": {
+  "cost":{
     "type": "float",
     "doc": "base material cost of this item, used for calculating place times\n1 cost = 1 tick added to build time",
     "default": "1"
   },
-  "healthScaling": {
+  "healthScaling":{
     "type": "float",
     "doc": "When this item is present in the build cost, a block's <b>default</b> health is multiplied by 1 + scaling, where 'scaling' is summed together for all item requirement types.",
     "default": "0"
   },
-  "lowPriority": {
+  "lowPriority":{
     "type": "boolean",
     "doc": "if true, this item is of the lowest priority to drills."
   },
-  "frames": {
+  "frames":{
     "type": "int",
     "doc": "If >0, this item is animated.",
     "default": "0"
   },
-  "transitionFrames": {
+  "transitionFrames":{
     "type": "int",
     "doc": "Number of generated transition frames between each frame",
     "default": "0"
   },
-  "frameTime": {
+  "frameTime":{
     "type": "float",
     "doc": "Ticks in-between animation frames.",
     "default": "5"
   },
-  "buildable": {
+  "buildable":{
     "type": "boolean",
     "doc": "If true, this material is used by buildings. If false, this material will be incinerated in certain cores.",
     "default": "true"
   },
-  "hidden": {
+  "hidden":{
     "type": "boolean",
     "default": "false"
   },
-  "stats": {
+  "stats":{
     "type": "mindustry.world.meta.Stats",
     "doc": "Stat storage for this content. Initialized on demand."
   },
-  "localizedName": {
+  "localizedName":{
     "type": "java.lang.String",
     "doc": "Localized, formal name. Never null. Set to internal name if not found in bundle."
   },
-  "description": {
+  "description":{
     "type": "java.lang.String",
     "nullable": true,
     "doc": "Localized description & details. May be null."
   },
-  "details": {
+  "details":{
     "type": "java.lang.String",
     "nullable": true,
     "doc": "Localized description & details. May be null."
   },
-  "credit": {
+  "credit":{
     "type": "java.lang.String",
     "nullable": true,
     "doc": "Localized description & details. May be null."
   },
-  "alwaysUnlocked": {
+  "alwaysUnlocked":{
     "type": "boolean",
     "doc": "Whether this content is always unlocked in the tech tree.",
     "default": "false"
   },
-  "inlineDescription": {
+  "inlineDescription":{
     "type": "boolean",
     "doc": "Whether to show the description in the research dialog preview.",
     "default": "true"
   },
-  "hideDetails": {
+  "hideDetails":{
     "type": "boolean",
     "doc": "Whether details are hidden in custom games if this hasn't been unlocked in campaign mode.",
     "default": "true"
   },
-  "hideDatabase": {
+  "hideDatabase":{
     "type": "boolean",
     "doc": "Whether this is hidden from the Core Database.",
     "default": "false"
   },
-  "generateIcons": {
+  "generateIcons":{
     "type": "boolean",
     "doc": "If false, all icon generation is disabled for this content; createIcons is not called.",
     "default": "true"
   },
-  "selectionSize": {
+  "selectionSize":{
     "type": "float",
     "doc": "How big the content appears in certain selection menus",
     "default": "24"
   },
-  "uiIcon": {
+  "uiIcon":{
     "type": "arc.graphics.g2d.TextureRegion",
     "doc": "Icon of the content to use in UI."
   },
-  "fullIcon": {
+  "fullIcon":{
     "type": "arc.graphics.g2d.TextureRegion",
     "doc": "Icon of the full content. Unscaled."
   },
-  "fullOverride": {
+  "fullOverride":{
     "type": "java.lang.String",
     "doc": "Override for the full icon. Useful for mod content with duplicate icons. Overrides any other full icon.",
     "default": "\"\""
   },
-  "allDatabaseTabs": {
+  "allDatabaseTabs":{
     "type": "boolean",
     "doc": "If true, this content will appear in all database tabs.",
     "default": "false"
   },
-  "shownPlanets": {
+  "shownPlanets":{
     "type": "arc.struct.ObjectSet<mindustry.type.Planet>",
     "doc": "Planets that this content is made for. If empty, a planet is decided based on item requirements.\nCurrently, this is only meaningful for blocks."
   },
-  "databaseTabs": {
+  "databaseTabs":{
     "type": "arc.struct.ObjectSet<mindustry.ctype.UnlockableContent>",
     "doc": "Content - usually a planet - that dictates which database tab(s) this content will appear in.\nIf nothing is defined, it will use the values in shownPlanets.\nIf shownPlanets is also empty, it will use Serpulo as the \"default\" tab."
   },
-  "databaseCategory": {
+  "databaseCategory":{
     "type": "java.lang.String",
     "nullable": true,
     "doc": "Content category. Defines the primary category of content classification in core database.\nFor example, \"block\", \"liquid\", \"unit\".\nUses getContentType().name() as a fallback when the value is null or empty."
   },
-  "databaseTag": {
+  "databaseTag":{
     "type": "java.lang.String",
     "nullable": true,
     "doc": "Category tags. Secondary category of content classification in core database.\nFor example, \"turret\", \"wall\" under databaseCategory \"block\", \"core-unit\", \"ground-unit\" under databaseCategory \"units\".\nUses \"default\" as a fallback when the value is null or empty. When using \"default\", no extra tag label are displayed."
   },
-  "techNode": {
+  "techNode":{
     "type": "mindustry.content.TechTree$TechNode",
     "nullable": true,
     "doc": "The tech tree node for this content, if applicable. Null if not part of a tech tree."
   },
-  "techNodes": {
+  "techNodes":{
     "type": "arc.struct.Seq<mindustry.content.TechTree$TechNode>",
     "doc": "Tech nodes for all trees that this content is part of."
   },
-  "name": {
+  "name":{
     "type": "java.lang.String"
   },
-  "id": {
+  "id":{
     "type": "short"
   },
-  "minfo": {
+  "minfo":{
     "type": "mindustry.ctype.Content$ModContentInfo",
     "doc": "Info on which mod this content was loaded from."
   },
-  "removed": {
+  "removed":{
     "type": "boolean",
     "doc": "If true, this content is invalid (added in a data patch and then removed)."
+  },
+  "research":{
+    "type": "Research",
+    "nullable": true,
+    "doc": "Tech tree research dependencies."
   }
 }

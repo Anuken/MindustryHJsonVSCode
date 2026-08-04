@@ -1033,11 +1033,11 @@
   "consumes":{
     "type": "Consumes",
     "nullable": true,
-    "doc": "Special consumption spec, translated into 'consumers' entries on init() - not a real field."
+    "doc": "Things that the block consumes."
   },
   "research":{
     "type": "Research",
     "nullable": true,
-    "doc": "Tech tree placement, consumed by hand when loading mod content - not a real field."
+    "doc": "Tech tree research dependencies."
   }
 }

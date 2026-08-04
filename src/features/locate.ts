@@ -1,6 +1,16 @@
-import { Jval, JvalObject, JvalMember, ParseResult } from '../parser/mhjsonParser';
+import { Jval, JvalObject, JvalArray, JvalMember, ParseResult, Range } from '../parser/mhjsonParser';
 import { SchemaRegistry } from '../schema/schemaLoader';
-import { TypeContext, findExplicitTypeField, inferImplicitType } from '../schema/typeResolver';
+import { TypeContext, findExplicitTypeField, inferImplicitType, contentTypeSimpleName } from '../schema/typeResolver';
+
+/** A bare-string token that refers to named content (an Item, Block, Liquid, ...) by name. */
+export interface ContentRef {
+	/** Simple class name of the content, e.g. "Item". */
+	type: string;
+	/** The referenced content's name, as written. */
+	name: string;
+	/** Source range of just the name token (the whole string value, or the map key). */
+	range: Range;
+}
 
 export interface LocateResult {
 	/** The innermost object containing the offset (the object we'd be completing/hovering a key in). */
@@ -19,6 +29,14 @@ export interface LocateResult {
 	isMapEntries: boolean;
 	/** When `onKey` is a map entry's key, the map's declared Key type (for hover). */
 	mapKeyType: string | undefined;
+	/**
+	 * Set when the offset sits on a bare-string token (a direct field value, an
+	 * element of a content-typed array, or a content-typed map's key) that
+	 * refers to named content - Item/Block/Liquid/Planet/SectorPreset/
+	 * StatusEffect/UnitType/Weather - resolvable via the mod's own content
+	 * folders. Drives content-aware completion/hover/go-to-definition.
+	 */
+	contentRef: ContentRef | undefined;
 }
 
 export function locate(
@@ -35,7 +53,15 @@ export function locate(
 		rootCtx = rootCtx.withExplicitType(explicit);
 	}
 
-	const result: LocateResult = { object: undefined, ctx: rootCtx, onKey: undefined, onValue: undefined, isMapEntries: false, mapKeyType: undefined };
+	const result: LocateResult = {
+		object: undefined,
+		ctx: rootCtx,
+		onKey: undefined,
+		onValue: undefined,
+		isMapEntries: false,
+		mapKeyType: undefined,
+		contentRef: undefined,
+	};
 	if (!parse.root) return result;
 	visit(parse.root, rootCtx, offset, result, registry);
 	return result;
@@ -43,6 +69,16 @@ export function locate(
 
 function contains(range: { start: number; end: number }, offset: number): boolean {
 	return offset >= range.start && offset <= range.end;
+}
+
+/** If `type` names a content class, checks whether `arr` has an element (string) containing `offset` and records it as a ContentRef. */
+function checkContentArrayElement(arr: JvalArray, contentType: string, offset: number, result: LocateResult) {
+	for (const el of arr.elements) {
+		if (contains(el.range, offset) && el.type === 'string') {
+			result.contentRef = { type: contentType, name: (el as any).value, range: el.range };
+			return;
+		}
+	}
 }
 
 function visit(node: Jval, ctx: TypeContext, offset: number, result: LocateResult, registry: SchemaRegistry) {
@@ -65,15 +101,26 @@ function visit(node: Jval, ctx: TypeContext, offset: number, result: LocateResul
 				if (member.value.type === 'object') {
 					const mapField = ctx.resolveMapField(field);
 					if (mapField) {
-						visitMapEntries(member.value as JvalObject, mapField.keyType, mapField.valueCtx, offset, result, registry);
+						visitMapEntries(member.value as JvalObject, mapField.keyType, mapField.valueType, mapField.valueCtx, offset, result, registry);
 						return;
 					}
 					const explicit = findExplicitTypeField(member.value as JvalObject);
 					childCtx = ctx.forField(field).withExplicitType(explicit);
 				} else if (member.value.type === 'array') {
+					const arrayContentType = field ? contentTypeSimpleName(field.type) : undefined;
+					if (arrayContentType) {
+						checkContentArrayElement(member.value as JvalArray, arrayContentType, offset, result);
+						return;
+					}
 					childCtx = ctx.forArrayElement(field);
 				} else {
 					childCtx = new TypeContext(registry, undefined);
+					if (member.value.type === 'string' && field) {
+						const contentType = contentTypeSimpleName(field.type);
+						if (contentType) {
+							result.contentRef = { type: contentType, name: (member.value as any).value, range: member.value.range };
+						}
+					}
 				}
 				visit(member.value, childCtx, offset, result, registry);
 				return;
@@ -96,15 +143,27 @@ function visit(node: Jval, ctx: TypeContext, offset: number, result: LocateResul
 
 /** Like `visit`, but for the literal object of an ObjectMap<Key, Value>-typed field: entries are
  * arbitrary map keys (not fixed schema fields), and each entry's *value* resolves to `valueCtx`. */
-function visitMapEntries(mapObj: JvalObject, keyType: string, valueCtx: TypeContext, offset: number, result: LocateResult, registry: SchemaRegistry) {
+function visitMapEntries(
+	mapObj: JvalObject,
+	keyType: string,
+	valueType: string,
+	valueCtx: TypeContext,
+	offset: number,
+	result: LocateResult,
+	registry: SchemaRegistry,
+) {
 	if (!contains(mapObj.range, offset)) return;
 	result.object = mapObj;
 	result.ctx = new TypeContext(registry, undefined); // arbitrary keys: no fixed field set to complete
 	result.isMapEntries = true;
+	const keyContentType = contentTypeSimpleName(keyType);
 	for (const entry of mapObj.entries) {
 		if (contains(entry.keyRange, offset)) {
 			result.onKey = entry;
 			result.mapKeyType = keyType;
+			if (keyContentType) {
+				result.contentRef = { type: keyContentType, name: entry.key, range: entry.keyRange };
+			}
 			return;
 		}
 		if (contains(entry.value.range, offset)) {
@@ -114,6 +173,11 @@ function visitMapEntries(mapObj: JvalObject, keyType: string, valueCtx: TypeCont
 				visit(entry.value, valueCtx.withExplicitType(explicit), offset, result, registry);
 			} else if (entry.value.type === 'array') {
 				visit(entry.value, new TypeContext(registry, undefined), offset, result, registry);
+			} else if (entry.value.type === 'string') {
+				const valueContentType = contentTypeSimpleName(valueType);
+				if (valueContentType) {
+					result.contentRef = { type: valueContentType, name: (entry.value as any).value, range: entry.value.range };
+				}
 			}
 			return;
 		}

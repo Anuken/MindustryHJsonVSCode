@@ -1,5 +1,60 @@
 import { Jval, JvalObject, JvalArray } from '../parser/mhjsonParser';
-import { SchemaRegistry, unwrapGenericElementType, FieldSchema } from './schemaLoader';
+import { SchemaRegistry, unwrapGenericElementType, FieldSchema, ClassSchema } from './schemaLoader';
+
+/**
+ * Simple names of "content" classes that are looked up by name (as a bare
+ * string field value) rather than declared inline as nested objects, and
+ * which live under a well-known folder of the mod (see CONTENT_TYPE_FOLDERS
+ * / the `mindustryHjson.contentTypeFolders` setting for the folder mapping).
+ */
+export const CONTENT_TYPE_SIMPLE_NAMES = new Set([
+	'Item',
+	'Block',
+	'Liquid',
+	'Planet',
+	'SectorPreset',
+	'StatusEffect',
+	'UnitType',
+	'Weather',
+]);
+
+/**
+ * If `type` (a field type, generic-element type, or map key/value type -
+ * already unwrapped of any `Seq<...>`/`ObjectMap<...>` wrapper) names one of
+ * the CONTENT_TYPE_SIMPLE_NAMES classes, returns that simple name.
+ */
+export function contentTypeSimpleName(type: string): string | undefined {
+	const name = shortName(type);
+	return CONTENT_TYPE_SIMPLE_NAMES.has(name) ? name : undefined;
+}
+
+/**
+ * Simple names of abstract/base classes that are never actually instantiated
+ * bare - Mindustry substitutes a concrete default subclass when an object of
+ * this declared type has no explicit `type: X` of its own. Keyed and valued
+ * by simple class name; extend this map for any other abstract-with-a-
+ * conventional-default types.
+ */
+const DEFAULT_TYPE_RESOLUTIONS: Record<string, string> = {
+	BulletType: 'BasicBulletType',
+	Effect: 'ParticleEffect',
+};
+
+/**
+ * Resolves a (possibly FQCN) type name to its schema, substituting the
+ * DEFAULT_TYPE_RESOLUTIONS default (if one is registered) whenever the type
+ * itself has no schema, or the type is a known abstract base with a
+ * conventional default concrete subclass - see DEFAULT_TYPE_RESOLUTIONS.
+ */
+function resolveClassForType(registry: SchemaRegistry, targetType: string): ClassSchema | undefined {
+	const short = shortName(targetType);
+	const defaultName = DEFAULT_TYPE_RESOLUTIONS[short];
+	if (defaultName) {
+		const resolved = registry.getBySimpleName(defaultName);
+		if (resolved) return resolved;
+	}
+	return registry.getByFqcn(targetType) ?? registry.getBySimpleName(short);
+}
 
 /**
  * Figures out the implicit top-level type for a file based on its path,
@@ -27,6 +82,8 @@ export function inferImplicitType(filePath: string, contentTypeFolders: Record<s
  */
 export interface MapFieldTypes {
 	keyType: string;
+	/** The map's raw (unresolved) value type, e.g. "mindustry.type.Item" - useful for content-type checks. */
+	valueType: string;
 	valueCtx: TypeContext;
 }
 
@@ -48,17 +105,32 @@ export class TypeContext {
 		if (!field) return new TypeContext(this.registry, undefined);
 		const elementType = unwrapGenericElementType(field.type);
 		const targetType = elementType ?? field.type;
-		const resolved = this.registry.getByFqcn(targetType) ?? this.registry.getBySimpleName(shortName(targetType));
+		const resolved = resolveClassForType(this.registry, targetType);
 		return new TypeContext(this.registry, resolved?.fqcn);
 	}
 
-	/** Resolve the TypeContext for an array element, when the array's own field type is a generic like Seq<Weapon>. */
+	/**
+	 * Resolve the TypeContext for an array element. Handles both a generic
+	 * array field type like `Seq<Weapon>` (element type = Weapon), and the
+	 * special case of a bare `Effect`-typed field being given a JSON array
+	 * directly - Mindustry treats each element of that array as its own
+	 * Effect (the array *is* the MultiEffect shorthand, not a Seq<Effect>
+	 * field), so every element resolves against the field's own type
+	 * (defaulting to ParticleEffect per DEFAULT_TYPE_RESOLUTIONS, same as any
+	 * other bare Effect, unless the element itself has an explicit `type:`).
+	 */
 	forArrayElement(field: FieldSchema | undefined): TypeContext {
 		if (!field) return new TypeContext(this.registry, undefined);
 		const elementType = unwrapGenericElementType(field.type);
-		if (!elementType) return new TypeContext(this.registry, undefined);
-        const resolved = this.registry.getByFqcn(elementType) ?? this.registry.getBySimpleName(shortName(elementType));
-		return new TypeContext(this.registry, resolved?.fqcn);
+		if (elementType) {
+			const resolved = resolveClassForType(this.registry, elementType);
+			return new TypeContext(this.registry, resolved?.fqcn);
+		}
+		if (shortName(field.type) === 'Effect') {
+			const resolved = resolveClassForType(this.registry, field.type);
+			return new TypeContext(this.registry, resolved?.fqcn);
+		}
+		return new TypeContext(this.registry, undefined);
 	}
 
 	/** If a member's field type is a two-arg generic like ObjectMap<Key, Value>, resolve the key/value type info. Returns undefined otherwise. */
@@ -66,8 +138,8 @@ export class TypeContext {
 		if (!field) return undefined;
 		const map = unwrapMapTypes(field.type);
 		if (!map) return undefined;
-		const resolved = this.registry.getByFqcn(map.valueType) ?? this.registry.getBySimpleName(shortName(map.valueType));
-		return { keyType: map.keyType, valueCtx: new TypeContext(this.registry, resolved?.fqcn) };
+		const resolved = resolveClassForType(this.registry, map.valueType);
+		return { keyType: map.keyType, valueType: map.valueType, valueCtx: new TypeContext(this.registry, resolved?.fqcn) };
 	}
 
 	/** If an object literal has its own explicit `type: X`, that overrides the inferred/field type. */

@@ -116,11 +116,48 @@ object."), independent of whatever schemas are loaded.
    over-warning).
 6. **Hover docs** — `src/features/hover.ts` shows the field's type, `doc`
    string, and default value (when present) on hover over a key.
+7. **`Effect` array shorthand** — a field declared as a bare (non-generic)
+   `Effect` type (e.g. `mindustry.entities.Effect`, not `Seq<Effect>`) that's
+   given a JSON array literal is treated as Mindustry's `MultiEffect`
+   shorthand: every element of the array resolves as its own `Effect`
+   (schema fields, completion, hover, diagnostics all apply per-element),
+   handled in `TypeContext.forArrayElement` (`src/schema/typeResolver.ts`).
+8. **`BulletType` default** — any field/array-element/map-value whose
+   declared type resolves to the abstract `mindustry.entities.bullet.BulletType`
+   resolves instead to `BasicBulletType` (`mindustry.entities.bullet.BasicBulletType`)
+   when there's no explicit `type: X` on the object — matching what Mindustry
+   itself instantiates. An explicit `type:` on the object still overrides
+   this. Handled centrally in `resolveClassForType` (`src/schema/typeResolver.ts`)
+   so it applies uniformly to plain fields, `Seq<BulletType>` elements, and
+   `ObjectMap<K, BulletType>` values.
+9. **Content resolution** (`src/schema/contentIndex.ts`) — any field whose
+   declared type (after unwrapping `Seq<...>`/`ObjectMap<K, V>`) is one of
+   `Item`, `Block`, `Liquid`, `Planet`, `SectorPreset`, `StatusEffect`,
+   `UnitType`, or `Weather` is treated as a reference to *named content*
+   rather than a nested object. The index recursively scans the mod's own
+   `items/`, `blocks/`, `liquids/`, `planets/`, `sectors/`, `status/`,
+   `units/`, `weathers/` folders (as configured by
+   `mindustryHjson.contentTypeFolders` — the same setting used for implicit
+   top-level typing) for `.hjson` files, and treats each file's base name
+   (without extension, regardless of nesting) as a content name. This lights
+   up, only where such a field is relevant:
+   - **Autocomplete** of every matching content name found in the mod, for a
+     direct scalar field (`liquid: `), an element of a content-typed array
+     (`Seq<Item>`), or a key of a content-keyed map (`ObjectMap<Item, ...>`).
+   - **Hover** on such a reference shows which file(s) in the mod define it
+     (or a note that it wasn't found locally — it may be vanilla content).
+   - **Go to definition** (`src/features/definition.ts`) jumps straight to
+     the defining file.
+   Resolution logic lives in `src/features/locate.ts` (`ContentRef` on
+   `LocateResult`); the index itself rebuilds (debounced) on activation and
+   whenever `.hjson` files are created/deleted or `contentTypeFolders`
+   changes.
 
 `src/extension.ts` wires it all up: loads schemas from
 `mindustryHjson.schemaFolder` (or `<workspace>/.mindustry-schemas`, or the
-bundled `schemas/` folder), re-lints on open/edit, registers the completion
-and hover providers, and exposes `Mindustry HJSON: Reload Schemas`.
+bundled `schemas/` folder), builds the content index, re-lints on open/edit,
+registers the completion, hover, and definition providers, and exposes
+`Mindustry HJSON: Reload Schemas`.
 
 ## Known simplifications
 - Duplicate-key merge semantics (Mindustry's `putAdd`) aren't fully
@@ -130,4 +167,8 @@ and hover providers, and exposes `Mindustry HJSON: Reload Schemas`.
 - Ambiguous simple names (two schema files with the same short class name in
   different packages) resolve to whichever was loaded first; not currently
   surfaced as a warning.
-- No formatter/rename/go-to-definition — out of scope here.
+- No formatter/rename — out of scope here.
+- Content resolution doesn't flag unresolved references as diagnostics,
+  since a name not found in the mod's own folders may still be valid vanilla
+  content (e.g. `copper`, `water`) — it's purely additive (completion/hover/
+  go-to-definition).

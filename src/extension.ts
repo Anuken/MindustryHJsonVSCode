@@ -3,19 +3,30 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { parseMHJson } from './parser/mhjsonParser';
 import { SchemaRegistry } from './schema/schemaLoader';
+import { ContentIndex } from './schema/contentIndex';
 import { refreshDiagnostics, makeDiagnosticCollection } from './features/diagnostics';
 import { MHJsonCompletionProvider } from './features/completion';
 import { MHJsonHoverProvider } from './features/hover';
+import { MHJsonDefinitionProvider } from './features/definition';
 
 const LANGUAGE_ID = 'mhjson';
 
 export function activate(context: vscode.ExtensionContext) {
 	const registry = new SchemaRegistry();
+	const contentIndex = new ContentIndex();
 	const collection = makeDiagnosticCollection();
 	context.subscriptions.push(collection);
 
 	function getContentTypeFolders(): Record<string, string> {
 		return vscode.workspace.getConfiguration('mindustryHjson').get('contentTypeFolders') ?? {};
+	}
+
+	let contentIndexRefreshTimer: ReturnType<typeof setTimeout> | undefined;
+	function scheduleContentIndexRefresh() {
+		if (contentIndexRefreshTimer) clearTimeout(contentIndexRefreshTimer);
+		contentIndexRefreshTimer = setTimeout(() => {
+			contentIndex.refresh(getContentTypeFolders());
+		}, 300);
 	}
 
 	function resolveSchemaFolder(): string | undefined {
@@ -54,6 +65,11 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	loadSchemas();
+	scheduleContentIndexRefresh();
+
+	const contentWatcher = vscode.workspace.createFileSystemWatcher('**/*.hjson');
+	contentWatcher.onDidCreate(scheduleContentIndexRefresh);
+	contentWatcher.onDidDelete(scheduleContentIndexRefresh);
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand('mindustryHjson.reloadSchemas', loadSchemas),
@@ -61,14 +77,20 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.workspace.onDidChangeTextDocument((e) => lintDocument(e.document)),
 		vscode.workspace.onDidCloseTextDocument((doc) => collection.delete(doc.uri)),
 		vscode.workspace.onDidChangeConfiguration((e) => {
-			if (e.affectsConfiguration('mindustryHjson')) loadSchemas();
+			if (e.affectsConfiguration('mindustryHjson')) {
+				loadSchemas();
+				scheduleContentIndexRefresh();
+			}
 		}),
+		vscode.workspace.onDidChangeWorkspaceFolders(scheduleContentIndexRefresh),
+		contentWatcher,
 		vscode.languages.registerCompletionItemProvider(
 			{ language: LANGUAGE_ID },
-			new MHJsonCompletionProvider(registry, getContentTypeFolders),
+			new MHJsonCompletionProvider(registry, getContentTypeFolders, contentIndex),
 			':', ' ', '"',
 		),
-		vscode.languages.registerHoverProvider({ language: LANGUAGE_ID }, new MHJsonHoverProvider(registry, getContentTypeFolders)),
+		vscode.languages.registerHoverProvider({ language: LANGUAGE_ID }, new MHJsonHoverProvider(registry, getContentTypeFolders, contentIndex)),
+		vscode.languages.registerDefinitionProvider({ language: LANGUAGE_ID }, new MHJsonDefinitionProvider(registry, getContentTypeFolders, contentIndex)),
 	);
 
 	lintAllOpenDocuments();

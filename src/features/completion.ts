@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { parseMHJson } from '../parser/mhjsonParser';
 import { SchemaRegistry, TYPE_FIELD } from '../schema/schemaLoader';
+import { ContentIndex } from '../schema/contentIndex';
 import { locate } from './locate';
 
 /** Chars that can appear in a bare key/type token being typed. */
@@ -25,7 +26,11 @@ function currentToken(text: string, offset: number, document: vscode.TextDocumen
 }
 
 export class MHJsonCompletionProvider implements vscode.CompletionItemProvider {
-	constructor(private registry: SchemaRegistry, private getContentTypeFolders: () => Record<string, string>) {}
+	constructor(
+		private registry: SchemaRegistry,
+		private getContentTypeFolders: () => Record<string, string>,
+		private contentIndex: ContentIndex,
+	) {}
 
 	provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] {
 		const text = document.getText();
@@ -33,6 +38,17 @@ export class MHJsonCompletionProvider implements vscode.CompletionItemProvider {
 		const parse = parseMHJson(text);
 		const loc = locate(parse, offset, this.registry, document.uri.fsPath, this.getContentTypeFolders());
 		const token = currentToken(text, offset, document);
+
+		// completing a bare-string content reference (e.g. `liquid: `, a Seq<Item> element,
+		// or an ObjectMap<Item, ...> key) -> suggest names of that content type found in the mod
+		if (loc.contentRef) {
+			return this.contentIndex.namesFor(loc.contentRef.type).map((name) => {
+				const item = new vscode.CompletionItem(name, vscode.CompletionItemKind.Reference);
+				item.detail = loc.contentRef!.type;
+				item.range = token.range;
+				return item;
+			});
+		}
 
 		// completing a `type: ` value -> suggest simple class names
 		if (loc.onValue && loc.onValue.key === 'type') {
