@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import { parseMHJson } from '../parser/mhjsonParser';
 import { SchemaRegistry, TYPE_FIELD } from '../schema/schemaLoader';
 import { ContentIndex } from '../schema/contentIndex';
+import { VanillaContentIndex } from '../schema/vanillaContent';
+import { prettyType } from '../schema/typeResolver';
 import { locate } from './locate';
 
 /** Chars that can appear in a bare key/type token being typed. */
@@ -30,6 +32,7 @@ export class MHJsonCompletionProvider implements vscode.CompletionItemProvider {
 		private registry: SchemaRegistry,
 		private getContentTypeFolders: () => Record<string, string>,
 		private contentIndex: ContentIndex,
+		private vanillaContent: VanillaContentIndex,
 	) {}
 
 	provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] {
@@ -40,22 +43,45 @@ export class MHJsonCompletionProvider implements vscode.CompletionItemProvider {
 		const token = currentToken(text, offset, document);
 
 		// completing a bare-string content reference (e.g. `liquid: `, a Seq<Item> element,
-		// or an ObjectMap<Item, ...> key) -> suggest names of that content type found in the mod
+		// or an ObjectMap<Item, ...> key) -> suggest names of that content type found in the mod, plus vanilla content
 		if (loc.contentRef) {
-			return this.contentIndex.namesFor(loc.contentRef.type).map((name) => {
+			const type = loc.contentRef.type;
+			const modNames = new Set(this.contentIndex.namesFor(type));
+			const items: vscode.CompletionItem[] = [];
+			for (const name of modNames) {
 				const item = new vscode.CompletionItem(name, vscode.CompletionItemKind.Reference);
-				item.detail = loc.contentRef!.type;
+				item.detail = type;
+				item.range = token.range;
+				items.push(item);
+			}
+			for (const name of this.vanillaContent.namesFor(type)) {
+				if (modNames.has(name)) continue;
+				const item = new vscode.CompletionItem(name, vscode.CompletionItemKind.Reference);
+				item.detail = `${type} (vanilla)`;
+				item.range = token.range;
+				items.push(item);
+			}
+			return items;
+		}
+
+		// completing a bare-string enum field value (e.g. `category: `) -> suggest the enum's legal values
+		if (loc.enumRef) {
+			return loc.enumRef.info.values.map((value) => {
+				const item = new vscode.CompletionItem(value, vscode.CompletionItemKind.EnumMember);
+				item.detail = prettyType(loc.enumRef!.info.fqcn);
 				item.range = token.range;
 				return item;
 			});
 		}
 
-		// completing a `type: ` value -> suggest simple class names
-		if (loc.onValue && loc.onValue.key === 'type') {
+		// completing a `type: ` value -> suggest simple class names (only when this object's schema
+		// doesn't declare its own 'type' field - e.g. UnitType.type: JsonUnitType is a normal enum
+		// field, handled by loc.enumRef above, not the polymorphic subclass-selector 'type')
+		if (loc.onValue && loc.onValue.key === 'type' && !loc.ctx.schemaFields.has('type')) {
 			return this.registry.getAllSimpleNames().map((name) => {
 				const item = new vscode.CompletionItem(name, vscode.CompletionItemKind.Class);
 				const schema = this.registry.getBySimpleName(name);
-				item.detail = schema?.fqcn;
+				item.detail = schema ? prettyType(schema.fqcn) : undefined;
 				if (schema?.doc) item.documentation = new vscode.MarkdownString(schema.doc);
 				item.range = token.range;
 				return item;
@@ -70,14 +96,14 @@ export class MHJsonCompletionProvider implements vscode.CompletionItemProvider {
 			for (const [name, field] of fields) {
 				if (already.has(name)) continue;
 				const item = new vscode.CompletionItem(name, vscode.CompletionItemKind.Field);
-				item.detail = field.type;
+				item.detail = prettyType(field.type);
 				item.documentation = new vscode.MarkdownString(describeField(field));
 				item.range = token.range;
 				// Don't append ": <default>" if the user already typed a colon after this key.
 				item.insertText = token.hasColonAfter ? name : new vscode.SnippetString(`${name}: \${1:${field.default ?? ''}}`);
 				items.push(item);
 			}
-			if (!already.has('type') && !loc.isMapEntries) {
+			if (!already.has('type') && !fields.has('type') && !loc.isMapEntries) {
 				const item = new vscode.CompletionItem('type', vscode.CompletionItemKind.Field);
 				item.detail = TYPE_FIELD.type;
 				item.documentation = new vscode.MarkdownString(describeField(TYPE_FIELD));
@@ -93,7 +119,7 @@ export class MHJsonCompletionProvider implements vscode.CompletionItemProvider {
 }
 
 function describeField(field: { type: string; doc?: string; default?: string }): string {
-	let md = `**${field.type}**`;
+	let md = `**${prettyType(field.type)}**`;
 	if (field.doc) md += `\n\n${field.doc}`;
 	if (field.default !== undefined) md += `\n\n*Default:* \`${field.default}\``;
 	return md;

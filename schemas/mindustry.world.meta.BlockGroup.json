@@ -1,0 +1,17 @@
+{
+  "superclass": "Enum",
+  "values":[
+    "none",
+    "walls",
+    "projectors",
+    "turrets",
+    "transportation",
+    "power",
+    "liquids",
+    "drills",
+    "units",
+    "logic",
+    "payloads",
+    "heat"
+  ]
+}

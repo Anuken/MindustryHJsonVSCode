@@ -8,6 +8,10 @@ import {
 	arrayContentTypeSimpleName,
 	stackContentType,
 	stackArrayContentType,
+	resolveEnumInfo,
+	arrayEnumInfo,
+	EnumInfo,
+	resolveObjectType,
 } from '../schema/typeResolver';
 
 /** A bare-string token that refers to named content (an Item, Block, Liquid, ...) by name. */
@@ -45,6 +49,13 @@ export interface LocateResult {
 	 * folders. Drives content-aware completion/hover/go-to-definition.
 	 */
 	contentRef: ContentRef | undefined;
+	/**
+	 * Set when the offset sits on a bare-string token whose field type
+	 * resolves to an Enum-superclass schema (e.g. `category: distribution`,
+	 * where `category`'s type `mindustry.type.Category` has `superclass:
+	 * "Enum"`). Drives enum-value completion/hover/diagnostics.
+	 */
+	enumRef: { info: EnumInfo; range: Range } | undefined;
 }
 
 export function locate(
@@ -57,8 +68,9 @@ export function locate(
 	const implicitSimple = inferImplicitType(filePath, contentTypeFolders);
 	let rootCtx = new TypeContext(registry, undefined);
 	if (parse.root && parse.root.type === 'object') {
-		const explicit = findExplicitTypeField(parse.root as JvalObject) ?? implicitSimple;
-		rootCtx = rootCtx.withExplicitType(explicit);
+		rootCtx = rootCtx.withExplicitType(implicitSimple);
+		const explicit = findExplicitTypeField(parse.root as JvalObject);
+		rootCtx = resolveObjectType(rootCtx, explicit);
 	}
 
 	const result: LocateResult = {
@@ -69,6 +81,7 @@ export function locate(
 		isMapEntries: false,
 		mapKeyType: undefined,
 		contentRef: undefined,
+		enumRef: undefined,
 	};
 	if (!parse.root) return result;
 	visit(parse.root, rootCtx, offset, result, registry);
@@ -120,6 +133,16 @@ function checkStackArrayElement(arr: JvalArray, contentType: string, offset: num
 	}
 }
 
+/** If `arr` has a string element containing `offset`, records it as an enumRef using the given EnumInfo. */
+function checkEnumArrayElement(arr: JvalArray, info: EnumInfo, offset: number, result: LocateResult) {
+	for (const el of arr.elements) {
+		if (contains(el.range, offset) && el.type === 'string') {
+			result.enumRef = { info, range: el.range };
+			return;
+		}
+	}
+}
+
 function visit(node: Jval, ctx: TypeContext, offset: number, result: LocateResult, registry: SchemaRegistry) {
 	if (!contains(node.range, offset)) return;
 
@@ -144,7 +167,7 @@ function visit(node: Jval, ctx: TypeContext, offset: number, result: LocateResul
 						return;
 					}
 					const explicit = findExplicitTypeField(member.value as JvalObject);
-					childCtx = ctx.forField(field).withExplicitType(explicit);
+					childCtx = resolveObjectType(ctx.forField(field), explicit);
 				} else if (member.value.type === 'array') {
 					const arrayContentType = field ? arrayContentTypeSimpleName(field.type) : undefined;
 					if (arrayContentType) {
@@ -155,6 +178,11 @@ function visit(node: Jval, ctx: TypeContext, offset: number, result: LocateResul
 						const stackType = stackArrayContentType(field.type);
 						if (stackType) {
 							checkStackArrayElement(member.value as JvalArray, stackType, offset, result);
+							return;
+						}
+						const enumInfo = arrayEnumInfo(registry, field.type);
+						if (enumInfo) {
+							checkEnumArrayElement(member.value as JvalArray, enumInfo, offset, result);
 							return;
 						}
 					}
@@ -170,6 +198,9 @@ function visit(node: Jval, ctx: TypeContext, offset: number, result: LocateResul
 							if (stackType) {
 								const { name, range } = stackNameRange(member.value as JvalString);
 								if (contains(range, offset)) result.contentRef = { type: stackType, name, range };
+							} else {
+								const enumInfo = resolveEnumInfo(registry, field.type);
+								if (enumInfo) result.enumRef = { info: enumInfo, range: member.value.range };
 							}
 						}
 					}
@@ -184,7 +215,7 @@ function visit(node: Jval, ctx: TypeContext, offset: number, result: LocateResul
 				let elCtx = ctx;
 				if (el.type === 'object') {
 					const explicit = findExplicitTypeField(el as JvalObject);
-					elCtx = ctx.withExplicitType(explicit);
+					elCtx = resolveObjectType(ctx, explicit);
 				}
 				visit(el, elCtx, offset, result, registry);
 				return;
@@ -222,7 +253,7 @@ function visitMapEntries(
 			result.onValue = entry;
 			if (entry.value.type === 'object') {
 				const explicit = findExplicitTypeField(entry.value as JvalObject);
-				visit(entry.value, valueCtx.withExplicitType(explicit), offset, result, registry);
+				visit(entry.value, resolveObjectType(valueCtx, explicit), offset, result, registry);
 			} else if (entry.value.type === 'array') {
 				visit(entry.value, new TypeContext(registry, undefined), offset, result, registry);
 			} else if (entry.value.type === 'string') {

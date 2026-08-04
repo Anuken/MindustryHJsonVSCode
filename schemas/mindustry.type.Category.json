@@ -1,3 +1,15 @@
 {
-  "superclass": "java.lang.Enum"
+  "superclass": "Enum",
+  "values":[
+    "turret",
+    "production",
+    "distribution",
+    "liquid",
+    "power",
+    "defense",
+    "crafting",
+    "units",
+    "effect",
+    "logic"
+  ]
 }

@@ -1,0 +1,5 @@
+{
+  "doc": "Template for unit types.",
+  "superclass": "Enum",
+  "values": ["UnitType", "ErekirUnitType", "MissileUnitType", "NeoplasmUnitType", "TankUnitType"]
+}

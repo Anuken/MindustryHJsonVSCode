@@ -21,6 +21,8 @@ export interface ClassSchema {
 	/** Optional class-level documentation, from a top-level "doc" key in the schema file. */
 	doc?: string;
 	fields: Record<string, FieldSchema>;
+	/** For enum schemas (superclass "Enum"), the enum's legal value names, e.g. ["turret", "production", ...] for Category. */
+	enumValues?: string[];
 }
 
 /** Synthetic field schema for the `type: SimpleName` field every content object can have. */
@@ -59,6 +61,7 @@ export class SchemaRegistry {
 		}
 		for (const file of fs.readdirSync(folder)) {
 			if (!file.endsWith('.json')) continue;
+			if (file === 'allContent.json') continue; // vanilla content index, not a class schema - see VanillaContentIndex
 			const fqcn = file.slice(0, -'.json'.length);
 			const full = path.join(folder, file);
 			try {
@@ -124,6 +127,7 @@ function parseSchemaFile(fqcn: string, raw: any): ClassSchema {
 	const fields: Record<string, FieldSchema> = {};
 	let superclass: string | undefined;
 	let doc: string | undefined;
+	let enumValues: string[] | undefined;
 	for (const [key, val] of Object.entries<any>(raw)) {
 		if (key === 'superclass') {
 			superclass = String(val);
@@ -131,6 +135,10 @@ function parseSchemaFile(fqcn: string, raw: any): ClassSchema {
 		}
 		if (key === 'doc' && typeof val === 'string') {
 			doc = val;
+			continue;
+		}
+		if (key === 'values' && Array.isArray(val)) {
+			enumValues = val.map(String);
 			continue;
 		}
 		if (val && typeof val === 'object' && typeof val.type === 'string') {
@@ -142,7 +150,7 @@ function parseSchemaFile(fqcn: string, raw: any): ClassSchema {
 		}
 	}
 	const simpleName = fqcn.includes('.') ? fqcn.slice(fqcn.lastIndexOf('.') + 1) : fqcn;
-	return { fqcn, simpleName, superclass, doc, fields };
+	return { fqcn, simpleName, superclass, doc, fields, enumValues };
 }
 
 /** Generic type helpers, e.g. "arc.struct.Seq<mindustry.type.Weapon>" -> element FQCN "mindustry.type.Weapon". */

@@ -1,7 +1,3 @@
-# THIS CODE IS SLOP
-
-But it works and it was free and I am okay with bleeding Anthropic dry
-
 # Mindustry HJSON (VSCode extension)
 
 Syntax highlighting, schema-driven autocomplete, unknown-field warnings, and

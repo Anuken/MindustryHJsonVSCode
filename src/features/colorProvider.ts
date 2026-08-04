@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { Jval, JvalArray, JvalObject, JvalString, parseMHJson } from '../parser/mhjsonParser';
 import { SchemaRegistry } from '../schema/schemaLoader';
-import { TypeContext, findExplicitTypeField, inferImplicitType, isColorArrayType, isColorType } from '../schema/typeResolver';
+import { TypeContext, findExplicitTypeField, inferImplicitType, isColorArrayType, isColorType, resolveObjectType } from '../schema/typeResolver';
 
 /** Matches a bare (optionally '#'-prefixed) 6- or 8-digit hex color, e.g. "ffbb44" or "c2464666". */
 const HEX_COLOR = /^#?([0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
@@ -28,8 +28,9 @@ export class MHJsonColorProvider implements vscode.DocumentColorProvider {
 		const implicitSimple = inferImplicitType(document.uri.fsPath, this.getContentTypeFolders());
 		let ctx = new TypeContext(this.registry, undefined);
 		if (parse.root.type === 'object') {
-			const explicit = findExplicitTypeField(parse.root as JvalObject) ?? implicitSimple;
-			ctx = ctx.withExplicitType(explicit);
+			ctx = ctx.withExplicitType(implicitSimple);
+			const explicit = findExplicitTypeField(parse.root as JvalObject);
+			ctx = resolveObjectType(ctx, explicit);
 		}
 
 		const out: vscode.ColorInformation[] = [];
@@ -104,7 +105,7 @@ function walk(node: Jval, ctx: TypeContext, document: vscode.TextDocument, out: 
 					continue;
 				}
 				const explicit = findExplicitTypeField(member.value as JvalObject);
-				childCtx = ctx.forField(field).withExplicitType(explicit);
+				childCtx = resolveObjectType(ctx.forField(field), explicit);
 			} else if (member.value.type === 'array') {
 				childCtx = ctx.forArrayElement(field);
 			} else {
@@ -117,7 +118,7 @@ function walk(node: Jval, ctx: TypeContext, document: vscode.TextDocument, out: 
 			let elCtx = ctx;
 			if (el.type === 'object') {
 				const explicit = findExplicitTypeField(el as JvalObject);
-				elCtx = ctx.withExplicitType(explicit);
+				elCtx = resolveObjectType(ctx, explicit);
 			}
 			walk(el, elCtx, document, out, registry);
 		}
@@ -142,7 +143,7 @@ function walkMapEntries(
 		let childCtx = valueCtx;
 		if (entry.value.type === 'object') {
 			const explicit = findExplicitTypeField(entry.value as JvalObject);
-			childCtx = valueCtx.withExplicitType(explicit);
+			childCtx = resolveObjectType(valueCtx, explicit);
 		} else if (entry.value.type === 'array') {
 			childCtx = new TypeContext(registry, undefined);
 		}

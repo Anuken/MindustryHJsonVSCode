@@ -182,6 +182,20 @@ export class TypeContext {
 }
 
 /**
+ * Resolves the effective TypeContext for an object literal, given the "base" context implied by
+ * its position (a field's target type, an array's element type, a file's implicit folder type,
+ * ...) and its own `type: X` entry, if any. A `type: X` entry is normally a polymorphic subclass
+ * selector (e.g. `type: FlakBulletType` overriding the base `BulletType`) - but some classes
+ * declare `type` as an ordinary field of their own (e.g. UnitType.type: JsonUnitType, an enum of
+ * unit archetypes), in which case `type: missile` is just that field's value, not a subclass
+ * selector, and must not change the object's resolved class.
+ */
+export function resolveObjectType(baseCtx: TypeContext, explicitTypeValue: string | undefined): TypeContext {
+	if (!explicitTypeValue || baseCtx.schemaFields.has('type')) return baseCtx;
+	return baseCtx.withExplicitType(explicitTypeValue);
+}
+
+/**
  * Simple name of an array field's element type, whether the field is
  * declared with bracket syntax (`Foo[]`, used e.g. for `ItemStack[]`,
  * `Color[]`) or a generic wrapper (`Seq<Foo>`). Returns undefined if `type`
@@ -228,6 +242,41 @@ export function isColorArrayType(type: string): boolean {
 
 export function shortName(fqcnOrSimple: string): string {
 	return fqcnOrSimple.includes('.') ? fqcnOrSimple.slice(fqcnOrSimple.lastIndexOf('.') + 1) : fqcnOrSimple;
+}
+
+/** Matches a dotted FQCN-looking identifier anywhere in a type string, e.g. both "arc.struct.Seq" and "mindustry.type.Weapon" inside "arc.struct.Seq<mindustry.type.Weapon>". */
+const FQCN_IN_TYPE = /\b[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)+\b/g;
+
+/**
+ * Shortens every fully-qualified class name embedded in a (possibly generic
+ * or array) type string down to its simple name, for display purposes -
+ * `arc.graphics.Color` -> `Color`, `arc.struct.Seq<mindustry.type.Weapon>` ->
+ * `Seq<Weapon>`. Unlike `shortName`, this is safe to use on generic types
+ * since it shortens every dotted segment, not just text after the last dot.
+ */
+export function prettyType(type: string): string {
+	return type.replace(FQCN_IN_TYPE, (m) => shortName(m));
+}
+
+/** Info about an Enum-superclass schema: its FQCN and legal value names. */
+export interface EnumInfo {
+	fqcn: string;
+	values: string[];
+}
+
+/** If `type` (FQCN or simple name) resolves to a schema whose superclass is "Enum", returns its FQCN + legal values. */
+export function resolveEnumInfo(registry: SchemaRegistry, type: string): EnumInfo | undefined {
+	const schema = registry.getByFqcn(type) ?? registry.getBySimpleName(shortName(type));
+	if (schema && schema.superclass === 'Enum' && schema.enumValues) {
+		return { fqcn: schema.fqcn, values: schema.enumValues };
+	}
+	return undefined;
+}
+
+/** Like `resolveEnumInfo`, but for an array-of-enum field, e.g. `Seq<Category>` or `Category[]`. */
+export function arrayEnumInfo(registry: SchemaRegistry, type: string): EnumInfo | undefined {
+	const el = arrayElementSimpleName(type);
+	return el ? resolveEnumInfo(registry, el) : undefined;
 }
 
 export function findExplicitTypeField(obj: JvalObject): string | undefined {

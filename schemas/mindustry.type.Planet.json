@@ -487,7 +487,7 @@
   },
   "sectorSize":{
     "type": "int",
-    "doc": "Planet sector subdivisions"
+    "doc": "Planet sector subdivisions."
   },
   "research":{
     "type": "Research",

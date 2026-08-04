@@ -4,6 +4,7 @@ import * as path from 'path';
 import { parseMHJson } from './parser/mhjsonParser';
 import { SchemaRegistry } from './schema/schemaLoader';
 import { ContentIndex } from './schema/contentIndex';
+import { VanillaContentIndex } from './schema/vanillaContent';
 import { refreshDiagnostics, makeDiagnosticCollection } from './features/diagnostics';
 import { MHJsonCompletionProvider } from './features/completion';
 import { MHJsonHoverProvider } from './features/hover';
@@ -15,6 +16,7 @@ const LANGUAGE_ID = 'mhjson';
 export function activate(context: vscode.ExtensionContext) {
 	const registry = new SchemaRegistry();
 	const contentIndex = new ContentIndex();
+	const vanillaContent = new VanillaContentIndex();
 	const collection = makeDiagnosticCollection();
 	context.subscriptions.push(collection);
 
@@ -50,6 +52,7 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 		const { loaded, errors } = registry.loadFolder(folder);
+		vanillaContent.load(folder);
 		vscode.window.setStatusBarMessage(`Mindustry HJSON: loaded ${loaded} schemas from ${folder}`, 4000);
 		for (const e of errors) console.warn('[mindustry-hjson]', e);
 		lintAllOpenDocuments();
@@ -58,7 +61,7 @@ export function activate(context: vscode.ExtensionContext) {
 	function lintDocument(doc: vscode.TextDocument) {
 		if (doc.languageId !== LANGUAGE_ID) return;
 		const parse = parseMHJson(doc.getText());
-		refreshDiagnostics(doc, parse, registry, getContentTypeFolders(), collection);
+		refreshDiagnostics(doc, parse, registry, getContentTypeFolders(), collection, contentIndex, vanillaContent);
 	}
 
 	function lintAllOpenDocuments() {
@@ -87,10 +90,10 @@ export function activate(context: vscode.ExtensionContext) {
 		contentWatcher,
 		vscode.languages.registerCompletionItemProvider(
 			{ language: LANGUAGE_ID },
-			new MHJsonCompletionProvider(registry, getContentTypeFolders, contentIndex),
+			new MHJsonCompletionProvider(registry, getContentTypeFolders, contentIndex, vanillaContent),
 			':', ' ', '"',
 		),
-		vscode.languages.registerHoverProvider({ language: LANGUAGE_ID }, new MHJsonHoverProvider(registry, getContentTypeFolders, contentIndex)),
+		vscode.languages.registerHoverProvider({ language: LANGUAGE_ID }, new MHJsonHoverProvider(registry, getContentTypeFolders, contentIndex, vanillaContent)),
 		vscode.languages.registerDefinitionProvider({ language: LANGUAGE_ID }, new MHJsonDefinitionProvider(registry, getContentTypeFolders, contentIndex)),
 		vscode.languages.registerColorProvider({ language: LANGUAGE_ID }, new MHJsonColorProvider(registry, getContentTypeFolders)),
 	);

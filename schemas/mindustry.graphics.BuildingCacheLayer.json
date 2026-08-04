@@ -1,0 +1,7 @@
+{
+  "superclass": "Enum",
+  "values":[
+    "under",
+    "normal"
+  ]
+}
