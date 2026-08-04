@@ -179,6 +179,11 @@ export class TypeContext {
 		const resolved = this.registry.getBySimpleName(explicitSimpleName);
 		return resolved ? new TypeContext(this.registry, resolved.fqcn) : this;
 	}
+
+	/** True if `simpleName` names an actual loaded class schema (a real subclass candidate). */
+	namesKnownClass(simpleName: string): boolean {
+		return this.registry.getBySimpleName(simpleName) !== undefined;
+	}
 }
 
 /**
@@ -189,9 +194,18 @@ export class TypeContext {
  * declare `type` as an ordinary field of their own (e.g. UnitType.type: JsonUnitType, an enum of
  * unit archetypes), in which case `type: missile` is just that field's value, not a subclass
  * selector, and must not change the object's resolved class.
+ *
+ * The two cases are told apart by whether `explicitTypeValue` actually names a known class: a
+ * genuine subclass selector like `FlakBulletType` or `ParticleWeather` resolves to a real loaded
+ * schema, while an ordinary field's enum-style value (`missile`, `flying`, ...) normally doesn't
+ * name any class at all. This matters because some base classes - e.g. `mindustry.type.Weather`,
+ * whose own `type` field is an internal `Prov<WeatherState>` essentially never set from mod JSON -
+ * declare a `type` field yet are still always meant to have `type: X` read as the subclass
+ * selector in practice, so merely declaring a `type` field can't be the deciding factor on its own.
  */
 export function resolveObjectType(baseCtx: TypeContext, explicitTypeValue: string | undefined): TypeContext {
-	if (!explicitTypeValue || baseCtx.schemaFields.has('type')) return baseCtx;
+	if (!explicitTypeValue) return baseCtx;
+	if (baseCtx.schemaFields.has('type') && !baseCtx.namesKnownClass(explicitTypeValue)) return baseCtx;
 	return baseCtx.withExplicitType(explicitTypeValue);
 }
 

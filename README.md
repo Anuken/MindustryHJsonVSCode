@@ -1,3 +1,7 @@
+# THIS CODE IS SLOP
+
+But it works and it was free
+
 # Mindustry HJSON (VSCode extension)
 
 Syntax highlighting, schema-driven autocomplete, unknown-field warnings, and

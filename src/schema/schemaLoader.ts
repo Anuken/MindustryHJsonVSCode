@@ -87,10 +87,20 @@ export class SchemaRegistry {
 		return this.byFqcn.get(fqcn);
 	}
 
-	/** Resolve a *simple* type name (as used in `type: Foo`) to a schema. Ambiguous names return the first match. */
+	/**
+	 * Resolve a *simple* type name (as used in `type: Foo`) to a schema. Ambiguous names return the
+	 * first match. Mod authors sometimes write the type name with a lowercase first letter (e.g.
+	 * `type: onSector` instead of `type: OnSector`) - if the name as written isn't found, this
+	 * retries with the first letter capitalized before giving up.
+	 */
 	getBySimpleName(simpleName: string): ClassSchema | undefined {
 		const list = this.bySimpleName.get(simpleName);
-		return list && list.length > 0 ? list[0] : undefined;
+		if (list && list.length > 0) return list[0];
+
+		const capitalized = capitalizeFirstLetter(simpleName);
+		if (capitalized === simpleName) return undefined;
+		const capitalizedList = this.bySimpleName.get(capitalized);
+		return capitalizedList && capitalizedList.length > 0 ? capitalizedList[0] : undefined;
 	}
 
 	getAllSimpleNames(): string[] {
@@ -161,4 +171,9 @@ export function unwrapGenericElementType(type: string): string | undefined {
 
 export function isKnownPrimitive(type: string): boolean {
 	return ['float', 'double', 'int', 'long', 'boolean', 'String', 'string', 'short', 'byte', 'char'].includes(type);
+}
+
+function capitalizeFirstLetter(str: string): string {
+	if (!str) return '';
+	return str.charAt(0).toUpperCase() + str.slice(1);
 }
