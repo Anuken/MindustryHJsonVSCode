@@ -1,0 +1,75 @@
+{
+  "superclass": "mindustry.world.draw.DrawBlock",
+  "color":{
+    "type": "arc.graphics.Color"
+  },
+  "sides":{
+    "type": "int",
+    "default": "12"
+  },
+  "x":{
+    "type": "float",
+    "default": "0"
+  },
+  "y":{
+    "type": "float",
+    "default": "0"
+  },
+  "alpha":{
+    "type": "float",
+    "default": "5"
+  },
+  "particles":{
+    "type": "int",
+    "default": "30"
+  },
+  "particleRotation":{
+    "type": "float",
+    "default": "0"
+  },
+  "particleLife":{
+    "type": "float",
+    "default": "0"
+  },
+  "particleRad":{
+    "type": "float",
+    "default": "0"
+  },
+  "particleSize":{
+    "type": "float",
+    "default": "0"
+  },
+  "fadeMargin":{
+    "type": "float",
+    "default": "0"
+  },
+  "rotateScl":{
+    "type": "float",
+    "default": "0"
+  },
+  "reverse":{
+    "type": "boolean",
+    "default": "false"
+  },
+  "poly":{
+    "type": "boolean",
+    "default": "false"
+  },
+  "particleInterp":{
+    "type": "arc.math.Interp"
+  },
+  "particleSizeInterp":{
+    "type": "arc.math.Interp",
+    "default": "slope"
+  },
+  "blending":{
+    "type": "arc.graphics.Blending",
+    "default": "normal"
+  },
+  "iconOverride":{
+    "type": "java.lang.String[]",
+    "nullable": true,
+    "doc": "If set, the icon is overridden to be these strings, in order. Each string is a suffix.",
+    "default": "null"
+  }
+}

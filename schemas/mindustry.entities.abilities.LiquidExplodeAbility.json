@@ -1,0 +1,36 @@
+{
+  "doc": "Explodes into a cloud of liquid on death.",
+  "superclass": "mindustry.entities.abilities.Ability",
+  "liquid": {
+    "type": "mindustry.type.Liquid",
+    "default": "water"
+  },
+  "amount": {
+    "type": "float",
+    "default": "120"
+  },
+  "radAmountScale": {
+    "type": "float",
+    "default": "5"
+  },
+  "radScale": {
+    "type": "float",
+    "default": "5"
+  },
+  "noiseMag": {
+    "type": "float",
+    "default": "5"
+  },
+  "noiseScl": {
+    "type": "float",
+    "default": "5"
+  },
+  "display": {
+    "type": "boolean",
+    "doc": "If false, this ability does not show in unit stats.",
+    "default": "true"
+  },
+  "data": {
+    "type": "float"
+  }
+}

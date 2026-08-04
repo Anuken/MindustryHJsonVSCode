@@ -1,0 +1,27 @@
+{
+  "superclass": "mindustry.world.draw.DrawBlock",
+  "frames":{
+    "type": "int",
+    "doc": "Number of frames to draw.",
+    "default": "3"
+  },
+  "interval":{
+    "type": "float",
+    "doc": "Ticks between frames.",
+    "default": "5"
+  },
+  "sine":{
+    "type": "boolean",
+    "doc": "If true, frames wil alternate back and forth in a sine wave.",
+    "default": "true"
+  },
+  "regions":{
+    "type": "arc.graphics.g2d.TextureRegion[]"
+  },
+  "iconOverride":{
+    "type": "java.lang.String[]",
+    "nullable": true,
+    "doc": "If set, the icon is overridden to be these strings, in order. Each string is a suffix.",
+    "default": "null"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "superclass": "mindustry.entities.units.AIController",
+  "unloadTarget":{
+    "type": "mindustry.world.blocks.units.UnitCargoUnloadPoint$UnitCargoUnloadPointBuild",
+    "nullable": true
+  },
+  "itemTarget":{
+    "type": "mindustry.type.Item",
+    "nullable": true
+  },
+  "noDestTimer":{
+    "type": "float",
+    "default": "0"
+  },
+  "targetIndex":{
+    "type": "int",
+    "default": "0"
+  }
+}

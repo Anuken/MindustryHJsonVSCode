@@ -1,0 +1,41 @@
+{
+  "superclass": "mindustry.world.draw.DrawBlock",
+  "weave":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "glow":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "rotateSpeed":{
+    "type": "float",
+    "default": "1"
+  },
+  "rotateSpeed2":{
+    "type": "float",
+    "default": "1"
+  },
+  "fadeWeave":{
+    "type": "boolean",
+    "default": "false"
+  },
+  "glowColor":{
+    "type": "arc.graphics.Color"
+  },
+  "weaveColor":{
+    "type": "arc.graphics.Color"
+  },
+  "pulse":{
+    "type": "float",
+    "default": "3"
+  },
+  "pulseScl":{
+    "type": "float",
+    "default": "3"
+  },
+  "iconOverride":{
+    "type": "java.lang.String[]",
+    "nullable": true,
+    "doc": "If set, the icon is overridden to be these strings, in order. Each string is a suffix.",
+    "default": "null"
+  }
+}

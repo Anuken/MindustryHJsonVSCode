@@ -1,0 +1,83 @@
+{
+  "superclass": "mindustry.entities.part.DrawPart",
+  "doc": "Spawns effects in a rectangle centered on x and y.\n",
+  "x":{
+    "type": "float"
+  },
+  "y":{
+    "type": "float"
+  },
+  "width":{
+    "type": "float"
+  },
+  "height":{
+    "type": "float"
+  },
+  "rotation":{
+    "type": "float"
+  },
+  "mirror":{
+    "type": "boolean",
+    "default": "false"
+  },
+  "effectRot":{
+    "type": "float"
+  },
+  "effectRandRot":{
+    "type": "float"
+  },
+  "effectInterval":{
+    "type": "float",
+    "doc": "If >0, the interval, in ticks, between effect spawns.",
+    "default": "0"
+  },
+  "effectIntervalFrom":{
+    "type": "float",
+    "doc": "If >0, this is the interval at 0 progress. useProgress is ignored."
+  },
+  "effectChance":{
+    "type": "float",
+    "default": "1"
+  },
+  "effect":{
+    "type": "mindustry.entities.Effect",
+    "default": "sparkShoot"
+  },
+  "effectColor":{
+    "type": "arc.graphics.Color",
+    "default": "white"
+  },
+  "useProgress":{
+    "type": "boolean",
+    "doc": "If true, effectChance will be scaled by progress.",
+    "default": "true"
+  },
+  "progress":{
+    "type": "mindustry.entities.part.DrawPart$PartProgress",
+    "default": "warmup"
+  },
+  "debugDraw":{
+    "type": "boolean",
+    "doc": "Shows the spawn rectangles in red.",
+    "default": "false"
+  },
+  "turretShading":{
+    "type": "boolean",
+    "doc": "If true, turret shading is used. Don't touch this, it is set up in unit/block init()!"
+  },
+  "under":{
+    "type": "boolean",
+    "doc": "If true, the layer is overridden to be under the weapon/turret itself.",
+    "default": "false"
+  },
+  "weaponIndex":{
+    "type": "int",
+    "doc": "For units, this is the index of the weapon this part gets its progress for.",
+    "default": "0"
+  },
+  "recoilIndex":{
+    "type": "int",
+    "doc": "Which recoil counter to use. < 0 to use base recoil.",
+    "default": "-1"
+  }
+}

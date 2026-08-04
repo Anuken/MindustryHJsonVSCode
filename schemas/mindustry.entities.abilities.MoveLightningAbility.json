@@ -1,0 +1,86 @@
+{
+  "superclass": "mindustry.entities.abilities.Ability",
+  "damage":{
+    "type": "float",
+    "doc": "Lightning damage",
+    "default": "35"
+  },
+  "chance":{
+    "type": "float",
+    "doc": "Chance of firing every tick. Set >= 1 to always fire lightning every tick at max speed",
+    "default": "15"
+  },
+  "length":{
+    "type": "int",
+    "doc": "Length of the lightning. <= 0 to disable",
+    "default": "12"
+  },
+  "minSpeed":{
+    "type": "float",
+    "doc": "Speeds for when to start lightninging and when to stop getting faster",
+    "default": "8"
+  },
+  "maxSpeed":{
+    "type": "float",
+    "doc": "Speeds for when to start lightninging and when to stop getting faster",
+    "default": "8"
+  },
+  "color":{
+    "type": "arc.graphics.Color",
+    "doc": "Lightning color"
+  },
+  "y":{
+    "type": "float",
+    "doc": "Shifts where the lightning spawns along the Y axis",
+    "default": "0"
+  },
+  "x":{
+    "type": "float",
+    "doc": "Offset along the X axis",
+    "default": "0"
+  },
+  "alternate":{
+    "type": "boolean",
+    "doc": "Whether the spawn side alternates",
+    "default": "true"
+  },
+  "heatRegion":{
+    "type": "java.lang.String",
+    "doc": "Jittering heat sprite like the shield on v5 Javelin",
+    "default": "\"error\""
+  },
+  "bullet":{
+    "type": "mindustry.entities.bullet.BulletType",
+    "nullable": true,
+    "doc": "Bullet type that is fired. Can be null"
+  },
+  "bulletAngle":{
+    "type": "float",
+    "doc": "Bullet angle parameters",
+    "default": "0"
+  },
+  "bulletSpread":{
+    "type": "float",
+    "doc": "Bullet angle parameters",
+    "default": "0"
+  },
+  "shootEffect":{
+    "type": "mindustry.entities.Effect",
+    "default": "sparkShoot"
+  },
+  "parentizeEffects":{
+    "type": "boolean"
+  },
+  "shootSound":{
+    "type": "arc.audio.Sound",
+    "default": "shootArc"
+  },
+  "display":{
+    "type": "boolean",
+    "doc": "If false, this ability does not show in unit stats.",
+    "default": "true"
+  },
+  "data":{
+    "type": "float"
+  }
+}

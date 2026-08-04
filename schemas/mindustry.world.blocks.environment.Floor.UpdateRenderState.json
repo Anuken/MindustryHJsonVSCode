@@ -1,0 +1,12 @@
+{
+  "superclass": "java.lang.Object",
+  "tile":{
+    "type": "mindustry.world.Tile"
+  },
+  "floor":{
+    "type": "mindustry.world.blocks.environment.Floor"
+  },
+  "data":{
+    "type": "float"
+  }
+}

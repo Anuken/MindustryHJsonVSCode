@@ -1,0 +1,71 @@
+{
+  "superclass": "mindustry.entities.abilities.Ability",
+  "minVelocity":{
+    "type": "float",
+    "default": "08"
+  },
+  "interval":{
+    "type": "float",
+    "default": "3"
+  },
+  "chance":{
+    "type": "float",
+    "default": "3"
+  },
+  "amount":{
+    "type": "int",
+    "default": "1"
+  },
+  "x":{
+    "type": "float"
+  },
+  "y":{
+    "type": "float"
+  },
+  "rotation":{
+    "type": "float"
+  },
+  "rangeX":{
+    "type": "float"
+  },
+  "rangeY":{
+    "type": "float"
+  },
+  "rangeLengthMin":{
+    "type": "float"
+  },
+  "rangeLengthMax":{
+    "type": "float"
+  },
+  "rotateEffect":{
+    "type": "boolean",
+    "default": "false"
+  },
+  "effectParam":{
+    "type": "float",
+    "default": "3"
+  },
+  "teamColor":{
+    "type": "boolean",
+    "default": "false"
+  },
+  "parentizeEffects":{
+    "type": "boolean"
+  },
+  "color":{
+    "type": "arc.graphics.Color",
+    "default": "white"
+  },
+  "effect":{
+    "type": "mindustry.entities.Effect",
+    "default": "missileTrail"
+  },
+  "display":{
+    "type": "boolean",
+    "doc": "If false, this ability does not show in unit stats.",
+    "default": "true"
+  },
+  "data":{
+    "type": "float"
+  }
+}

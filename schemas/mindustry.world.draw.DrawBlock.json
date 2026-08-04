@@ -1,0 +1,10 @@
+{
+  "superclass": "java.lang.Object",
+  "doc": "An implementation of custom rendering behavior for a crafter block.\nThis is used mostly for mods.\n",
+  "iconOverride":{
+    "type": "java.lang.String[]",
+    "nullable": true,
+    "doc": "If set, the icon is overridden to be these strings, in order. Each string is a suffix.",
+    "default": "null"
+  }
+}

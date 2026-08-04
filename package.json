@@ -1,0 +1,72 @@
+{
+  "name": "mindustry-hjson",
+  "displayName": "Mindustry HJSON",
+  "description": "Syntax highlighting, schema-driven autocomplete, diagnostics and hover docs for Mindustry mod (H)JSON content files.",
+  "version": "0.0.6",
+  "publisher": "local-dev",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Programming Languages", "Linters"],
+  "activationEvents": [ "onLanguage:mhjson" ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "mhjson",
+        "aliases": ["Mindustry HJSON", "mhjson"],
+        "extensions": [".hjson"],
+        "filenamePatterns": ["**/content/**/*.hjson", "**/mod.hjson"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "mhjson",
+        "scopeName": "source.mhjson",
+        "path": "./syntaxes/mhjson.tmLanguage.json"
+      }
+    ],
+    "configurationDefaults": {
+      "[mhjson]": {
+        "editor.quickSuggestions": {
+          "other": true,
+          "comments": false,
+          "strings": true
+        }
+      }
+    },
+    "configuration": {
+      "title": "Mindustry HJSON",
+      "properties": {
+        "mindustryHjson.schemaFolder": {
+          "type": "string",
+          "default": "",
+          "description": "Path to a folder of <Fully.Qualified.ClassName>.json schema files. If unset, the extension looks for a 'schemas' folder next to the extension and a '.mindustry-schemas' folder at the workspace root."
+        },
+        "mindustryHjson.contentTypeFolders": {
+          "type": "object",
+          "default": {
+            "weathers": "Weather",
+            "sectors": "SectorPreset",
+            "items": "Item",
+            "liquids": "Liquid",
+            "planets": "Planet",
+            "status": "StatusEffect",
+            "blocks": "Block",
+            "units": "UnitType"
+          },
+          "description": "Maps a content/<folder> path segment to the implicit simple type name used when a file has no explicit 'type' field."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -w -p ./",
+    "test-parser": "node ./out/test/parserSmokeTest.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.4.0"
+  }
+}

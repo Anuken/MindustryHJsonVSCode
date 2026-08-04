@@ -1,0 +1,41 @@
+{
+  "superclass": "mindustry.world.draw.DrawBlock",
+  "middle":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "color":{
+    "type": "arc.graphics.Color"
+  },
+  "particleColorFrom":{
+    "type": "arc.graphics.Color"
+  },
+  "particleColorTo":{
+    "type": "arc.graphics.Color"
+  },
+  "particles":{
+    "type": "int",
+    "default": "12"
+  },
+  "range":{
+    "type": "float",
+    "default": "4"
+  },
+  "recurrence":{
+    "type": "float",
+    "default": "4"
+  },
+  "radius":{
+    "type": "float",
+    "default": "4"
+  },
+  "lifetime":{
+    "type": "float",
+    "default": "4"
+  },
+  "iconOverride":{
+    "type": "java.lang.String[]",
+    "nullable": true,
+    "doc": "If set, the icon is overridden to be these strings, in order. Each string is a suffix.",
+    "default": "null"
+  }
+}

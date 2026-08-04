@@ -1,0 +1,18 @@
+{
+  "superclass": "java.lang.Object",
+  "x":{
+    "type": "float"
+  },
+  "y":{
+    "type": "float"
+  },
+  "ox":{
+    "type": "float"
+  },
+  "oy":{
+    "type": "float"
+  },
+  "payload":{
+    "type": "mindustry.world.blocks.payloads.Payload"
+  }
+}

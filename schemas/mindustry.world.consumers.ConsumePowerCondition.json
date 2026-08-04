@@ -1,0 +1,33 @@
+{
+  "superclass": "mindustry.world.consumers.ConsumePower",
+  "doc": "A power consumer that only activates sometimes.\n",
+  "usage":{
+    "type": "float",
+    "doc": "The maximum amount of power which can be processed per tick. This might influence efficiency or load a buffer."
+  },
+  "capacity":{
+    "type": "float",
+    "doc": "The maximum power capacity in power units."
+  },
+  "buffered":{
+    "type": "boolean",
+    "doc": "True if the module can store power."
+  },
+  "optional":{
+    "type": "boolean",
+    "doc": "If true, this consumer will not influence consumer validity."
+  },
+  "booster":{
+    "type": "boolean",
+    "doc": "If true, this consumer will be displayed as a boost input."
+  },
+  "update":{
+    "type": "boolean",
+    "doc": "If false, this consumer will still be checked, but it will need to updated manually.",
+    "default": "true"
+  },
+  "multiplier":{
+    "type": "arc.func.Floatf<mindustry.gen.Building>",
+    "doc": "Multiplier for costs. Does not work for power consumers."
+  }
+}

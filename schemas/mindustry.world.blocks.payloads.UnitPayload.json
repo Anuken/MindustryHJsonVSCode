@@ -1,0 +1,14 @@
+{
+  "superclass": "java.lang.Object",
+  "unit":{
+    "type": "mindustry.gen.Unit"
+  },
+  "overlayTime":{
+    "type": "float",
+    "default": "0"
+  },
+  "overlayRegion":{
+    "type": "arc.graphics.g2d.TextureRegion",
+    "nullable": true
+  }
+}

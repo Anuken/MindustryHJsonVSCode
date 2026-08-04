@@ -1,0 +1,7 @@
+{
+  "superclass": "arc.struct.ObjectMap",
+  "doc": "Class for storing map-specific locale bundles\n",
+  "size":{
+    "type": "int"
+  }
+}

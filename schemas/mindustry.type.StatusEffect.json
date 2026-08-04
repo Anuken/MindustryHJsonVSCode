@@ -1,0 +1,238 @@
+{
+  "superclass": "mindustry.ctype.UnlockableContent",
+  "damageMultiplier":{
+    "type": "float",
+    "doc": "Damage dealt by the unit with the effect.",
+    "default": "1"
+  },
+  "healthMultiplier":{
+    "type": "float",
+    "doc": "Unit health multiplier.",
+    "default": "1"
+  },
+  "speedMultiplier":{
+    "type": "float",
+    "doc": "Unit speed multiplier.",
+    "default": "1"
+  },
+  "reloadMultiplier":{
+    "type": "float",
+    "doc": "Unit reload multiplier.",
+    "default": "1"
+  },
+  "buildSpeedMultiplier":{
+    "type": "float",
+    "doc": "Unit build speed multiplier.",
+    "default": "1"
+  },
+  "dragMultiplier":{
+    "type": "float",
+    "doc": "Unit drag multiplier.",
+    "default": "1"
+  },
+  "transitionDamage":{
+    "type": "float",
+    "doc": "Damage dealt upon transition to an affinity.",
+    "default": "0"
+  },
+  "disarm":{
+    "type": "boolean",
+    "doc": "Unit weapon(s) disabled.",
+    "default": "false"
+  },
+  "damage":{
+    "type": "float",
+    "doc": "Damage per frame."
+  },
+  "intervalDamageTime":{
+    "type": "float",
+    "doc": "Spacing (in ticks) between interval damage. <=0 to disable."
+  },
+  "intervalDamage":{
+    "type": "float",
+    "doc": "Damage dealt by interval damage."
+  },
+  "intervalDamagePierce":{
+    "type": "boolean",
+    "doc": "If true, interval damage is armor piercing.",
+    "default": "false"
+  },
+  "effectChance":{
+    "type": "float",
+    "doc": "Chance of effect appearing.",
+    "default": "15"
+  },
+  "parentizeEffect":{
+    "type": "boolean",
+    "doc": "Should the effect be given a parent."
+  },
+  "permanent":{
+    "type": "boolean",
+    "doc": "If true, the effect never disappears."
+  },
+  "reactive":{
+    "type": "boolean",
+    "doc": "If true, this effect will only react with other effects and cannot be applied."
+  },
+  "dynamic":{
+    "type": "boolean",
+    "doc": "Special flag for the dynamic effect type with custom stats - do not use.",
+    "default": "false"
+  },
+  "show":{
+    "type": "boolean",
+    "doc": "Whether to show this effect in the database.",
+    "default": "true"
+  },
+  "color":{
+    "type": "arc.graphics.Color",
+    "doc": "Tint color of effect."
+  },
+  "effect":{
+    "type": "mindustry.entities.Effect",
+    "doc": "Effect that happens randomly on top of the affected unit.",
+    "default": "none"
+  },
+  "applyEffect":{
+    "type": "mindustry.entities.Effect",
+    "doc": "Effect that is displayed once when applied to a unit.",
+    "default": "none"
+  },
+  "applyExtend":{
+    "type": "boolean",
+    "doc": "Whether the apply effect should display even if effect is already on the unit."
+  },
+  "applyColor":{
+    "type": "arc.graphics.Color",
+    "doc": "Tint color of apply effect."
+  },
+  "parentizeApplyEffect":{
+    "type": "boolean",
+    "doc": "Should the apply effect be given a parent."
+  },
+  "affinities":{
+    "type": "arc.struct.ObjectSet<mindustry.type.StatusEffect>",
+    "doc": "Affinity & opposite values for stat displays."
+  },
+  "opposites":{
+    "type": "arc.struct.ObjectSet<mindustry.type.StatusEffect>",
+    "doc": "Affinity & opposite values for stat displays."
+  },
+  "outline":{
+    "type": "boolean",
+    "doc": "Set to false to disable outline generation.",
+    "default": "true"
+  },
+  "stats":{
+    "type": "mindustry.world.meta.Stats",
+    "doc": "Stat storage for this content. Initialized on demand."
+  },
+  "localizedName":{
+    "type": "java.lang.String",
+    "doc": "Localized, formal name. Never null. Set to internal name if not found in bundle."
+  },
+  "description":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Localized description & details. May be null."
+  },
+  "details":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Localized description & details. May be null."
+  },
+  "credit":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Localized description & details. May be null."
+  },
+  "alwaysUnlocked":{
+    "type": "boolean",
+    "doc": "Whether this content is always unlocked in the tech tree.",
+    "default": "false"
+  },
+  "inlineDescription":{
+    "type": "boolean",
+    "doc": "Whether to show the description in the research dialog preview.",
+    "default": "true"
+  },
+  "hideDetails":{
+    "type": "boolean",
+    "doc": "Whether details are hidden in custom games if this hasn't been unlocked in campaign mode.",
+    "default": "true"
+  },
+  "hideDatabase":{
+    "type": "boolean",
+    "doc": "Whether this is hidden from the Core Database.",
+    "default": "false"
+  },
+  "generateIcons":{
+    "type": "boolean",
+    "doc": "If false, all icon generation is disabled for this content; createIcons is not called.",
+    "default": "true"
+  },
+  "selectionSize":{
+    "type": "float",
+    "doc": "How big the content appears in certain selection menus",
+    "default": "24"
+  },
+  "uiIcon":{
+    "type": "arc.graphics.g2d.TextureRegion",
+    "doc": "Icon of the content to use in UI."
+  },
+  "fullIcon":{
+    "type": "arc.graphics.g2d.TextureRegion",
+    "doc": "Icon of the full content. Unscaled."
+  },
+  "fullOverride":{
+    "type": "java.lang.String",
+    "doc": "Override for the full icon. Useful for mod content with duplicate icons. Overrides any other full icon.",
+    "default": "\"\""
+  },
+  "allDatabaseTabs":{
+    "type": "boolean",
+    "doc": "If true, this content will appear in all database tabs.",
+    "default": "false"
+  },
+  "shownPlanets":{
+    "type": "arc.struct.ObjectSet<mindustry.type.Planet>",
+    "doc": "Planets that this content is made for. If empty, a planet is decided based on item requirements.\nCurrently, this is only meaningful for blocks."
+  },
+  "databaseTabs":{
+    "type": "arc.struct.ObjectSet<mindustry.ctype.UnlockableContent>",
+    "doc": "Content - usually a planet - that dictates which database tab(s) this content will appear in.\nIf nothing is defined, it will use the values in shownPlanets.\nIf shownPlanets is also empty, it will use Serpulo as the \"default\" tab."
+  },
+  "databaseCategory":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Content category. Defines the primary category of content classification in core database.\nFor example, \"block\", \"liquid\", \"unit\".\nUses getContentType().name() as a fallback when the value is null or empty."
+  },
+  "databaseTag":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Category tags. Secondary category of content classification in core database.\nFor example, \"turret\", \"wall\" under databaseCategory \"block\", \"core-unit\", \"ground-unit\" under databaseCategory \"units\".\nUses \"default\" as a fallback when the value is null or empty. When using \"default\", no extra tag label are displayed."
+  },
+  "techNode":{
+    "type": "mindustry.content.TechTree$TechNode",
+    "nullable": true,
+    "doc": "The tech tree node for this content, if applicable. Null if not part of a tech tree."
+  },
+  "techNodes":{
+    "type": "arc.struct.Seq<mindustry.content.TechTree$TechNode>",
+    "doc": "Tech nodes for all trees that this content is part of."
+  },
+  "name":{
+    "type": "java.lang.String"
+  },
+  "id":{
+    "type": "short"
+  },
+  "minfo":{
+    "type": "mindustry.ctype.Content$ModContentInfo",
+    "doc": "Info on which mod this content was loaded from."
+  },
+  "removed":{
+    "type": "boolean",
+    "doc": "If true, this content is invalid (added in a data patch and then removed)."
+  }
+}

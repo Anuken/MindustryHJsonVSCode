@@ -1,0 +1,33 @@
+{
+  "superclass": "mindustry.entities.abilities.Ability",
+  "doc": "Spawns a certain amount of units upon death.\n",
+  "unit":{
+    "type": "mindustry.type.UnitType"
+  },
+  "amount":{
+    "type": "int",
+    "default": "1"
+  },
+  "randAmount":{
+    "type": "int",
+    "default": "1"
+  },
+  "spread":{
+    "type": "float",
+    "doc": "Random spread of units away from the spawned.",
+    "default": "8"
+  },
+  "faceOutwards":{
+    "type": "boolean",
+    "doc": "If true, units spawned face outwards from the middle.",
+    "default": "true"
+  },
+  "display":{
+    "type": "boolean",
+    "doc": "If false, this ability does not show in unit stats.",
+    "default": "true"
+  },
+  "data":{
+    "type": "float"
+  }
+}

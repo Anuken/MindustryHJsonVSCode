@@ -1,0 +1,128 @@
+{
+  "superclass": "mindustry.entities.part.DrawPart",
+  "hollow":{
+    "type": "boolean",
+    "default": "false"
+  },
+  "tri":{
+    "type": "boolean",
+    "default": "false"
+  },
+  "shapes":{
+    "type": "int",
+    "default": "3"
+  },
+  "sides":{
+    "type": "int",
+    "default": "3"
+  },
+  "radius":{
+    "type": "float",
+    "default": "3"
+  },
+  "radiusTo":{
+    "type": "float",
+    "default": "3"
+  },
+  "stroke":{
+    "type": "float",
+    "default": "3"
+  },
+  "strokeTo":{
+    "type": "float",
+    "default": "3"
+  },
+  "triLength":{
+    "type": "float",
+    "default": "1"
+  },
+  "triLengthTo":{
+    "type": "float",
+    "default": "1"
+  },
+  "haloRadius":{
+    "type": "float",
+    "default": "10"
+  },
+  "haloRadiusTo":{
+    "type": "float",
+    "default": "10"
+  },
+  "x":{
+    "type": "float"
+  },
+  "y":{
+    "type": "float"
+  },
+  "shapeRotation":{
+    "type": "float"
+  },
+  "moveX":{
+    "type": "float"
+  },
+  "moveY":{
+    "type": "float"
+  },
+  "shapeMoveRot":{
+    "type": "float"
+  },
+  "haloRotateSpeed":{
+    "type": "float",
+    "default": "0"
+  },
+  "haloRotation":{
+    "type": "float",
+    "default": "0"
+  },
+  "rotateSpeed":{
+    "type": "float",
+    "default": "0"
+  },
+  "color":{
+    "type": "arc.graphics.Color",
+    "default": "white"
+  },
+  "colorTo":{
+    "type": "arc.graphics.Color",
+    "nullable": true
+  },
+  "mirror":{
+    "type": "boolean",
+    "default": "false"
+  },
+  "clampProgress":{
+    "type": "boolean",
+    "default": "true"
+  },
+  "progress":{
+    "type": "mindustry.entities.part.DrawPart$PartProgress",
+    "default": "warmup"
+  },
+  "layer":{
+    "type": "float",
+    "default": "-1"
+  },
+  "layerOffset":{
+    "type": "float",
+    "default": "-1"
+  },
+  "turretShading":{
+    "type": "boolean",
+    "doc": "If true, turret shading is used. Don't touch this, it is set up in unit/block init()!"
+  },
+  "under":{
+    "type": "boolean",
+    "doc": "If true, the layer is overridden to be under the weapon/turret itself.",
+    "default": "false"
+  },
+  "weaponIndex":{
+    "type": "int",
+    "doc": "For units, this is the index of the weapon this part gets its progress for.",
+    "default": "0"
+  },
+  "recoilIndex":{
+    "type": "int",
+    "doc": "Which recoil counter to use. < 0 to use base recoil.",
+    "default": "-1"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "superclass": "mindustry.entities.units.AIController",
+  "assistFollowing":{
+    "type": "mindustry.gen.Unit",
+    "nullable": true
+  },
+  "following":{
+    "type": "mindustry.gen.Unit",
+    "nullable": true
+  },
+  "enemy":{
+    "type": "mindustry.gen.Teamc",
+    "nullable": true
+  },
+  "lastPlan":{
+    "type": "mindustry.game.Teams$BlockPlan",
+    "nullable": true
+  },
+  "fleeRange":{
+    "type": "float",
+    "default": "370"
+  },
+  "rebuildPeriod":{
+    "type": "float",
+    "default": "370"
+  },
+  "alwaysFlee":{
+    "type": "boolean"
+  },
+  "onlyAssist":{
+    "type": "boolean"
+  }
+}

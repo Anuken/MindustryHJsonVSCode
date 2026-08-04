@@ -1,0 +1,93 @@
+{
+  "superclass": "mindustry.entities.abilities.Ability",
+  "reload":{
+    "type": "float",
+    "default": "5"
+  },
+  "maxDelay":{
+    "type": "float",
+    "default": "5"
+  },
+  "range":{
+    "type": "float",
+    "default": "200"
+  },
+  "orbRadius":{
+    "type": "float",
+    "default": "1"
+  },
+  "orbMidScl":{
+    "type": "float",
+    "default": "1"
+  },
+  "orbSinScl":{
+    "type": "float",
+    "default": "1"
+  },
+  "orbSinMag":{
+    "type": "float",
+    "default": "1"
+  },
+  "color":{
+    "type": "arc.graphics.Color",
+    "default": "suppress"
+  },
+  "layer":{
+    "type": "float",
+    "default": "effect"
+  },
+  "x":{
+    "type": "float",
+    "default": "0"
+  },
+  "y":{
+    "type": "float",
+    "default": "0"
+  },
+  "particles":{
+    "type": "int",
+    "default": "15"
+  },
+  "particleSize":{
+    "type": "float",
+    "default": "4"
+  },
+  "particleLen":{
+    "type": "float",
+    "default": "7"
+  },
+  "rotateScl":{
+    "type": "float",
+    "default": "3"
+  },
+  "particleLife":{
+    "type": "float",
+    "default": "110"
+  },
+  "active":{
+    "type": "boolean",
+    "default": "true"
+  },
+  "particleInterp":{
+    "type": "arc.math.Interp"
+  },
+  "particleColor":{
+    "type": "arc.graphics.Color"
+  },
+  "effectColor":{
+    "type": "arc.graphics.Color",
+    "default": "sapBullet"
+  },
+  "applyParticleChance":{
+    "type": "float",
+    "default": "13"
+  },
+  "display":{
+    "type": "boolean",
+    "doc": "If false, this ability does not show in unit stats.",
+    "default": "true"
+  },
+  "data":{
+    "type": "float"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "superclass": "mindustry.entities.pattern.ShootPattern",
+  "scl":{
+    "type": "float",
+    "default": "2"
+  },
+  "mag":{
+    "type": "float",
+    "default": "2"
+  },
+  "offset":{
+    "type": "float",
+    "default": "2"
+  },
+  "shots":{
+    "type": "int",
+    "doc": "amount of shots per \"trigger pull\"",
+    "default": "1"
+  },
+  "firstShotDelay":{
+    "type": "float",
+    "doc": "delay in ticks before first shot",
+    "default": "0"
+  },
+  "shotDelay":{
+    "type": "float",
+    "doc": "delay in ticks between shots",
+    "default": "0"
+  }
+}

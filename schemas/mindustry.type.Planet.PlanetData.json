@@ -1,0 +1,10 @@
+{
+  "superclass": "java.lang.Object",
+  "presets":{
+    "type": "arc.struct.ObjectIntMap<java.lang.String>"
+  },
+  "attackSectors":{
+    "type": "int[]",
+    "default": "[]"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "superclass": "mindustry.entities.abilities.Ability",
+  "amount":{
+    "type": "float",
+    "default": "1"
+  },
+  "reload":{
+    "type": "float",
+    "default": "1"
+  },
+  "range":{
+    "type": "float",
+    "default": "1"
+  },
+  "healPercent":{
+    "type": "float",
+    "default": "1"
+  },
+  "healEffect":{
+    "type": "mindustry.entities.Effect",
+    "default": "heal"
+  },
+  "activeEffect":{
+    "type": "mindustry.entities.Effect",
+    "default": "healWaveDynamic"
+  },
+  "sound":{
+    "type": "arc.audio.Sound",
+    "default": "healWave"
+  },
+  "soundVolume":{
+    "type": "float",
+    "default": "5"
+  },
+  "parentizeEffects":{
+    "type": "boolean",
+    "default": "false"
+  },
+  "sameTypeHealMult":{
+    "type": "float",
+    "doc": "Multiplies healing to units of the same type by this amount.",
+    "default": "1"
+  },
+  "display":{
+    "type": "boolean",
+    "doc": "If false, this ability does not show in unit stats.",
+    "default": "true"
+  },
+  "data":{
+    "type": "float"
+  }
+}

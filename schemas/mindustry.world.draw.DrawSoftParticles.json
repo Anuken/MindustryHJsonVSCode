@@ -1,0 +1,57 @@
+{
+  "superclass": "mindustry.world.draw.DrawBlock",
+  "region":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "color":{
+    "type": "arc.graphics.Color"
+  },
+  "color2":{
+    "type": "arc.graphics.Color"
+  },
+  "x":{
+    "type": "float",
+    "default": "0"
+  },
+  "y":{
+    "type": "float",
+    "default": "0"
+  },
+  "alpha":{
+    "type": "float",
+    "default": "5"
+  },
+  "particles":{
+    "type": "int",
+    "default": "30"
+  },
+  "particleLife":{
+    "type": "float",
+    "default": "70"
+  },
+  "particleRad":{
+    "type": "float",
+    "default": "70"
+  },
+  "particleSize":{
+    "type": "float",
+    "default": "70"
+  },
+  "fadeMargin":{
+    "type": "float",
+    "default": "70"
+  },
+  "rotateScl":{
+    "type": "float",
+    "default": "70"
+  },
+  "particleInterp":{
+    "type": "arc.math.Interp"
+  },
+  "iconOverride":{
+    "type": "java.lang.String[]",
+    "nullable": true,
+    "doc": "If set, the icon is overridden to be these strings, in order. Each string is a suffix.",
+    "default": "null"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "superclass": "mindustry.world.draw.DrawBlock",
+  "drawLiquid":{
+    "type": "mindustry.type.Liquid"
+  },
+  "liquid":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "suffix":{
+    "type": "java.lang.String",
+    "default": "\"-liquid\""
+  },
+  "alpha":{
+    "type": "float",
+    "default": "1"
+  },
+  "iconOverride":{
+    "type": "java.lang.String[]",
+    "nullable": true,
+    "doc": "If set, the icon is overridden to be these strings, in order. Each string is a suffix.",
+    "default": "null"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "superclass": "mindustry.world.draw.DrawFlame",
+  "x":{
+    "type": "float"
+  },
+  "y":{
+    "type": "float"
+  },
+  "regions":{
+    "type": "arc.graphics.g2d.TextureRegion[]"
+  },
+  "suffix":{
+    "type": "java.lang.String",
+    "default": "\"-plasma-\""
+  },
+  "plasmas":{
+    "type": "int",
+    "default": "4"
+  },
+  "plasma1":{
+    "type": "arc.graphics.Color"
+  },
+  "plasma2":{
+    "type": "arc.graphics.Color"
+  },
+  "flameColor":{
+    "type": "arc.graphics.Color"
+  },
+  "top":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "lightRadius":{
+    "type": "float",
+    "default": "60"
+  },
+  "lightAlpha":{
+    "type": "float",
+    "default": "60"
+  },
+  "lightSinScl":{
+    "type": "float",
+    "default": "60"
+  },
+  "lightSinMag":{
+    "type": "float",
+    "default": "60"
+  },
+  "flameRadius":{
+    "type": "float",
+    "default": "3"
+  },
+  "flameRadiusIn":{
+    "type": "float",
+    "default": "3"
+  },
+  "flameRadiusScl":{
+    "type": "float",
+    "default": "3"
+  },
+  "flameRadiusMag":{
+    "type": "float",
+    "default": "3"
+  },
+  "flameRadiusInMag":{
+    "type": "float",
+    "default": "3"
+  },
+  "flameX":{
+    "type": "float",
+    "default": "0"
+  },
+  "flameY":{
+    "type": "float",
+    "default": "0"
+  },
+  "iconOverride":{
+    "type": "java.lang.String[]",
+    "nullable": true,
+    "doc": "If set, the icon is overridden to be these strings, in order. Each string is a suffix.",
+    "default": "null"
+  }
+}

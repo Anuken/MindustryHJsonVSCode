@@ -1,0 +1,4 @@
+{
+  "superclass": "java.lang.Enum",
+  "doc": "The mode to slice a texture at.\n"
+}

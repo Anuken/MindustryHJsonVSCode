@@ -1,0 +1,68 @@
+{
+  "superclass": "mindustry.entities.part.DrawPart",
+  "radius":{
+    "type": "float",
+    "default": "4"
+  },
+  "x":{
+    "type": "float"
+  },
+  "y":{
+    "type": "float"
+  },
+  "rotation":{
+    "type": "float"
+  },
+  "phase":{
+    "type": "float"
+  },
+  "stroke":{
+    "type": "float"
+  },
+  "minStroke":{
+    "type": "float"
+  },
+  "circles":{
+    "type": "int",
+    "default": "2"
+  },
+  "sides":{
+    "type": "int",
+    "default": "2"
+  },
+  "color":{
+    "type": "arc.graphics.Color",
+    "default": "white"
+  },
+  "mirror":{
+    "type": "boolean",
+    "default": "false"
+  },
+  "layer":{
+    "type": "float",
+    "default": "-1"
+  },
+  "layerOffset":{
+    "type": "float",
+    "default": "-1"
+  },
+  "turretShading":{
+    "type": "boolean",
+    "doc": "If true, turret shading is used. Don't touch this, it is set up in unit/block init()!"
+  },
+  "under":{
+    "type": "boolean",
+    "doc": "If true, the layer is overridden to be under the weapon/turret itself.",
+    "default": "false"
+  },
+  "weaponIndex":{
+    "type": "int",
+    "doc": "For units, this is the index of the weapon this part gets its progress for.",
+    "default": "0"
+  },
+  "recoilIndex":{
+    "type": "int",
+    "doc": "Which recoil counter to use. < 0 to use base recoil.",
+    "default": "-1"
+  }
+}

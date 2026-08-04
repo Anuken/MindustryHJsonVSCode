@@ -1,0 +1,56 @@
+{
+  "superclass": "mindustry.world.draw.DrawBlock",
+  "doc": "Extend to implement custom drawing behavior for a turret.\n",
+  "parts":{
+    "type": "arc.struct.Seq<mindustry.entities.part.DrawPart>"
+  },
+  "ammoParts":{
+    "type": "arc.struct.ObjectMap<mindustry.ctype.UnlockableContent, mindustry.entities.part.DrawPart[]>"
+  },
+  "basePrefix":{
+    "type": "java.lang.String",
+    "doc": "Prefix to use when loading base region.",
+    "default": "\"\""
+  },
+  "liquidDraw":{
+    "type": "mindustry.type.Liquid",
+    "nullable": true,
+    "doc": "Overrides the liquid to draw in the liquid region."
+  },
+  "turretLayer":{
+    "type": "float",
+    "default": "turret"
+  },
+  "shadowLayer":{
+    "type": "float",
+    "default": "turret"
+  },
+  "heatLayer":{
+    "type": "float",
+    "default": "turret"
+  },
+  "base":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "liquid":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "top":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "heat":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "preview":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "outline":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "iconOverride":{
+    "type": "java.lang.String[]",
+    "nullable": true,
+    "doc": "If set, the icon is overridden to be these strings, in order. Each string is a suffix.",
+    "default": "null"
+  }
+}

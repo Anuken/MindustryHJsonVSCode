@@ -1,0 +1,6 @@
+{
+  "superclass": "java.lang.Object",
+  "content":{
+    "type": "mindustry.ctype.UnlockableContent"
+  }
+}

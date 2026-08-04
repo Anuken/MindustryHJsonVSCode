@@ -1,0 +1,249 @@
+{
+  "superclass": "mindustry.type.Liquid",
+  "doc": "Liquid that draws cells in its puddle.\n",
+  "colorFrom":{
+    "type": "arc.graphics.Color"
+  },
+  "colorTo":{
+    "type": "arc.graphics.Color"
+  },
+  "cells":{
+    "type": "int",
+    "default": "6"
+  },
+  "spreadTarget":{
+    "type": "mindustry.type.Liquid",
+    "nullable": true
+  },
+  "maxSpread":{
+    "type": "float",
+    "default": "75"
+  },
+  "spreadConversion":{
+    "type": "float",
+    "default": "75"
+  },
+  "spreadDamage":{
+    "type": "float",
+    "default": "75"
+  },
+  "removeScaling":{
+    "type": "float",
+    "default": "75"
+  },
+  "gas":{
+    "type": "boolean",
+    "doc": "If true, this fluid is treated as a gas (and does not create puddles)",
+    "default": "false"
+  },
+  "color":{
+    "type": "arc.graphics.Color",
+    "doc": "Color used in pipes and on the ground."
+  },
+  "gasColor":{
+    "type": "arc.graphics.Color",
+    "doc": "Color of this liquid in gas form."
+  },
+  "barColor":{
+    "type": "arc.graphics.Color",
+    "nullable": true,
+    "doc": "Color used in bars."
+  },
+  "lightColor":{
+    "type": "arc.graphics.Color",
+    "doc": "Color used to draw lights. Note that the alpha channel is used to dictate brightness."
+  },
+  "flammability":{
+    "type": "float",
+    "doc": "0-1, 0 is completely not flammable, anything above that may catch fire when exposed to heat, 0.5+ is very flammable."
+  },
+  "temperature":{
+    "type": "float",
+    "doc": "temperature: 0.5 is 'room' temperature, 0 is very cold, 1 is molten hot",
+    "default": "5"
+  },
+  "heatCapacity":{
+    "type": "float",
+    "doc": "how much heat this liquid can store. 0.4=water (decent), anything lower is probably less dense and bad at cooling.",
+    "default": "5"
+  },
+  "viscosity":{
+    "type": "float",
+    "doc": "how thick this liquid is. 0.5=water (relatively viscous), 1 would be something like tar (very slow).",
+    "default": "5"
+  },
+  "explosiveness":{
+    "type": "float",
+    "doc": "how prone to exploding this liquid is, when heated. 0 = nothing, 1 = nuke"
+  },
+  "blockReactive":{
+    "type": "boolean",
+    "doc": "whether this fluid reacts in blocks at all (e.g. slag with water)",
+    "default": "true"
+  },
+  "coolant":{
+    "type": "boolean",
+    "doc": "if false, this liquid cannot be a coolant",
+    "default": "true"
+  },
+  "moveThroughBlocks":{
+    "type": "boolean",
+    "doc": "if true, this liquid can move through blocks as a puddle.",
+    "default": "false"
+  },
+  "incinerable":{
+    "type": "boolean",
+    "doc": "if true, this liquid can be incinerated in the incinerator block.",
+    "default": "true"
+  },
+  "effect":{
+    "type": "mindustry.type.StatusEffect",
+    "doc": "The associated status effect.",
+    "default": "none"
+  },
+  "particleEffect":{
+    "type": "mindustry.entities.Effect",
+    "doc": "Effect shown in puddles.",
+    "default": "none"
+  },
+  "particleSpacing":{
+    "type": "float",
+    "doc": "Particle effect rate spacing in ticks.",
+    "default": "60"
+  },
+  "boilPoint":{
+    "type": "float",
+    "doc": "Temperature at which this liquid vaporizes. This isn't just boiling.",
+    "default": "2"
+  },
+  "capPuddles":{
+    "type": "boolean",
+    "doc": "If true, puddle size is capped.",
+    "default": "true"
+  },
+  "vaporEffect":{
+    "type": "mindustry.entities.Effect",
+    "doc": "Effect when this liquid vaporizes.",
+    "default": "vapor"
+  },
+  "hidden":{
+    "type": "boolean",
+    "doc": "If true, this liquid is hidden in most UI."
+  },
+  "canStayOn":{
+    "type": "arc.struct.ObjectSet<mindustry.type.Liquid>",
+    "doc": "Liquids this puddle can stay on, e.g. oil on water."
+  },
+  "stats":{
+    "type": "mindustry.world.meta.Stats",
+    "doc": "Stat storage for this content. Initialized on demand."
+  },
+  "localizedName":{
+    "type": "java.lang.String",
+    "doc": "Localized, formal name. Never null. Set to internal name if not found in bundle."
+  },
+  "description":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Localized description & details. May be null."
+  },
+  "details":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Localized description & details. May be null."
+  },
+  "credit":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Localized description & details. May be null."
+  },
+  "alwaysUnlocked":{
+    "type": "boolean",
+    "doc": "Whether this content is always unlocked in the tech tree.",
+    "default": "false"
+  },
+  "inlineDescription":{
+    "type": "boolean",
+    "doc": "Whether to show the description in the research dialog preview.",
+    "default": "true"
+  },
+  "hideDetails":{
+    "type": "boolean",
+    "doc": "Whether details are hidden in custom games if this hasn't been unlocked in campaign mode.",
+    "default": "true"
+  },
+  "hideDatabase":{
+    "type": "boolean",
+    "doc": "Whether this is hidden from the Core Database.",
+    "default": "false"
+  },
+  "generateIcons":{
+    "type": "boolean",
+    "doc": "If false, all icon generation is disabled for this content; createIcons is not called.",
+    "default": "true"
+  },
+  "selectionSize":{
+    "type": "float",
+    "doc": "How big the content appears in certain selection menus",
+    "default": "24"
+  },
+  "uiIcon":{
+    "type": "arc.graphics.g2d.TextureRegion",
+    "doc": "Icon of the content to use in UI."
+  },
+  "fullIcon":{
+    "type": "arc.graphics.g2d.TextureRegion",
+    "doc": "Icon of the full content. Unscaled."
+  },
+  "fullOverride":{
+    "type": "java.lang.String",
+    "doc": "Override for the full icon. Useful for mod content with duplicate icons. Overrides any other full icon.",
+    "default": "\"\""
+  },
+  "allDatabaseTabs":{
+    "type": "boolean",
+    "doc": "If true, this content will appear in all database tabs.",
+    "default": "false"
+  },
+  "shownPlanets":{
+    "type": "arc.struct.ObjectSet<mindustry.type.Planet>",
+    "doc": "Planets that this content is made for. If empty, a planet is decided based on item requirements.\nCurrently, this is only meaningful for blocks."
+  },
+  "databaseTabs":{
+    "type": "arc.struct.ObjectSet<mindustry.ctype.UnlockableContent>",
+    "doc": "Content - usually a planet - that dictates which database tab(s) this content will appear in.\nIf nothing is defined, it will use the values in shownPlanets.\nIf shownPlanets is also empty, it will use Serpulo as the \"default\" tab."
+  },
+  "databaseCategory":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Content category. Defines the primary category of content classification in core database.\nFor example, \"block\", \"liquid\", \"unit\".\nUses getContentType().name() as a fallback when the value is null or empty."
+  },
+  "databaseTag":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Category tags. Secondary category of content classification in core database.\nFor example, \"turret\", \"wall\" under databaseCategory \"block\", \"core-unit\", \"ground-unit\" under databaseCategory \"units\".\nUses \"default\" as a fallback when the value is null or empty. When using \"default\", no extra tag label are displayed."
+  },
+  "techNode":{
+    "type": "mindustry.content.TechTree$TechNode",
+    "nullable": true,
+    "doc": "The tech tree node for this content, if applicable. Null if not part of a tech tree."
+  },
+  "techNodes":{
+    "type": "arc.struct.Seq<mindustry.content.TechTree$TechNode>",
+    "doc": "Tech nodes for all trees that this content is part of."
+  },
+  "name":{
+    "type": "java.lang.String"
+  },
+  "id":{
+    "type": "short"
+  },
+  "minfo":{
+    "type": "mindustry.ctype.Content$ModContentInfo",
+    "doc": "Info on which mod this content was loaded from."
+  },
+  "removed":{
+    "type": "boolean",
+    "doc": "If true, this content is invalid (added in a data patch and then removed)."
+  }
+}

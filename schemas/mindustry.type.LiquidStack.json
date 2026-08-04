@@ -1,0 +1,9 @@
+{
+  "superclass": "java.lang.Object",
+  "liquid":{
+    "type": "mindustry.type.Liquid"
+  },
+  "amount":{
+    "type": "float"
+  }
+}

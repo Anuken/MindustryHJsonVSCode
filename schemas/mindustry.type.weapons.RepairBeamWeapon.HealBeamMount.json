@@ -1,0 +1,119 @@
+{
+  "superclass": "mindustry.entities.units.WeaponMount",
+  "offset":{
+    "type": "arc.math.geom.Vec2"
+  },
+  "lastEnd":{
+    "type": "arc.math.geom.Vec2"
+  },
+  "strength":{
+    "type": "float"
+  },
+  "effectTimer":{
+    "type": "float"
+  },
+  "weapon":{
+    "type": "mindustry.type.Weapon",
+    "doc": "weapon associated with this mount"
+  },
+  "reload":{
+    "type": "float",
+    "doc": "reload in frames; 0 means ready to fire"
+  },
+  "rotation":{
+    "type": "float",
+    "doc": "rotation relative to the unit this mount is on"
+  },
+  "recoil":{
+    "type": "float",
+    "doc": "weapon recoil"
+  },
+  "recoils":{
+    "type": "float[]",
+    "nullable": true,
+    "doc": "weapon barrel recoil"
+  },
+  "targetRotation":{
+    "type": "float",
+    "doc": "destination rotation; do not modify!"
+  },
+  "heat":{
+    "type": "float",
+    "doc": "current heat, 0 to 1"
+  },
+  "warmup":{
+    "type": "float",
+    "doc": "lerps to 1 when shooting, 0 when not"
+  },
+  "charging":{
+    "type": "boolean",
+    "doc": "is the weapon actively charging"
+  },
+  "charge":{
+    "type": "float",
+    "doc": "counts up to 1 when charging, 0 when not"
+  },
+  "smoothReload":{
+    "type": "float",
+    "doc": "lerps to reload time"
+  },
+  "aimX":{
+    "type": "float",
+    "doc": "aiming position in world coordinates"
+  },
+  "aimY":{
+    "type": "float",
+    "doc": "aiming position in world coordinates"
+  },
+  "shoot":{
+    "type": "boolean",
+    "doc": "whether to shoot right now",
+    "default": "false"
+  },
+  "allowShootEffects":{
+    "type": "boolean",
+    "doc": "whether to allow any shooting effects",
+    "default": "true"
+  },
+  "rotate":{
+    "type": "boolean",
+    "doc": "whether to rotate to face the target right now",
+    "default": "false"
+  },
+  "side":{
+    "type": "boolean",
+    "doc": "extra state for alternating weapons"
+  },
+  "totalShots":{
+    "type": "int",
+    "doc": "total bullets fired from this mount"
+  },
+  "barrelCounter":{
+    "type": "int",
+    "doc": "counter for which barrel bullets have been fired from; used for alternating patterns"
+  },
+  "lastLength":{
+    "type": "float",
+    "doc": "Last aim length of weapon. Only used for point lasers."
+  },
+  "bullet":{
+    "type": "mindustry.gen.Bullet",
+    "nullable": true,
+    "doc": "current bullet for continuous weapons"
+  },
+  "sound":{
+    "type": "mindustry.audio.SoundLoop",
+    "nullable": true,
+    "doc": "sound loop for continuous weapons"
+  },
+  "target":{
+    "type": "mindustry.gen.Teamc",
+    "nullable": true,
+    "doc": "current target; used for autonomous weapons and AI"
+  },
+  "retarget":{
+    "type": "float",
+    "doc": "retarget counter",
+    "default": "0"
+  }
+}

@@ -1,0 +1,354 @@
+{
+  "superclass": "mindustry.type.Weapon",
+  "name":{
+    "type": "java.lang.String",
+    "doc": "displayed weapon region"
+  },
+  "bullet":{
+    "type": "mindustry.entities.bullet.BulletType",
+    "doc": "bullet shot",
+    "default": "placeholder"
+  },
+  "ejectEffect":{
+    "type": "mindustry.entities.Effect",
+    "doc": "shell ejection effect",
+    "default": "none"
+  },
+  "display":{
+    "type": "boolean",
+    "doc": "whether weapon should appear in the stats of a unit with this weapon",
+    "default": "true"
+  },
+  "mirror":{
+    "type": "boolean",
+    "doc": "whether to create a flipped copy of this weapon upon initialization. default: true",
+    "default": "true"
+  },
+  "flipSprite":{
+    "type": "boolean",
+    "doc": "whether to flip the weapon's sprite when rendering. internal use only - do not set!",
+    "default": "false"
+  },
+  "alternate":{
+    "type": "boolean",
+    "doc": "whether to shoot the weapons in different arms one after another, rather than all at once; only valid when mirror = true",
+    "default": "true"
+  },
+  "rotate":{
+    "type": "boolean",
+    "doc": "whether to rotate toward the target independently of unit",
+    "default": "false"
+  },
+  "showStatSprite":{
+    "type": "boolean",
+    "doc": "Whether to show the sprite of the weapon in the database.",
+    "default": "true"
+  },
+  "baseRotation":{
+    "type": "float",
+    "doc": "rotation at which this weapon starts at.",
+    "default": "0"
+  },
+  "top":{
+    "type": "boolean",
+    "doc": "whether to draw the outline on top.",
+    "default": "true"
+  },
+  "continuous":{
+    "type": "boolean",
+    "doc": "whether to hold the bullet in place while firing; it will still require reload."
+  },
+  "alwaysContinuous":{
+    "type": "boolean",
+    "doc": "whether this weapon uses continuous fire without reloading; implies continuous = true"
+  },
+  "aimChangeSpeed":{
+    "type": "float",
+    "doc": "Speed at which the turret can change its bullet \"aim\" distance. This is only used for point laser bullets.",
+    "default": "POSITIVE_INFINITY"
+  },
+  "controllable":{
+    "type": "boolean",
+    "doc": "whether this weapon can be aimed manually by players",
+    "default": "true"
+  },
+  "aiControllable":{
+    "type": "boolean",
+    "doc": "whether this weapon can be automatically aimed by the unit",
+    "default": "true"
+  },
+  "alwaysShooting":{
+    "type": "boolean",
+    "doc": "whether this weapon is always shooting, regardless of targets ore cone",
+    "default": "false"
+  },
+  "autoTarget":{
+    "type": "boolean",
+    "doc": "whether to automatically target relevant units in update(); only works when controllable = false.",
+    "default": "false"
+  },
+  "predictTarget":{
+    "type": "boolean",
+    "doc": "whether to perform target trajectory prediction",
+    "default": "true"
+  },
+  "useAttackRange":{
+    "type": "boolean",
+    "doc": "if true, this weapon is used for attack range calculations",
+    "default": "true"
+  },
+  "targetInterval":{
+    "type": "float",
+    "doc": "ticks to wait in-between targets",
+    "default": "40"
+  },
+  "targetSwitchInterval":{
+    "type": "float",
+    "doc": "ticks to wait in-between targets",
+    "default": "40"
+  },
+  "rotateSpeed":{
+    "type": "float",
+    "doc": "rotation speed of weapon when rotation is enabled, in degrees/t",
+    "default": "20"
+  },
+  "reload":{
+    "type": "float",
+    "doc": "weapon reload in frames",
+    "default": "1"
+  },
+  "inaccuracy":{
+    "type": "float",
+    "doc": "inaccuracy of degrees of each shot",
+    "default": "0"
+  },
+  "shake":{
+    "type": "float",
+    "doc": "intensity and duration of each shot's screen shake",
+    "default": "0"
+  },
+  "recoil":{
+    "type": "float",
+    "doc": "visual weapon knockback.",
+    "default": "5"
+  },
+  "recoils":{
+    "type": "int",
+    "doc": "Number of additional counters for recoil.",
+    "default": "-1"
+  },
+  "recoilTime":{
+    "type": "float",
+    "doc": "time taken for weapon to return to starting position in ticks. uses reload time by default",
+    "default": "-1"
+  },
+  "recoilPow":{
+    "type": "float",
+    "doc": "power curve applied to visual recoil",
+    "default": "8"
+  },
+  "cooldownTime":{
+    "type": "float",
+    "doc": "ticks to cool down the heat region",
+    "default": "20"
+  },
+  "shootX":{
+    "type": "float",
+    "doc": "projectile/effect offsets from center of weapon",
+    "default": "0"
+  },
+  "shootY":{
+    "type": "float",
+    "doc": "projectile/effect offsets from center of weapon",
+    "default": "0"
+  },
+  "x":{
+    "type": "float",
+    "doc": "offsets of weapon position on unit",
+    "default": "5"
+  },
+  "y":{
+    "type": "float",
+    "doc": "offsets of weapon position on unit",
+    "default": "5"
+  },
+  "xRand":{
+    "type": "float",
+    "doc": "Random spread on the X/Y axis.",
+    "default": "0"
+  },
+  "yRand":{
+    "type": "float",
+    "doc": "Random spread on the X/Y axis.",
+    "default": "0"
+  },
+  "shoot":{
+    "type": "mindustry.entities.pattern.ShootPattern",
+    "doc": "pattern used for bullets"
+  },
+  "shadow":{
+    "type": "float",
+    "doc": "radius of shadow drawn under the weapon; <0 to disable",
+    "default": "-1"
+  },
+  "velocityRnd":{
+    "type": "float",
+    "doc": "fraction of velocity that is random",
+    "default": "0"
+  },
+  "extraVelocity":{
+    "type": "float",
+    "doc": "extra velocity that is added as a fraction",
+    "default": "0"
+  },
+  "shootCone":{
+    "type": "float",
+    "doc": "The half-radius of the cone in which shooting will start.",
+    "default": "5"
+  },
+  "rotationLimit":{
+    "type": "float",
+    "doc": "Cone in which the weapon can rotate relative to its mount.",
+    "default": "361"
+  },
+  "minWarmup":{
+    "type": "float",
+    "doc": "minimum weapon warmup before firing (this is not linear, do NOT use 1!)",
+    "default": "0"
+  },
+  "shootWarmupSpeed":{
+    "type": "float",
+    "doc": "lerp speed for shoot warmup, only used for parts",
+    "default": "1"
+  },
+  "smoothReloadSpeed":{
+    "type": "float",
+    "doc": "lerp speed for shoot warmup, only used for parts",
+    "default": "1"
+  },
+  "linearWarmup":{
+    "type": "boolean",
+    "doc": "If true, shoot warmup is linear instead of a curve.",
+    "default": "false"
+  },
+  "soundPitchMin":{
+    "type": "float",
+    "doc": "random sound pitch range",
+    "default": "8"
+  },
+  "soundPitchMax":{
+    "type": "float",
+    "doc": "random sound pitch range",
+    "default": "8"
+  },
+  "ignoreRotation":{
+    "type": "boolean",
+    "doc": "whether shooter rotation is ignored when shooting.",
+    "default": "false"
+  },
+  "noAttack":{
+    "type": "boolean",
+    "doc": "If true, this weapon cannot be used to attack targets.",
+    "default": "false"
+  },
+  "minShootVelocity":{
+    "type": "float",
+    "doc": "min velocity required for this weapon to shoot",
+    "default": "-1"
+  },
+  "parentizeEffects":{
+    "type": "boolean",
+    "doc": "should the shoot effects follow the unit (effects need followParent set to true for this to work)"
+  },
+  "otherSide":{
+    "type": "int",
+    "doc": "internal value used for alternation - do not change!",
+    "default": "-1"
+  },
+  "layerOffset":{
+    "type": "float",
+    "doc": "draw Z offset relative to the default value",
+    "default": "0"
+  },
+  "activeSound":{
+    "type": "arc.audio.Sound",
+    "doc": "sound looped when shooting",
+    "default": "none"
+  },
+  "activeSoundVolume":{
+    "type": "float",
+    "doc": "volume of active sound",
+    "default": "1"
+  },
+  "shootSound":{
+    "type": "arc.audio.Sound",
+    "doc": "sound used for shooting",
+    "default": "shoot"
+  },
+  "shootSoundVolume":{
+    "type": "float",
+    "doc": "volume of the shoot sound",
+    "default": "1"
+  },
+  "initialShootSound":{
+    "type": "arc.audio.Sound",
+    "doc": "sound used when this weapon first fires; for continuous weapons only",
+    "default": "none"
+  },
+  "chargeSound":{
+    "type": "arc.audio.Sound",
+    "doc": "sound used for weapons that have a delay",
+    "default": "none"
+  },
+  "region":{
+    "type": "arc.graphics.g2d.TextureRegion",
+    "doc": "displayed region (autoloaded)"
+  },
+  "heatRegion":{
+    "type": "arc.graphics.g2d.TextureRegion",
+    "doc": "heat region, must be same size as region (optional)"
+  },
+  "cellRegion":{
+    "type": "arc.graphics.g2d.TextureRegion",
+    "doc": "cell region, must be same size as region (optional)"
+  },
+  "outlineRegion":{
+    "type": "arc.graphics.g2d.TextureRegion",
+    "doc": "outline region to display if top is false"
+  },
+  "heatColor":{
+    "type": "arc.graphics.Color",
+    "doc": "heat region tint",
+    "default": "turretHeat"
+  },
+  "shootStatus":{
+    "type": "mindustry.type.StatusEffect",
+    "doc": "status effect applied when shooting",
+    "default": "none"
+  },
+  "mountType":{
+    "type": "arc.func.Func<mindustry.type.Weapon, mindustry.entities.units.WeaponMount>",
+    "doc": "type of weapon mount to be used",
+    "default": "WeaponMount::new"
+  },
+  "shootStatusDuration":{
+    "type": "float",
+    "doc": "status effect duration when shot",
+    "default": "60f * 5"
+  },
+  "shootOnDeath":{
+    "type": "boolean",
+    "doc": "whether this weapon should fire when its owner dies",
+    "default": "false"
+  },
+  "shootOnDeathEffect":{
+    "type": "mindustry.entities.Effect",
+    "nullable": true,
+    "doc": "If not null and shootOnDeath == true, overrides the weapon's shoot effect only when its owner dies.",
+    "default": "null"
+  },
+  "parts":{
+    "type": "arc.struct.Seq<mindustry.entities.part.DrawPart>",
+    "doc": "extra animated parts"
+  }
+}

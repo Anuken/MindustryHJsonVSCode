@@ -1,0 +1,488 @@
+{
+  "superclass": "mindustry.ctype.UnlockableContent",
+  "mesh":{
+    "type": "mindustry.graphics.g3d.GenericMesh",
+    "nullable": true,
+    "doc": "Mesh used for rendering. Created on load() - will be null on the server!"
+  },
+  "cloudMesh":{
+    "type": "mindustry.graphics.g3d.GenericMesh",
+    "nullable": true,
+    "doc": "Mesh used for rendering planet clouds. Null if no clouds are present."
+  },
+  "gridMesh":{
+    "type": "arc.graphics.Mesh",
+    "nullable": true,
+    "doc": "Mesh used for rendering planet grid outlines. Null on server or if {@link #grid} is null."
+  },
+  "position":{
+    "type": "arc.math.geom.Vec3",
+    "doc": "Position in global coordinates. Will be 0,0,0 until the Universe updates it."
+  },
+  "grid":{
+    "type": "mindustry.graphics.g3d.PlanetGrid",
+    "nullable": true,
+    "doc": "Grid used for the sectors on the planet. Null if this planet can't be landed on."
+  },
+  "generator":{
+    "type": "mindustry.maps.generators.PlanetGenerator",
+    "nullable": true,
+    "doc": "Generator that will make the planet. Can be null for planets that don't need to be landed on."
+  },
+  "sectors":{
+    "type": "arc.struct.Seq<mindustry.type.Sector>",
+    "doc": "Array of sectors; directly maps to tiles in the grid."
+  },
+  "orbitSpacing":{
+    "type": "float",
+    "doc": "Default spacing between planet orbits in world units. This is defined per-parent!",
+    "default": "12"
+  },
+  "radius":{
+    "type": "float",
+    "doc": "Radius of this planet's sphere. Does not take into account satellites."
+  },
+  "camRadius":{
+    "type": "float",
+    "doc": "Camera radius offset."
+  },
+  "minZoom":{
+    "type": "float",
+    "doc": "Minimum camera zoom value.",
+    "default": "5"
+  },
+  "maxZoom":{
+    "type": "float",
+    "doc": "Maximum camera zoom value.",
+    "default": "2"
+  },
+  "drawOrbit":{
+    "type": "boolean",
+    "doc": "Whether to draw the orbital circle.",
+    "default": "true"
+  },
+  "atmosphereRadIn":{
+    "type": "float",
+    "doc": "Atmosphere radius adjustment parameters.",
+    "default": "0"
+  },
+  "atmosphereRadOut":{
+    "type": "float",
+    "doc": "Atmosphere radius adjustment parameters.",
+    "default": "0"
+  },
+  "clipRadius":{
+    "type": "float",
+    "doc": "Frustum sphere clip radius.",
+    "default": "-1"
+  },
+  "orbitRadius":{
+    "type": "float",
+    "doc": "Orbital radius around the sun. Do not change unless you know exactly what you are doing."
+  },
+  "totalRadius":{
+    "type": "float",
+    "doc": "Total radius of this planet and all its children."
+  },
+  "orbitTime":{
+    "type": "float",
+    "doc": "Time for the planet to orbit around the sun once, in seconds. One year."
+  },
+  "rotateTime":{
+    "type": "float",
+    "doc": "Time for the planet to perform a full revolution, in seconds. One day.",
+    "default": "24f * 60"
+  },
+  "orbitOffset":{
+    "type": "float",
+    "doc": "Random orbit angle offset to prevent planets from starting out in a line."
+  },
+  "sectorApproxRadius":{
+    "type": "float",
+    "doc": "Approx. radius of one sector."
+  },
+  "tidalLock":{
+    "type": "boolean",
+    "doc": "Whether this planet is tidally locked relative to its parent - see https://en.wikipedia.org/wiki/Tidal_locking",
+    "default": "false"
+  },
+  "accessible":{
+    "type": "boolean",
+    "doc": "Whether this planet is listed in the planet access UI. *",
+    "default": "true"
+  },
+  "defaultEnv":{
+    "type": "int",
+    "doc": "Environment flags for sectors on this planet.",
+    "default": "oxygen"
+  },
+  "defaultAttributes":{
+    "type": "mindustry.world.blocks.Attributes",
+    "doc": "Environment attributes."
+  },
+  "updateLighting":{
+    "type": "boolean",
+    "doc": "If true, a day/night cycle is simulated.",
+    "default": "true"
+  },
+  "lightSrcFrom":{
+    "type": "float",
+    "doc": "Day/night cycle parameters.",
+    "default": "0"
+  },
+  "lightSrcTo":{
+    "type": "float",
+    "doc": "Day/night cycle parameters.",
+    "default": "0"
+  },
+  "lightDstFrom":{
+    "type": "float",
+    "doc": "Day/night cycle parameters.",
+    "default": "0"
+  },
+  "lightDstTo":{
+    "type": "float",
+    "doc": "Day/night cycle parameters.",
+    "default": "0"
+  },
+  "startSector":{
+    "type": "int",
+    "doc": "The default starting sector displayed to the map dialog.",
+    "default": "0"
+  },
+  "sectorSeed":{
+    "type": "int",
+    "doc": "Seed for sector base generation on this planet. -1 to use a random one based on ID.",
+    "default": "-1"
+  },
+  "launchCapacityMultiplier":{
+    "type": "float",
+    "doc": "multiplier for core item capacity when launching",
+    "default": "25"
+  },
+  "bloom":{
+    "type": "boolean",
+    "doc": "Whether the bloom render effect is enabled.",
+    "default": "false"
+  },
+  "visible":{
+    "type": "boolean",
+    "doc": "Whether this planet is displayed.",
+    "default": "true"
+  },
+  "landCloudColor":{
+    "type": "arc.graphics.Color",
+    "doc": "Tint of clouds displayed when landing."
+  },
+  "lightColor":{
+    "type": "arc.graphics.Color",
+    "doc": "For suns, this is the color that shines on other planets. Does nothing for children."
+  },
+  "atmosphereColor":{
+    "type": "arc.graphics.Color",
+    "doc": "Atmosphere tint for landable planets."
+  },
+  "iconColor":{
+    "type": "arc.graphics.Color",
+    "doc": "Icon for appearance in planet list."
+  },
+  "hasAtmosphere":{
+    "type": "boolean",
+    "doc": "Whether this planet has an atmosphere.",
+    "default": "true"
+  },
+  "allowLaunchSchematics":{
+    "type": "boolean",
+    "doc": "Whether to allow users to specify a custom launch schematic for this map.",
+    "default": "false"
+  },
+  "allowLaunchLoadout":{
+    "type": "boolean",
+    "doc": "Whether to allow users to specify the resources they take to this map.",
+    "default": "false"
+  },
+  "allowSectorInvasion":{
+    "type": "boolean",
+    "doc": "Whether to simulate sector invasions from enemy bases.",
+    "default": "false"
+  },
+  "allowLegacyLaunchPads":{
+    "type": "boolean",
+    "doc": "If true, legacy launch pads can be enabled.",
+    "default": "false"
+  },
+  "clearSectorOnLose":{
+    "type": "boolean",
+    "doc": "If true, sectors saves are cleared when lost.",
+    "default": "false"
+  },
+  "enemyBuildSpeedMultiplier":{
+    "type": "float",
+    "doc": "Multiplier for enemy rebuild speeds; only applied in campaign (not standard rules)",
+    "default": "1"
+  },
+  "enemyFactoryActivationDelay":{
+    "type": "float",
+    "doc": "Default activation delay for enemy factories, if not set in the campaign.",
+    "default": "0"
+  },
+  "enemyInfiniteItems":{
+    "type": "boolean",
+    "doc": "If true, the enemy team always has infinite items.",
+    "default": "true"
+  },
+  "enemyCoreSpawnReplace":{
+    "type": "boolean",
+    "doc": "If true, enemy cores are replaced with spawnpoints on this planet (for invasions)",
+    "default": "false"
+  },
+  "prebuildBase":{
+    "type": "boolean",
+    "doc": "If true, blocks in the radius of the core will be removed and \"built up\" in a shockwave upon landing.",
+    "default": "true"
+  },
+  "allowWaves":{
+    "type": "boolean",
+    "doc": "If true, waves are created on sector loss. TODO remove.",
+    "default": "false"
+  },
+  "allowLaunchToNumbered":{
+    "type": "boolean",
+    "doc": "If false, players are unable to land on this planet's numbered sectors.",
+    "default": "true"
+  },
+  "allowCampaignRules":{
+    "type": "boolean",
+    "doc": "If true, the player is allowed to change the difficulty/rules in the planet UI.",
+    "default": "false"
+  },
+  "icon":{
+    "type": "java.lang.String",
+    "doc": "Icon as displayed in the planet selection dialog. This is a string, as drawables are null at load time.",
+    "default": "\"planet\""
+  },
+  "launchMusic":{
+    "type": "arc.audio.Music",
+    "doc": "Plays in the planet dialog when this planet is selected.",
+    "default": "launch"
+  },
+  "ambientMusic":{
+    "type": "arc.struct.Seq<arc.audio.Music>",
+    "nullable": true,
+    "doc": "Overrides random ambient music to be played."
+  },
+  "darkMusic":{
+    "type": "arc.struct.Seq<arc.audio.Music>",
+    "nullable": true,
+    "doc": "Overrides music that is played in certain situations, like during boss waves or low core health."
+  },
+  "alwaysPlayMusic":{
+    "type": "boolean",
+    "doc": "If true, this overrides the game setting to always play ambient music.",
+    "default": "false"
+  },
+  "defaultCore":{
+    "type": "mindustry.world.Block",
+    "doc": "Default core block for launching.",
+    "default": "coreShard"
+  },
+  "parent":{
+    "type": "mindustry.type.Planet",
+    "nullable": true,
+    "doc": "Parent body that this planet orbits around. If null, this planet is considered to be in the middle of the solar system."
+  },
+  "solarSystem":{
+    "type": "mindustry.type.Planet",
+    "doc": "The root parent of the whole solar system this planet is in."
+  },
+  "children":{
+    "type": "arc.struct.Seq<mindustry.type.Planet>",
+    "doc": "All planets orbiting this one, in ascending order of radius."
+  },
+  "techTree":{
+    "type": "mindustry.content.TechTree$TechNode",
+    "nullable": true,
+    "doc": "Default root node shown when the tech tree is opened here."
+  },
+  "launchCandidates":{
+    "type": "arc.struct.Seq<mindustry.type.Planet>",
+    "doc": "Planets that can be launched to from this one."
+  },
+  "allowSelfSectorLaunch":{
+    "type": "boolean",
+    "doc": "Whether interplanetary accelerators can launch to 'any' procedural sector on this planet's surface."
+  },
+  "autoAssignPlanet":{
+    "type": "boolean",
+    "doc": "If true, all content in this planet's tech tree will be assigned this planet in their shownPlanets.",
+    "default": "true"
+  },
+  "unlockedOnLand":{
+    "type": "arc.struct.Seq<mindustry.ctype.UnlockableContent>",
+    "doc": "Content (usually planet-specific) that is unlocked upon landing here."
+  },
+  "meshLoader":{
+    "type": "arc.func.Prov<mindustry.graphics.g3d.GenericMesh>",
+    "doc": "Loads the mesh. Clientside only. Defaults to a boring sphere mesh."
+  },
+  "cloudMeshLoader":{
+    "type": "arc.func.Prov<mindustry.graphics.g3d.GenericMesh>",
+    "doc": "Loads the mesh. Clientside only. Defaults to a boring sphere mesh."
+  },
+  "gridMeshLoader":{
+    "type": "arc.func.Prov<arc.graphics.Mesh>",
+    "doc": "Loads the planet grid outline mesh. Clientside only."
+  },
+  "statParent":{
+    "type": "mindustry.type.Planet",
+    "nullable": true,
+    "doc": "If set, this planet will have the same stats as its parent. Use for shared campaigns."
+  },
+  "updateGroup":{
+    "type": "arc.struct.ObjectSet<mindustry.type.Planet>",
+    "doc": "Planets that are allowed to update at the same time as this one for background calculations."
+  },
+  "campaignRules":{
+    "type": "mindustry.game.CampaignRules",
+    "doc": "Global difficulty/modifier settings for this planet's campaign."
+  },
+  "campaignRuleDefaults":{
+    "type": "mindustry.game.CampaignRules",
+    "doc": "Defaults applied to the rules."
+  },
+  "ruleSetter":{
+    "type": "arc.func.Cons<mindustry.game.Rules>",
+    "doc": "Sets up rules on game load for any sector on this planet. In JSON mods, this field is called \"rules\", and expects an object."
+  },
+  "sectorCaptureReplacements":{
+    "type": "arc.struct.ObjectMap<mindustry.world.Block, mindustry.world.Block>",
+    "doc": "Replaces specific blocks on the map upon sector capture. Used for metal floor tiles on Serpulo. Unstable API, may be removed!"
+  },
+  "showRtsAIRule":{
+    "type": "boolean",
+    "doc": "If true, RTS AI can be customized.",
+    "default": "false"
+  },
+  "loadPlanetData":{
+    "type": "boolean",
+    "doc": "If true, planet data is loaded as 'planets/{name}.json'. This is only tested/functional in vanilla!",
+    "default": "false"
+  },
+  "data":{
+    "type": "mindustry.type.Planet$PlanetData",
+    "nullable": true,
+    "doc": "Data indicating attack sector positions and sector mappings."
+  },
+  "stats":{
+    "type": "mindustry.world.meta.Stats",
+    "doc": "Stat storage for this content. Initialized on demand."
+  },
+  "localizedName":{
+    "type": "java.lang.String",
+    "doc": "Localized, formal name. Never null. Set to internal name if not found in bundle."
+  },
+  "description":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Localized description & details. May be null."
+  },
+  "details":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Localized description & details. May be null."
+  },
+  "credit":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Localized description & details. May be null."
+  },
+  "alwaysUnlocked":{
+    "type": "boolean",
+    "doc": "Whether this content is always unlocked in the tech tree.",
+    "default": "false"
+  },
+  "inlineDescription":{
+    "type": "boolean",
+    "doc": "Whether to show the description in the research dialog preview.",
+    "default": "true"
+  },
+  "hideDetails":{
+    "type": "boolean",
+    "doc": "Whether details are hidden in custom games if this hasn't been unlocked in campaign mode.",
+    "default": "true"
+  },
+  "hideDatabase":{
+    "type": "boolean",
+    "doc": "Whether this is hidden from the Core Database.",
+    "default": "false"
+  },
+  "generateIcons":{
+    "type": "boolean",
+    "doc": "If false, all icon generation is disabled for this content; createIcons is not called.",
+    "default": "true"
+  },
+  "selectionSize":{
+    "type": "float",
+    "doc": "How big the content appears in certain selection menus",
+    "default": "24"
+  },
+  "uiIcon":{
+    "type": "arc.graphics.g2d.TextureRegion",
+    "doc": "Icon of the content to use in UI."
+  },
+  "fullIcon":{
+    "type": "arc.graphics.g2d.TextureRegion",
+    "doc": "Icon of the full content. Unscaled."
+  },
+  "fullOverride":{
+    "type": "java.lang.String",
+    "doc": "Override for the full icon. Useful for mod content with duplicate icons. Overrides any other full icon.",
+    "default": "\"\""
+  },
+  "allDatabaseTabs":{
+    "type": "boolean",
+    "doc": "If true, this content will appear in all database tabs.",
+    "default": "false"
+  },
+  "shownPlanets":{
+    "type": "arc.struct.ObjectSet<mindustry.type.Planet>",
+    "doc": "Planets that this content is made for. If empty, a planet is decided based on item requirements.\nCurrently, this is only meaningful for blocks."
+  },
+  "databaseTabs":{
+    "type": "arc.struct.ObjectSet<mindustry.ctype.UnlockableContent>",
+    "doc": "Content - usually a planet - that dictates which database tab(s) this content will appear in.\nIf nothing is defined, it will use the values in shownPlanets.\nIf shownPlanets is also empty, it will use Serpulo as the \"default\" tab."
+  },
+  "databaseCategory":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Content category. Defines the primary category of content classification in core database.\nFor example, \"block\", \"liquid\", \"unit\".\nUses getContentType().name() as a fallback when the value is null or empty."
+  },
+  "databaseTag":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Category tags. Secondary category of content classification in core database.\nFor example, \"turret\", \"wall\" under databaseCategory \"block\", \"core-unit\", \"ground-unit\" under databaseCategory \"units\".\nUses \"default\" as a fallback when the value is null or empty. When using \"default\", no extra tag label are displayed."
+  },
+  "techNode":{
+    "type": "mindustry.content.TechTree$TechNode",
+    "nullable": true,
+    "doc": "The tech tree node for this content, if applicable. Null if not part of a tech tree."
+  },
+  "techNodes":{
+    "type": "arc.struct.Seq<mindustry.content.TechTree$TechNode>",
+    "doc": "Tech nodes for all trees that this content is part of."
+  },
+  "name":{
+    "type": "java.lang.String"
+  },
+  "id":{
+    "type": "short"
+  },
+  "minfo":{
+    "type": "mindustry.ctype.Content$ModContentInfo",
+    "doc": "Info on which mod this content was loaded from."
+  },
+  "removed":{
+    "type": "boolean",
+    "doc": "If true, this content is invalid (added in a data patch and then removed)."
+  }
+}

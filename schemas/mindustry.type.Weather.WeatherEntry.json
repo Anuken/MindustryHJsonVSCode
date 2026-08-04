@@ -1,0 +1,38 @@
+{
+  "superclass": "java.lang.Object",
+  "weather":{
+    "type": "mindustry.type.Weather",
+    "doc": "The type of weather used.",
+    "default": "rain"
+  },
+  "minFrequency":{
+    "type": "float",
+    "doc": "Minimum and maximum spacing between weather events. Does not include the time of the event itself."
+  },
+  "maxFrequency":{
+    "type": "float",
+    "doc": "Minimum and maximum spacing between weather events. Does not include the time of the event itself."
+  },
+  "minDuration":{
+    "type": "float",
+    "doc": "Minimum and maximum spacing between weather events. Does not include the time of the event itself."
+  },
+  "maxDuration":{
+    "type": "float",
+    "doc": "Minimum and maximum spacing between weather events. Does not include the time of the event itself."
+  },
+  "cooldown":{
+    "type": "float",
+    "doc": "Cooldown time before the next weather event takes place This is *state*, not configuration."
+  },
+  "intensity":{
+    "type": "float",
+    "doc": "Intensity of the weather produced.",
+    "default": "1"
+  },
+  "always":{
+    "type": "boolean",
+    "doc": "If true, this weather is always active.",
+    "default": "false"
+  }
+}

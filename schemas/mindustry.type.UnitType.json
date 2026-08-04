@@ -1,0 +1,1271 @@
+{
+  "superclass": "mindustry.ctype.UnlockableContent",
+  "envRequired":{
+    "type": "int",
+    "doc": "Environmental flags that are *all* required for this unit to function. 0 = any environment",
+    "default": "0"
+  },
+  "envEnabled":{
+    "type": "int",
+    "doc": "The environment flags that this unit can function in. If the env matches any of these, it will be enabled.",
+    "default": "terrestrial"
+  },
+  "envDisabled":{
+    "type": "int",
+    "doc": "The environment flags that this unit *cannot* function in. If the env matches any of these, it will explode or be disabled.",
+    "default": "scorching"
+  },
+  "speed":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "boostMultiplier":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "floorMultiplier":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "rotateSpeed":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "baseRotateSpeed":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "drag":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "accel":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "hitSize":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "deathShake":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "stepShake":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "rippleScale":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "riseSpeed":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "descentSpeed":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "fallSpeed":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "missileAccelTime":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "health":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "armor":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "range":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "maxRange":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "mineRange":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "buildRange":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "circleTargetRadius":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "crashDamageMultiplier":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "wreckHealthMultiplier":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "dpsEstimate":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "clipSize":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "drownTimeMultiplier":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "strafePenalty":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "researchCostMultiplier":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "groundLayer":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "flyingLayer":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "payloadCapacity":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "buildSpeed":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "aimDst":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "buildBeamOffset":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "mineBeamOffset":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "targetPriority":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "shadowElevation":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "shadowElevationScl":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "engineOffset":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "engineSize":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "engineLayer":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "itemOffsetY":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "lightRadius":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "lightOpacity":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "softShadowScl":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "fogRadius":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "waveTrailX":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "waveTrailY":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "trailScl":{
+    "type": "float",
+    "doc": "movement speed (world units/t)",
+    "default": "1"
+  },
+  "isEnemy":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "flying":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "wobble":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "targetAir":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "targetGround":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "faceTarget":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "circleTarget":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "autoDropBombs":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "targetBuildingsMobile":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "canBoost":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "boostWhenBuilding":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "boostWhenMining":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "logicControllable":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "playerControllable":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "controlSelectGlobal":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "allowedInPayloads":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "hittable":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "killable":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "targetable":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "vulnerableWithPayloads":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "pickupUnits":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "physics":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "canDrown":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "useUnitCap":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "coreUnitDock":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "createWreck":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "createScorch":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "lowAltitude":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "rotateToBuilding":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "allowLegStep":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "legPhysicsLayer":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "hovering":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "omniMovement":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "rotateMoveFirst":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "healFlash":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "canHeal":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "singleTarget":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "forceMultiTarget":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "canAttack":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "hidden":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "internal":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "internalGenerateSprites":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "bounded":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "naval":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "autoFindTarget":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "targetUnderBlocks":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "alwaysShootWhenMoving":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "hoverable":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "alwaysCreateOutline":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "generateFullIcon":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "squareShape":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "drawBuildBeam":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "drawMineBeam":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "drawCell":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "drawItems":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "drawShields":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "drawBody":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "drawSoftShadow":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "drawMinimap":{
+    "type": "boolean",
+    "doc": "if true, this unit counts as an enemy in the wave counter (usually false for support-only units)",
+    "default": "true"
+  },
+  "aiController":{
+    "type": "arc.func.Prov<? extends mindustry.entities.units.UnitController>",
+    "doc": "The default AI controller to assign on creation."
+  },
+  "controller":{
+    "type": "arc.func.Func<mindustry.gen.Unit, ? extends mindustry.entities.units.UnitController>",
+    "doc": "Function that chooses AI controller based on unit entity."
+  },
+  "constructor":{
+    "type": "arc.func.Prov<? extends mindustry.gen.Unit>",
+    "doc": "Creates a new instance of this unit class."
+  },
+  "abilities":{
+    "type": "arc.struct.Seq<mindustry.entities.abilities.Ability>",
+    "doc": "list of \"abilities\", which are various behaviors that update each frame"
+  },
+  "weapons":{
+    "type": "arc.struct.Seq<mindustry.type.Weapon>",
+    "doc": "All weapons that this unit will shoot with."
+  },
+  "immunities":{
+    "type": "arc.struct.ObjectSet<mindustry.type.StatusEffect>",
+    "doc": "None of the status effects in this set can be applied to this unit."
+  },
+  "healColor":{
+    "type": "arc.graphics.Color",
+    "doc": "color that this unit flashes when getting healed (if healFlash is true)",
+    "default": "heal"
+  },
+  "lightColor":{
+    "type": "arc.graphics.Color",
+    "doc": "Color of light that this unit produces when lighting is enabled in the map.",
+    "default": "powerLight"
+  },
+  "shieldColor":{
+    "type": "arc.graphics.Color",
+    "nullable": true,
+    "doc": "override for unit shield colour."
+  },
+  "deathSound":{
+    "type": "arc.audio.Sound",
+    "doc": "sound played when this unit explodes (*not* when it is shot down)",
+    "default": "unset"
+  },
+  "deathSoundVolume":{
+    "type": "float",
+    "doc": "volume of death sound",
+    "default": "1"
+  },
+  "wreckSound":{
+    "type": "arc.audio.Sound",
+    "doc": "sound played when the unit wreck is shot down",
+    "default": "unset"
+  },
+  "wreckSoundVolume":{
+    "type": "float",
+    "doc": "volume of wreck falling sound",
+    "default": "1"
+  },
+  "loopSound":{
+    "type": "arc.audio.Sound",
+    "doc": "sound played on loop when this unit is around.",
+    "default": "none"
+  },
+  "loopSoundVolume":{
+    "type": "float",
+    "doc": "volume of loop sound",
+    "default": "5"
+  },
+  "stepSound":{
+    "type": "arc.audio.Sound",
+    "doc": "sound played when this mech/insect unit does a step",
+    "default": "mechStepSmall"
+  },
+  "stepSoundVolume":{
+    "type": "float",
+    "doc": "volume of step sound",
+    "default": "5"
+  },
+  "stepSoundPitch":{
+    "type": "float",
+    "doc": "base pitch of step sound",
+    "default": "1"
+  },
+  "stepSoundPitchRange":{
+    "type": "float",
+    "doc": "base pitch of step sound",
+    "default": "1"
+  },
+  "tankMoveSound":{
+    "type": "arc.audio.Sound",
+    "doc": "sound looped when tank moves",
+    "default": "tankMove"
+  },
+  "moveSound":{
+    "type": "arc.audio.Sound",
+    "doc": "sound looped when the unit moves; volume depends on velocity",
+    "default": "none"
+  },
+  "moveSoundVolume":{
+    "type": "float",
+    "doc": "volume of movement sound",
+    "default": "1"
+  },
+  "moveSoundPitchMin":{
+    "type": "float",
+    "doc": "pitch of movement sound based on velocity",
+    "default": "1"
+  },
+  "moveSoundPitchMax":{
+    "type": "float",
+    "doc": "pitch of movement sound based on velocity",
+    "default": "1"
+  },
+  "tankMoveVolume":{
+    "type": "float",
+    "doc": "volume of tank move sfx",
+    "default": "5"
+  },
+  "fallEffect":{
+    "type": "mindustry.entities.Effect",
+    "doc": "effect that this unit emits when falling",
+    "default": "fallSmoke"
+  },
+  "fallEngineEffect":{
+    "type": "mindustry.entities.Effect",
+    "doc": "effect created at engine when unit falls.",
+    "default": "fallSmoke"
+  },
+  "deathExplosionEffect":{
+    "type": "mindustry.entities.Effect",
+    "doc": "effect created when this unit dies",
+    "default": "dynamicExplosion"
+  },
+  "treadEffect":{
+    "type": "mindustry.entities.Effect",
+    "nullable": true,
+    "doc": "optional effect created when this tank moves"
+  },
+  "parts":{
+    "type": "arc.struct.Seq<mindustry.entities.part.DrawPart>",
+    "doc": "extra (usually animated) visual parts"
+  },
+  "engines":{
+    "type": "arc.struct.Seq<mindustry.type.UnitType$UnitEngine>",
+    "doc": "list of engines, or \"thrusters\""
+  },
+  "useEngineElevation":{
+    "type": "boolean",
+    "doc": "if false, the thruster is always displayed at its normal size regardless of elevation",
+    "default": "true"
+  },
+  "engineColor":{
+    "type": "arc.graphics.Color",
+    "nullable": true,
+    "doc": "override for all engine colors",
+    "default": "null"
+  },
+  "engineColorInner":{
+    "type": "arc.graphics.Color",
+    "doc": "color for inner portions of engines",
+    "default": "white"
+  },
+  "trailLength":{
+    "type": "int",
+    "doc": "length of engine trail (if flying) or wave trail (if naval)",
+    "default": "0"
+  },
+  "trailColor":{
+    "type": "arc.graphics.Color",
+    "nullable": true,
+    "doc": "override for engine trail color"
+  },
+  "flowfieldPathType":{
+    "type": "int",
+    "doc": "Cost type ID for flow field/enemy AI pathfinding.",
+    "default": "-1"
+  },
+  "pathCost":{
+    "type": "mindustry.ai.Pathfinder$PathCost",
+    "nullable": true,
+    "doc": "Function used for calculating cost of moving with ControlPathfinder. Does not affect \"normal\" flow field pathfinding."
+  },
+  "pathCostId":{
+    "type": "int",
+    "doc": "ID for path cost, to be used in the control path finder. This is the value that actually matters; do not assign manually. Set in init()."
+  },
+  "sample":{
+    "type": "mindustry.gen.Unit",
+    "nullable": true,
+    "doc": "A sample of the unit that this type creates. Do not modify!"
+  },
+  "targetFlags":{
+    "type": "mindustry.world.meta.BlockFlag[]",
+    "doc": "Flags to target based on priority. Null indicates that the closest target should be found. The closest enemy core is used as a fallback.",
+    "default": "{ null }"
+  },
+  "allowChangeCommands":{
+    "type": "boolean",
+    "doc": "A value of false is used to hide command changing UI in unit factories.",
+    "default": "true"
+  },
+  "commands":{
+    "type": "arc.struct.Seq<mindustry.ai.UnitCommand>",
+    "doc": "Commands available to this unit through RTS controls. An empty array means commands will be assigned based on unit capabilities in init()."
+  },
+  "defaultCommand":{
+    "type": "mindustry.ai.UnitCommand",
+    "nullable": true,
+    "doc": "Command to assign to this unit upon creation. Null indicates the first command in the array."
+  },
+  "stances":{
+    "type": "arc.struct.Seq<mindustry.ai.UnitStance>",
+    "doc": "Stances this unit can have.  An empty array means stances will be assigned based on unit capabilities in init()."
+  },
+  "outlineColor":{
+    "type": "arc.graphics.Color",
+    "doc": "color for outline generated around sprites",
+    "default": "darkerMetal"
+  },
+  "outlineRadius":{
+    "type": "int",
+    "doc": "thickness for sprite outline",
+    "default": "3"
+  },
+  "outlines":{
+    "type": "boolean",
+    "doc": "if false, no sprite outlines are generated",
+    "default": "true"
+  },
+  "itemCapacity":{
+    "type": "int",
+    "doc": "amount of items this unit can carry; <0 to determine based on hitSize.",
+    "default": "-1"
+  },
+  "ammoCapacity":{
+    "type": "int",
+    "doc": "\n@deprecated only kept for compatibility with some turrets that query this field! Remove this from your code immediately!",
+    "default": "1"
+  },
+  "mineTier":{
+    "type": "int",
+    "doc": "max hardness of ore that this unit can mine (<0 to disable)",
+    "default": "-1"
+  },
+  "mineSpeed":{
+    "type": "float",
+    "doc": "mining speed in weird arbitrary units",
+    "default": "1"
+  },
+  "mineWalls":{
+    "type": "boolean",
+    "doc": "whether this unit can mine ores from floors/walls, respectively",
+    "default": "false"
+  },
+  "mineFloor":{
+    "type": "boolean",
+    "doc": "whether this unit can mine ores from floors/walls, respectively",
+    "default": "false"
+  },
+  "mineHardnessScaling":{
+    "type": "boolean",
+    "doc": "if true, harder materials will take longer to mine",
+    "default": "true"
+  },
+  "mineSound":{
+    "type": "arc.audio.Sound",
+    "doc": "continuous sound emitted when mining.",
+    "default": "loopMineBeam"
+  },
+  "mineSoundVolume":{
+    "type": "float",
+    "doc": "volume of mining sound.",
+    "default": "6"
+  },
+  "mineItems":{
+    "type": "arc.struct.Seq<mindustry.type.Item>",
+    "doc": "Target items to mine. Used in MinerAI"
+  },
+  "legCount":{
+    "type": "int",
+    "doc": "number of legs this unit has (must have the correct type to function!)",
+    "default": "4"
+  },
+  "legGroupSize":{
+    "type": "int",
+    "doc": "size of groups in which legs move. for example, insects (6 legs) usually move legs in groups of 3.",
+    "default": "2"
+  },
+  "legLength":{
+    "type": "float",
+    "doc": "total length of a leg (both segments)",
+    "default": "10"
+  },
+  "legSpeed":{
+    "type": "float",
+    "doc": "total length of a leg (both segments)",
+    "default": "10"
+  },
+  "legForwardScl":{
+    "type": "float",
+    "doc": "total length of a leg (both segments)",
+    "default": "10"
+  },
+  "legBaseOffset":{
+    "type": "float",
+    "doc": "total length of a leg (both segments)",
+    "default": "10"
+  },
+  "legMoveSpace":{
+    "type": "float",
+    "doc": "total length of a leg (both segments)",
+    "default": "10"
+  },
+  "legExtension":{
+    "type": "float",
+    "doc": "total length of a leg (both segments)",
+    "default": "10"
+  },
+  "legPairOffset":{
+    "type": "float",
+    "doc": "total length of a leg (both segments)",
+    "default": "10"
+  },
+  "legLengthScl":{
+    "type": "float",
+    "doc": "total length of a leg (both segments)",
+    "default": "10"
+  },
+  "legStraightLength":{
+    "type": "float",
+    "doc": "total length of a leg (both segments)",
+    "default": "10"
+  },
+  "legMaxLength":{
+    "type": "float",
+    "doc": "total length of a leg (both segments)",
+    "default": "10"
+  },
+  "legMinLength":{
+    "type": "float",
+    "doc": "total length of a leg (both segments)",
+    "default": "10"
+  },
+  "legSplashDamage":{
+    "type": "float",
+    "doc": "total length of a leg (both segments)",
+    "default": "10"
+  },
+  "legSplashRange":{
+    "type": "float",
+    "doc": "total length of a leg (both segments)",
+    "default": "10"
+  },
+  "baseLegStraightness":{
+    "type": "float",
+    "doc": "total length of a leg (both segments)",
+    "default": "10"
+  },
+  "legStraightness":{
+    "type": "float",
+    "doc": "total length of a leg (both segments)",
+    "default": "10"
+  },
+  "legBaseUnder":{
+    "type": "boolean",
+    "doc": "If true, the base (further away) leg region is drawn under instead of over.",
+    "default": "false"
+  },
+  "lockLegBase":{
+    "type": "boolean",
+    "doc": "If true, legs are locked to the base of the unit instead of being on an implicit rotating \"mount\".",
+    "default": "false"
+  },
+  "legContinuousMove":{
+    "type": "boolean",
+    "doc": "If true, legs always try to move around even when the unit is not moving (leads to more natural behavior)"
+  },
+  "flipBackLegs":{
+    "type": "boolean",
+    "doc": "TODO neither of these appear to do much",
+    "default": "true"
+  },
+  "flipLegSide":{
+    "type": "boolean",
+    "doc": "TODO neither of these appear to do much",
+    "default": "true"
+  },
+  "emitWalkSound":{
+    "type": "boolean",
+    "doc": "Whether to emit a splashing noise in water.",
+    "default": "true"
+  },
+  "emitWalkEffect":{
+    "type": "boolean",
+    "doc": "Whether to emit a splashing effect in water (fasle implies emitWalkSound false).",
+    "default": "true"
+  },
+  "mechLandShake":{
+    "type": "float",
+    "doc": "screen shake amount for when this mech lands after boosting",
+    "default": "0"
+  },
+  "mechSideSway":{
+    "type": "float",
+    "doc": "parameters for mech swaying animation",
+    "default": "54"
+  },
+  "mechFrontSway":{
+    "type": "float",
+    "doc": "parameters for mech swaying animation",
+    "default": "54"
+  },
+  "mechStride":{
+    "type": "float",
+    "doc": "parameters for mech swaying animation",
+    "default": "54"
+  },
+  "mechStepParticles":{
+    "type": "boolean",
+    "doc": "whether particles are created when this mech takes a step",
+    "default": "false"
+  },
+  "mechLegColor":{
+    "type": "arc.graphics.Color",
+    "doc": "color that legs change to when moving, to simulate depth",
+    "default": "darkMetal"
+  },
+  "treadRects":{
+    "type": "arc.math.geom.Rect[]",
+    "doc": "list of treads as rectangles in IMAGE COORDINATES, relative to the center. these are mirrored.",
+    "default": "[]"
+  },
+  "treadFrames":{
+    "type": "int",
+    "doc": "number of frames of movement in a tread",
+    "default": "18"
+  },
+  "treadPullOffset":{
+    "type": "int",
+    "doc": "how much of a top part of a tread sprite is \"cut off\" relative to the pattern; this is corrected for",
+    "default": "0"
+  },
+  "crushFragile":{
+    "type": "boolean",
+    "doc": "if true, 'fragile' blocks will instantly be crushed in a 1x1 area around the tank",
+    "default": "false"
+  },
+  "segments":{
+    "type": "int",
+    "doc": "number of independent segments",
+    "default": "0"
+  },
+  "segmentUnits":{
+    "type": "int",
+    "doc": "TODO wave support - for multi-unit segmented units, this is the number of independent units that are spawned",
+    "default": "1"
+  },
+  "segmentUnit":{
+    "type": "mindustry.type.UnitType",
+    "nullable": true,
+    "doc": "unit spawned in segments; if null, the same unit is used"
+  },
+  "segmentEndUnit":{
+    "type": "mindustry.type.UnitType",
+    "nullable": true,
+    "doc": "unit spawned at the end; if null, the segment unit is used"
+  },
+  "segmentLayerOrder":{
+    "type": "boolean",
+    "doc": "true - parent segments are on higher layers; false - parent segments are on lower layers than head",
+    "default": "true"
+  },
+  "segmentMag":{
+    "type": "float",
+    "doc": "magnitude of sine offset between segments",
+    "default": "2"
+  },
+  "segmentScl":{
+    "type": "float",
+    "doc": "magnitude of sine offset between segments",
+    "default": "2"
+  },
+  "segmentPhase":{
+    "type": "float",
+    "doc": "magnitude of sine offset between segments",
+    "default": "2"
+  },
+  "segmentRotSpeed":{
+    "type": "float",
+    "doc": "magnitude of sine offset between segments",
+    "default": "2"
+  },
+  "segmentMaxRot":{
+    "type": "float",
+    "doc": "magnitude of sine offset between segments",
+    "default": "2"
+  },
+  "segmentSpacing":{
+    "type": "float",
+    "doc": "magnitude of sine offset between segments",
+    "default": "2"
+  },
+  "segmentRotationRange":{
+    "type": "float",
+    "doc": "magnitude of sine offset between segments",
+    "default": "2"
+  },
+  "crawlSlowdown":{
+    "type": "float",
+    "doc": "magnitude of sine offset between segments",
+    "default": "2"
+  },
+  "crushDamage":{
+    "type": "float",
+    "doc": "magnitude of sine offset between segments",
+    "default": "2"
+  },
+  "crawlSlowdownFrac":{
+    "type": "float",
+    "doc": "magnitude of sine offset between segments",
+    "default": "2"
+  },
+  "lifetime":{
+    "type": "float",
+    "doc": "lifetime of this missile.",
+    "default": "60f * 5"
+  },
+  "homingDelay":{
+    "type": "float",
+    "doc": "ticks that must pass before this missile starts homing.",
+    "default": "10"
+  },
+  "baseRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "legRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "region":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "previewRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "shadowRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "cellRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "itemCircleRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "softShadowRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "jointRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "footRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "legBaseRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "baseJointRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "outlineRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "treadRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "mineLaserRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "mineLaserEndRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "wreckRegions":{
+    "type": "arc.graphics.g2d.TextureRegion[]"
+  },
+  "segmentRegions":{
+    "type": "arc.graphics.g2d.TextureRegion[]"
+  },
+  "segmentCellRegions":{
+    "type": "arc.graphics.g2d.TextureRegion[]"
+  },
+  "segmentOutlineRegions":{
+    "type": "arc.graphics.g2d.TextureRegion[]"
+  },
+  "treadRegions":{
+    "type": "arc.graphics.g2d.TextureRegion[][]"
+  },
+  "stats":{
+    "type": "mindustry.world.meta.Stats",
+    "doc": "Stat storage for this content. Initialized on demand."
+  },
+  "localizedName":{
+    "type": "java.lang.String",
+    "doc": "Localized, formal name. Never null. Set to internal name if not found in bundle."
+  },
+  "description":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Localized description & details. May be null."
+  },
+  "details":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Localized description & details. May be null."
+  },
+  "credit":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Localized description & details. May be null."
+  },
+  "alwaysUnlocked":{
+    "type": "boolean",
+    "doc": "Whether this content is always unlocked in the tech tree.",
+    "default": "false"
+  },
+  "inlineDescription":{
+    "type": "boolean",
+    "doc": "Whether to show the description in the research dialog preview.",
+    "default": "true"
+  },
+  "hideDetails":{
+    "type": "boolean",
+    "doc": "Whether details are hidden in custom games if this hasn't been unlocked in campaign mode.",
+    "default": "true"
+  },
+  "hideDatabase":{
+    "type": "boolean",
+    "doc": "Whether this is hidden from the Core Database.",
+    "default": "false"
+  },
+  "generateIcons":{
+    "type": "boolean",
+    "doc": "If false, all icon generation is disabled for this content; createIcons is not called.",
+    "default": "true"
+  },
+  "selectionSize":{
+    "type": "float",
+    "doc": "How big the content appears in certain selection menus",
+    "default": "24"
+  },
+  "uiIcon":{
+    "type": "arc.graphics.g2d.TextureRegion",
+    "doc": "Icon of the content to use in UI."
+  },
+  "fullIcon":{
+    "type": "arc.graphics.g2d.TextureRegion",
+    "doc": "Icon of the full content. Unscaled."
+  },
+  "fullOverride":{
+    "type": "java.lang.String",
+    "doc": "Override for the full icon. Useful for mod content with duplicate icons. Overrides any other full icon.",
+    "default": "\"\""
+  },
+  "allDatabaseTabs":{
+    "type": "boolean",
+    "doc": "If true, this content will appear in all database tabs.",
+    "default": "false"
+  },
+  "shownPlanets":{
+    "type": "arc.struct.ObjectSet<mindustry.type.Planet>",
+    "doc": "Planets that this content is made for. If empty, a planet is decided based on item requirements.\nCurrently, this is only meaningful for blocks."
+  },
+  "databaseTabs":{
+    "type": "arc.struct.ObjectSet<mindustry.ctype.UnlockableContent>",
+    "doc": "Content - usually a planet - that dictates which database tab(s) this content will appear in.\nIf nothing is defined, it will use the values in shownPlanets.\nIf shownPlanets is also empty, it will use Serpulo as the \"default\" tab."
+  },
+  "databaseCategory":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Content category. Defines the primary category of content classification in core database.\nFor example, \"block\", \"liquid\", \"unit\".\nUses getContentType().name() as a fallback when the value is null or empty."
+  },
+  "databaseTag":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Category tags. Secondary category of content classification in core database.\nFor example, \"turret\", \"wall\" under databaseCategory \"block\", \"core-unit\", \"ground-unit\" under databaseCategory \"units\".\nUses \"default\" as a fallback when the value is null or empty. When using \"default\", no extra tag label are displayed."
+  },
+  "techNode":{
+    "type": "mindustry.content.TechTree$TechNode",
+    "nullable": true,
+    "doc": "The tech tree node for this content, if applicable. Null if not part of a tech tree."
+  },
+  "techNodes":{
+    "type": "arc.struct.Seq<mindustry.content.TechTree$TechNode>",
+    "doc": "Tech nodes for all trees that this content is part of."
+  },
+  "name":{
+    "type": "java.lang.String"
+  },
+  "id":{
+    "type": "short"
+  },
+  "minfo":{
+    "type": "mindustry.ctype.Content$ModContentInfo",
+    "doc": "Info on which mod this content was loaded from."
+  },
+  "removed":{
+    "type": "boolean",
+    "doc": "If true, this content is invalid (added in a data patch and then removed)."
+  }
+}

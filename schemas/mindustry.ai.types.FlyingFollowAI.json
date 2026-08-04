@@ -1,0 +1,7 @@
+{
+  "superclass": "mindustry.ai.types.FlyingAI",
+  "doc": "AI/wave team only! This is used for wave support flyers.\n",
+  "following":{
+    "type": "mindustry.gen.Teamc"
+  }
+}

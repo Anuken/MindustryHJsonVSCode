@@ -1,0 +1,4 @@
+{
+  "superclass": "java.lang.Object",
+  "doc": "Note: Don't use this class; difficulty will be reworked in v9 to use specific discrete values instead of arbitrary numbers.\n"
+}

@@ -1,0 +1,40 @@
+{
+  "superclass": "mindustry.entities.units.AIController",
+  "commandQueue":{
+    "type": "arc.struct.Seq<arc.math.geom.Position>"
+  },
+  "targetPos":{
+    "type": "arc.math.geom.Vec2",
+    "nullable": true
+  },
+  "attackTarget":{
+    "type": "mindustry.gen.Teamc",
+    "nullable": true
+  },
+  "group":{
+    "type": "mindustry.ai.UnitGroup",
+    "nullable": true,
+    "doc": "Group of units that were all commanded to reach the same point."
+  },
+  "groupIndex":{
+    "type": "int",
+    "default": "0"
+  },
+  "unreachableBuildings":{
+    "type": "arc.struct.IntSeq",
+    "doc": "All encountered unreachable buildings of this AI. Why a sequence? Because contains() is very rarely called on it."
+  },
+  "readAttackTarget":{
+    "type": "int",
+    "doc": "ID of unit read as target. This is set up after reading. Do not access!",
+    "default": "-1"
+  },
+  "command":{
+    "type": "mindustry.ai.UnitCommand",
+    "doc": "Current command this unit is following."
+  },
+  "stances":{
+    "type": "arc.struct.Bits",
+    "doc": "Stance, usually related to firing mode. Each bit is a stance ID."
+  }
+}

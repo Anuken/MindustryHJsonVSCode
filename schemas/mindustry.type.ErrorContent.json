@@ -1,0 +1,15 @@
+{
+  "superclass": "mindustry.ctype.Content",
+  "doc": "Represents a blank type of content that has an error. Replaces anything that failed to parse.\n",
+  "id":{
+    "type": "short"
+  },
+  "minfo":{
+    "type": "mindustry.ctype.Content$ModContentInfo",
+    "doc": "Info on which mod this content was loaded from."
+  },
+  "removed":{
+    "type": "boolean",
+    "doc": "If true, this content is invalid (added in a data patch and then removed)."
+  }
+}

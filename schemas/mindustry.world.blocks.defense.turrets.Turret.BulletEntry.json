@@ -1,0 +1,18 @@
+{
+  "superclass": "java.lang.Object",
+  "bullet":{
+    "type": "mindustry.gen.Bullet"
+  },
+  "x":{
+    "type": "float"
+  },
+  "y":{
+    "type": "float"
+  },
+  "rotation":{
+    "type": "float"
+  },
+  "life":{
+    "type": "float"
+  }
+}

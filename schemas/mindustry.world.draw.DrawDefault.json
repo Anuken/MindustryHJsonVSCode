@@ -1,0 +1,9 @@
+{
+  "superclass": "mindustry.world.draw.DrawBlock",
+  "iconOverride":{
+    "type": "java.lang.String[]",
+    "nullable": true,
+    "doc": "If set, the icon is overridden to be these strings, in order. Each string is a suffix.",
+    "default": "null"
+  }
+}

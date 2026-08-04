@@ -1,0 +1,12 @@
+{
+  "superclass": "java.lang.Object",
+  "unit":{
+    "type": "mindustry.type.UnitType"
+  },
+  "requirements":{
+    "type": "mindustry.type.ItemStack[]"
+  },
+  "time":{
+    "type": "float"
+  }
+}

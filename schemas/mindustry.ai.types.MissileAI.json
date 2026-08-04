@@ -1,0 +1,7 @@
+{
+  "superclass": "mindustry.entities.units.AIController",
+  "shooter":{
+    "type": "mindustry.gen.Unit",
+    "nullable": true
+  }
+}

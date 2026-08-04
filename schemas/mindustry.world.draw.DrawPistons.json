@@ -1,0 +1,65 @@
+{
+  "superclass": "mindustry.world.draw.DrawBlock",
+  "sinMag":{
+    "type": "float",
+    "default": "4"
+  },
+  "sinScl":{
+    "type": "float",
+    "default": "4"
+  },
+  "sinOffset":{
+    "type": "float",
+    "default": "4"
+  },
+  "sideOffset":{
+    "type": "float",
+    "default": "4"
+  },
+  "lenOffset":{
+    "type": "float",
+    "default": "4"
+  },
+  "horiOffset":{
+    "type": "float",
+    "default": "4"
+  },
+  "angleOffset":{
+    "type": "float",
+    "default": "4"
+  },
+  "x":{
+    "type": "float",
+    "default": "4"
+  },
+  "y":{
+    "type": "float",
+    "default": "4"
+  },
+  "sides":{
+    "type": "int",
+    "default": "4"
+  },
+  "suffix":{
+    "type": "java.lang.String",
+    "default": "\"-piston\""
+  },
+  "region1":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "region2":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "regiont":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "iconRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "iconOverride":{
+    "type": "java.lang.String[]",
+    "nullable": true,
+    "doc": "If set, the icon is overridden to be these strings, in order. Each string is a suffix.",
+    "default": "null"
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "superclass": "mindustry.entities.part.DrawPart",
+  "suffix":{
+    "type": "java.lang.String",
+    "doc": "Appended to unit/weapon/block name and drawn.",
+    "default": "\"\""
+  },
+  "name":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Overrides suffix if set."
+  },
+  "heat":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "light":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "regions":{
+    "type": "arc.graphics.g2d.TextureRegion[]",
+    "default": "[]"
+  },
+  "outlines":{
+    "type": "arc.graphics.g2d.TextureRegion[]",
+    "default": "[]"
+  },
+  "mirror":{
+    "type": "boolean",
+    "doc": "If true, parts are mirrored across the turret. Requires -1 and -2 regions.",
+    "default": "false"
+  },
+  "outline":{
+    "type": "boolean",
+    "doc": "If true, an outline is drawn under the part.",
+    "default": "true"
+  },
+  "replaceOutline":{
+    "type": "boolean",
+    "doc": "If true, this part has an outline created 'in-place'. Currently vanilla only, do not use this!",
+    "default": "false"
+  },
+  "drawRegion":{
+    "type": "boolean",
+    "doc": "If true, the base + outline regions are drawn. Set to false for heat-only regions.",
+    "default": "true"
+  },
+  "heatLight":{
+    "type": "boolean",
+    "doc": "If true, the heat region produces light.",
+    "default": "false"
+  },
+  "clampProgress":{
+    "type": "boolean",
+    "doc": "Whether to clamp progress to (0-1). If false, allows usage of interps that go past the range, but may have unwanted visual bugs depending on values.",
+    "default": "true"
+  },
+  "progress":{
+    "type": "mindustry.entities.part.DrawPart$PartProgress",
+    "doc": "Progress function for determining position/rotation.",
+    "default": "warmup"
+  },
+  "growProgress":{
+    "type": "mindustry.entities.part.DrawPart$PartProgress",
+    "doc": "Progress function for scaling.",
+    "default": "warmup"
+  },
+  "heatProgress":{
+    "type": "mindustry.entities.part.DrawPart$PartProgress",
+    "doc": "Progress function for heat alpha.",
+    "default": "heat"
+  },
+  "blending":{
+    "type": "arc.graphics.Blending",
+    "default": "normal"
+  },
+  "layer":{
+    "type": "float",
+    "default": "-1"
+  },
+  "layerOffset":{
+    "type": "float",
+    "default": "-1"
+  },
+  "heatLayerOffset":{
+    "type": "float",
+    "default": "-1"
+  },
+  "turretHeatLayer":{
+    "type": "float",
+    "default": "-1"
+  },
+  "outlineLayerOffset":{
+    "type": "float",
+    "default": "001"
+  },
+  "x":{
+    "type": "float"
+  },
+  "y":{
+    "type": "float"
+  },
+  "xScl":{
+    "type": "float"
+  },
+  "yScl":{
+    "type": "float"
+  },
+  "rotation":{
+    "type": "float"
+  },
+  "originX":{
+    "type": "float"
+  },
+  "originY":{
+    "type": "float"
+  },
+  "moveX":{
+    "type": "float"
+  },
+  "moveY":{
+    "type": "float"
+  },
+  "growX":{
+    "type": "float"
+  },
+  "growY":{
+    "type": "float"
+  },
+  "moveRot":{
+    "type": "float"
+  },
+  "heatLightOpacity":{
+    "type": "float",
+    "default": "3"
+  },
+  "color":{
+    "type": "arc.graphics.Color",
+    "nullable": true
+  },
+  "colorTo":{
+    "type": "arc.graphics.Color",
+    "nullable": true
+  },
+  "mixColor":{
+    "type": "arc.graphics.Color",
+    "nullable": true
+  },
+  "mixColorTo":{
+    "type": "arc.graphics.Color",
+    "nullable": true
+  },
+  "heatColor":{
+    "type": "arc.graphics.Color"
+  },
+  "children":{
+    "type": "arc.struct.Seq<mindustry.entities.part.DrawPart>"
+  },
+  "moves":{
+    "type": "arc.struct.Seq<mindustry.entities.part.DrawPart$PartMove>"
+  },
+  "turretShading":{
+    "type": "boolean",
+    "doc": "If true, turret shading is used. Don't touch this, it is set up in unit/block init()!"
+  },
+  "under":{
+    "type": "boolean",
+    "doc": "If true, the layer is overridden to be under the weapon/turret itself.",
+    "default": "false"
+  },
+  "weaponIndex":{
+    "type": "int",
+    "doc": "For units, this is the index of the weapon this part gets its progress for.",
+    "default": "0"
+  },
+  "recoilIndex":{
+    "type": "int",
+    "doc": "Which recoil counter to use. < 0 to use base recoil.",
+    "default": "-1"
+  }
+}

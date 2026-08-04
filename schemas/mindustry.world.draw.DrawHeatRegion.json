@@ -1,0 +1,31 @@
+{
+  "superclass": "mindustry.world.draw.DrawBlock",
+  "color":{
+    "type": "arc.graphics.Color"
+  },
+  "pulse":{
+    "type": "float",
+    "default": "3"
+  },
+  "pulseScl":{
+    "type": "float",
+    "default": "3"
+  },
+  "layer":{
+    "type": "float",
+    "default": "blockAdditive"
+  },
+  "heat":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "suffix":{
+    "type": "java.lang.String",
+    "default": "\"-glow\""
+  },
+  "iconOverride":{
+    "type": "java.lang.String[]",
+    "nullable": true,
+    "doc": "If set, the icon is overridden to be these strings, in order. Each string is a suffix.",
+    "default": "null"
+  }
+}

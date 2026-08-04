@@ -1,0 +1,25 @@
+{
+  "superclass": "mindustry.entities.pattern.ShootPattern",
+  "source":{
+    "type": "mindustry.entities.pattern.ShootPattern"
+  },
+  "dest":{
+    "type": "mindustry.entities.pattern.ShootPattern[]",
+    "default": "[]"
+  },
+  "shots":{
+    "type": "int",
+    "doc": "amount of shots per \"trigger pull\"",
+    "default": "1"
+  },
+  "firstShotDelay":{
+    "type": "float",
+    "doc": "delay in ticks before first shot",
+    "default": "0"
+  },
+  "shotDelay":{
+    "type": "float",
+    "doc": "delay in ticks between shots",
+    "default": "0"
+  }
+}

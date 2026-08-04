@@ -1,0 +1,28 @@
+{
+  "superclass": "mindustry.entities.pattern.ShootPattern",
+  "scl":{
+    "type": "float",
+    "doc": "scaling applied to bullet index",
+    "default": "4"
+  },
+  "mag":{
+    "type": "float",
+    "doc": "magnitude of sine curve for position displacement",
+    "default": "20"
+  },
+  "shots":{
+    "type": "int",
+    "doc": "amount of shots per \"trigger pull\"",
+    "default": "1"
+  },
+  "firstShotDelay":{
+    "type": "float",
+    "doc": "delay in ticks before first shot",
+    "default": "0"
+  },
+  "shotDelay":{
+    "type": "float",
+    "doc": "delay in ticks between shots",
+    "default": "0"
+  }
+}

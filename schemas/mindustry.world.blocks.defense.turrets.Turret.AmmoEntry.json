@@ -1,0 +1,6 @@
+{
+  "superclass": "java.lang.Object",
+  "amount":{
+    "type": "int"
+  }
+}

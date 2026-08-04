@@ -1,0 +1,6 @@
+{
+  "superclass": "java.lang.Object",
+  "preset":{
+    "type": "mindustry.type.SectorPreset"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "superclass": "mindustry.entities.units.AIController",
+  "control":{
+    "type": "mindustry.logic.LUnitControl",
+    "default": "idle"
+  },
+  "moveX":{
+    "type": "float"
+  },
+  "moveY":{
+    "type": "float"
+  },
+  "moveRad":{
+    "type": "float"
+  },
+  "controlTimer":{
+    "type": "float",
+    "default": "logicControlTimeout"
+  },
+  "targetTimer":{
+    "type": "float",
+    "default": "logicControlTimeout"
+  },
+  "controller":{
+    "type": "mindustry.gen.Building",
+    "nullable": true
+  },
+  "plan":{
+    "type": "mindustry.entities.units.BuildPlan"
+  },
+  "execCache":{
+    "type": "arc.struct.ObjectMap<java.lang.Object, java.lang.Object>"
+  },
+  "aimControl":{
+    "type": "mindustry.logic.LUnitControl",
+    "default": "stop"
+  },
+  "boost":{
+    "type": "boolean"
+  },
+  "mainTarget":{
+    "type": "mindustry.gen.Teamc"
+  },
+  "shoot":{
+    "type": "boolean"
+  },
+  "posTarget":{
+    "type": "mindustry.gen.PosTeam"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "superclass": "java.lang.Object",
+  "x":{
+    "type": "float"
+  },
+  "y":{
+    "type": "float"
+  },
+  "radius":{
+    "type": "float"
+  },
+  "rotation":{
+    "type": "float"
+  }
+}

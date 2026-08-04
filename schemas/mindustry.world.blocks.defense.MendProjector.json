@@ -1,0 +1,1079 @@
+{
+  "superclass": "mindustry.world.Block",
+  "timerUse":{
+    "type": "int",
+    "default": "timers++"
+  },
+  "baseColor":{
+    "type": "arc.graphics.Color"
+  },
+  "phaseColor":{
+    "type": "arc.graphics.Color",
+    "default": "baseColor"
+  },
+  "topRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "reload":{
+    "type": "float",
+    "default": "250"
+  },
+  "range":{
+    "type": "float",
+    "default": "60"
+  },
+  "healPercent":{
+    "type": "float",
+    "default": "12"
+  },
+  "phaseBoost":{
+    "type": "float",
+    "default": "12"
+  },
+  "phaseRangeBoost":{
+    "type": "float",
+    "default": "50"
+  },
+  "useTime":{
+    "type": "float",
+    "default": "400"
+  },
+  "mendSound":{
+    "type": "arc.audio.Sound",
+    "default": "healWave"
+  },
+  "mendSoundVolume":{
+    "type": "float",
+    "default": "5"
+  },
+  "hasItems":{
+    "type": "boolean",
+    "doc": "If true, buildings have an ItemModule."
+  },
+  "hasLiquids":{
+    "type": "boolean",
+    "doc": "If true, buildings have a LiquidModule."
+  },
+  "hasPower":{
+    "type": "boolean",
+    "doc": "If true, buildings have a PowerModule."
+  },
+  "outputsLiquid":{
+    "type": "boolean",
+    "doc": "Flag for determining whether this block outputs liquid somewhere; used for connections.",
+    "default": "false"
+  },
+  "consumesPower":{
+    "type": "boolean",
+    "doc": "Used by certain power blocks (nodes) to flag as non-consuming of power. True by default, even if this block has no power.",
+    "default": "true"
+  },
+  "outputsPower":{
+    "type": "boolean",
+    "doc": "If true, this block is a generator that can produce power.",
+    "default": "false"
+  },
+  "connectedPower":{
+    "type": "boolean",
+    "doc": "If false, power nodes cannot connect to this block.",
+    "default": "true"
+  },
+  "conductivePower":{
+    "type": "boolean",
+    "doc": "If true, this block can conduct power like a cable.",
+    "default": "false"
+  },
+  "outputsPayload":{
+    "type": "boolean",
+    "doc": "If true, this block can output payloads; affects blending.",
+    "default": "false"
+  },
+  "acceptsUnitPayloads":{
+    "type": "boolean",
+    "doc": "If true, this block can input payloads; affects unit payload enter behavior.",
+    "default": "false"
+  },
+  "acceptsPayload":{
+    "type": "boolean",
+    "doc": "If true, payloads will attempt to move into this block.",
+    "default": "false"
+  },
+  "acceptsItems":{
+    "type": "boolean",
+    "doc": "Visual flag use for blending of certain transportation blocks.",
+    "default": "false"
+  },
+  "alwaysAllowDeposit":{
+    "type": "boolean",
+    "doc": "If true, this block won't be affected by the onlyDepositCore rule.",
+    "default": "false"
+  },
+  "depositCooldown":{
+    "type": "float",
+    "doc": "Cooldown, in seconds, applied to player item depositing when any item is deposited to this block. Overrides the itemDepositCooldown if non-negative.",
+    "default": "-1"
+  },
+  "separateItemCapacity":{
+    "type": "boolean",
+    "doc": "If true, all item capacities of this block are separate instead of pooled as one number.",
+    "default": "false"
+  },
+  "itemCapacity":{
+    "type": "int",
+    "doc": "maximum items this block can carry (usually, this is per-type of item)",
+    "default": "10"
+  },
+  "liquidCapacity":{
+    "type": "float",
+    "doc": "maximum total liquids this block can carry if hasLiquids = true. Default value is 10, scales with max liquid consumption in ConsumeLiquid",
+    "default": "-1"
+  },
+  "liquidPressure":{
+    "type": "float",
+    "doc": "higher numbers increase liquid output speed; TODO remove and replace with better liquids system",
+    "default": "1"
+  },
+  "outputFacing":{
+    "type": "boolean",
+    "doc": "If true, this block outputs to its facing direction, when applicable.\nUsed for blending calculations.",
+    "default": "true"
+  },
+  "noSideBlend":{
+    "type": "boolean",
+    "doc": "if true, this block does not accept input from the sides (used for armored conveyors)",
+    "default": "false"
+  },
+  "displayFlow":{
+    "type": "boolean",
+    "doc": "whether to display flow rate",
+    "default": "true"
+  },
+  "inEditor":{
+    "type": "boolean",
+    "doc": "whether this block is visible in the editor",
+    "default": "true"
+  },
+  "editorConfigurable":{
+    "type": "boolean",
+    "doc": "if true, {@link #buildEditorConfig(Table)} will be called for configuring this block in the editor."
+  },
+  "lastConfig":{
+    "type": "java.lang.Object",
+    "nullable": true,
+    "doc": "the last configuration value applied to this block."
+  },
+  "saveConfig":{
+    "type": "boolean",
+    "doc": "whether to save the last config and apply it to newly placed blocks",
+    "default": "false"
+  },
+  "copyConfig":{
+    "type": "boolean",
+    "doc": "whether to allow copying the config through middle click",
+    "default": "true"
+  },
+  "clearOnDoubleTap":{
+    "type": "boolean",
+    "doc": "if true, double-tapping this configurable block clears configuration.",
+    "default": "false"
+  },
+  "update":{
+    "type": "boolean",
+    "doc": "whether this block has a tile entity that updates"
+  },
+  "destructible":{
+    "type": "boolean",
+    "doc": "whether this block has health and can be destroyed. note that setting this to false does nothing if update = true!"
+  },
+  "unloadable":{
+    "type": "boolean",
+    "doc": "whether unloaders work on this block",
+    "default": "true"
+  },
+  "isDuct":{
+    "type": "boolean",
+    "doc": "if true, this block acts a duct and will connect to armored ducts from the side.",
+    "default": "false"
+  },
+  "allowResupply":{
+    "type": "boolean",
+    "doc": "whether units can resupply by taking items from this block",
+    "default": "false"
+  },
+  "solid":{
+    "type": "boolean",
+    "doc": "whether this is solid"
+  },
+  "solidifes":{
+    "type": "boolean",
+    "doc": "whether this block CAN be solid."
+  },
+  "teamPassable":{
+    "type": "boolean",
+    "doc": "if true, this counts as a non-solid block to this team."
+  },
+  "underBullets":{
+    "type": "boolean",
+    "doc": "if true, this block cannot be hit by bullets unless explicitly targeted."
+  },
+  "rotate":{
+    "type": "boolean",
+    "doc": "whether this is rotatable"
+  },
+  "rotateDraw":{
+    "type": "boolean",
+    "doc": "if rotate is true and this is false, the region won't rotate when drawing",
+    "default": "true"
+  },
+  "rotateDrawEditor":{
+    "type": "boolean",
+    "doc": "if rotate is true and this is false, the region won't rotate when drawing in the editor",
+    "default": "true"
+  },
+  "visualRotationOffset":{
+    "type": "float",
+    "doc": "visual rotation offset used in broken plan rendering",
+    "default": "0"
+  },
+  "lockRotation":{
+    "type": "boolean",
+    "doc": "if rotate = false and this is true, rotation will be locked at 0 when placing (default); advanced use only",
+    "default": "true"
+  },
+  "ignoreLineRotation":{
+    "type": "boolean",
+    "doc": "if true, this block won't face the line drag direction",
+    "default": "false"
+  },
+  "invertFlip":{
+    "type": "boolean",
+    "doc": "if true, schematic flips with this block are inverted.",
+    "default": "false"
+  },
+  "variants":{
+    "type": "int",
+    "doc": "number of different variant regions to use",
+    "default": "0"
+  },
+  "drawArrow":{
+    "type": "boolean",
+    "doc": "whether to draw a rotation arrow - this does not apply to lines of blocks",
+    "default": "true"
+  },
+  "drawTeamOverlay":{
+    "type": "boolean",
+    "doc": "whether to draw the team corner by default",
+    "default": "true"
+  },
+  "saveData":{
+    "type": "boolean",
+    "doc": "for static blocks only: if true, tile data() is saved in world data."
+  },
+  "breakable":{
+    "type": "boolean",
+    "doc": "whether you can break this with rightclick"
+  },
+  "unitMoveBreakable":{
+    "type": "boolean",
+    "doc": "if true, this block will be broken by certain units stepping/moving over it"
+  },
+  "rebuildable":{
+    "type": "boolean",
+    "doc": "whether to add this block to brokenblocks",
+    "default": "true"
+  },
+  "privileged":{
+    "type": "boolean",
+    "doc": "if true, this logic-related block can only be used with privileged processors (or is one itself)",
+    "default": "false"
+  },
+  "requiresWater":{
+    "type": "boolean",
+    "doc": "whether this block can only be placed on water",
+    "default": "false"
+  },
+  "placeableLiquid":{
+    "type": "boolean",
+    "doc": "whether this block can be placed on any liquids, anywhere",
+    "default": "false"
+  },
+  "placeablePlayer":{
+    "type": "boolean",
+    "doc": "whether this block can be placed directly by the player via PlacementFragment",
+    "default": "true"
+  },
+  "placeableOn":{
+    "type": "boolean",
+    "doc": "whether this floor can be placed on.",
+    "default": "true"
+  },
+  "insulated":{
+    "type": "boolean",
+    "doc": "whether this block has insulating properties.",
+    "default": "false"
+  },
+  "squareSprite":{
+    "type": "boolean",
+    "doc": "whether the sprite is a full square.",
+    "default": "true"
+  },
+  "absorbLasers":{
+    "type": "boolean",
+    "doc": "whether this block absorbs laser attacks.",
+    "default": "false"
+  },
+  "enableDrawStatus":{
+    "type": "boolean",
+    "doc": "if false, the status is never drawn",
+    "default": "true"
+  },
+  "drawDisabled":{
+    "type": "boolean",
+    "doc": "whether to draw disabled status",
+    "default": "true"
+  },
+  "autoResetEnabled":{
+    "type": "boolean",
+    "doc": "whether to automatically reset enabled status after a logic block has not interacted for a while.",
+    "default": "true"
+  },
+  "noUpdateDisabled":{
+    "type": "boolean",
+    "doc": "if true, the block stops updating when disabled",
+    "default": "false"
+  },
+  "updateInUnits":{
+    "type": "boolean",
+    "doc": "if true, this block updates when it's a payload in a unit.",
+    "default": "true"
+  },
+  "alwaysUpdateInUnits":{
+    "type": "boolean",
+    "doc": "if true, this block updates in payloads in units regardless of the experimental game rule",
+    "default": "false"
+  },
+  "canPickup":{
+    "type": "boolean",
+    "doc": "if true, this block can be picked up in payloads",
+    "default": "true"
+  },
+  "deconstructDropAllLiquid":{
+    "type": "boolean",
+    "doc": "if false, only incinerable liquids are dropped when deconstructing; otherwise, all liquids are dropped.",
+    "default": "false"
+  },
+  "useColor":{
+    "type": "boolean",
+    "doc": "Whether to use this block's color in the minimap. Only used for overlays.",
+    "default": "true"
+  },
+  "itemDrop":{
+    "type": "mindustry.type.Item",
+    "nullable": true,
+    "doc": "item that drops from this block, used for drills",
+    "default": "null"
+  },
+  "playerUnmineable":{
+    "type": "boolean",
+    "doc": "if true, this block cannot be mined by players. useful for annoying things like sand.",
+    "default": "false"
+  },
+  "attributes":{
+    "type": "mindustry.world.blocks.Attributes",
+    "doc": "Affinities for floors."
+  },
+  "scaledHealth":{
+    "type": "float",
+    "doc": "Health per square tile that this block occupies; essentially, this is multiplied by size * size. Overridden if health is > 0. If <0, the default is 40.",
+    "default": "-1"
+  },
+  "health":{
+    "type": "int",
+    "doc": "building health; -1 to use scaledHealth",
+    "default": "-1"
+  },
+  "armor":{
+    "type": "float",
+    "doc": "damage absorption, similar to unit armor",
+    "default": "0"
+  },
+  "baseExplosiveness":{
+    "type": "float",
+    "doc": "base block explosiveness",
+    "default": "0"
+  },
+  "explosivenessScale":{
+    "type": "float",
+    "doc": "scaling of explosiveness based on items/liquids",
+    "default": "1"
+  },
+  "flammabilityScale":{
+    "type": "float",
+    "doc": "scaling of explosion flammability based on items/liquids",
+    "default": "1"
+  },
+  "baseShake":{
+    "type": "float",
+    "doc": "base value for screen shake upon destruction",
+    "default": "3"
+  },
+  "destroyBullet":{
+    "type": "mindustry.entities.bullet.BulletType",
+    "nullable": true,
+    "doc": "bullet that this block spawns when destroyed",
+    "default": "null"
+  },
+  "destroyBulletSameTeam":{
+    "type": "boolean",
+    "doc": "if true, destroyBullet is spawned on the block's team instead of Derelict team",
+    "default": "false"
+  },
+  "lightLiquid":{
+    "type": "mindustry.type.Liquid",
+    "nullable": true,
+    "doc": "liquid used for lighting"
+  },
+  "drawCracks":{
+    "type": "boolean",
+    "doc": "whether cracks are drawn when this block is damaged",
+    "default": "true"
+  },
+  "createRubble":{
+    "type": "boolean",
+    "doc": "whether rubble is created when this block is destroyed",
+    "default": "true"
+  },
+  "floating":{
+    "type": "boolean",
+    "doc": "whether this block can be placed on edges of liquids.",
+    "default": "false"
+  },
+  "size":{
+    "type": "int",
+    "doc": "multiblock size",
+    "default": "1"
+  },
+  "offset":{
+    "type": "float",
+    "doc": "multiblock offset",
+    "default": "0"
+  },
+  "sizeOffset":{
+    "type": "int",
+    "doc": "offset for iteration (internal use only)",
+    "default": "0"
+  },
+  "clipSize":{
+    "type": "float",
+    "doc": "Clipping size of this block. Should be as large as the block will draw.",
+    "default": "-1"
+  },
+  "lightClipSize":{
+    "type": "float",
+    "doc": "Clipping size for lights only."
+  },
+  "placeOverlapRange":{
+    "type": "float",
+    "doc": "When placeRangeCheck is enabled, this is the range checked for enemy blocks.",
+    "default": "50"
+  },
+  "crushDamageMultiplier":{
+    "type": "float",
+    "doc": "Multiplier of damage dealt to this block by tanks. Does not apply to crawlers.",
+    "default": "1"
+  },
+  "crushFragile":{
+    "type": "boolean",
+    "doc": "If true, this block is instantly destroyed by tanks with crushFragile set to true.",
+    "default": "false"
+  },
+  "timers":{
+    "type": "int",
+    "doc": "Max of timers used.",
+    "default": "0"
+  },
+  "cacheLayer":{
+    "type": "mindustry.graphics.CacheLayer",
+    "doc": "Cache layer. Only used for 'cached' rendering of blocks (not buildings).",
+    "default": "normal"
+  },
+  "drawDynamic":{
+    "type": "boolean",
+    "doc": "If true, draw() will be called on the building.",
+    "default": "true"
+  },
+  "drawCached":{
+    "type": "boolean",
+    "doc": "If enabled, drawCached() will be called on the building.",
+    "default": "false"
+  },
+  "buildingCacheLayer":{
+    "type": "mindustry.graphics.BuildingCacheLayer",
+    "doc": "",
+    "default": "normal"
+  },
+  "fillsTile":{
+    "type": "boolean",
+    "doc": "Special flag; if false, floor will be drawn under this block even if it is cached.",
+    "default": "true"
+  },
+  "forceDark":{
+    "type": "boolean",
+    "doc": "If true, this block can be covered by darkness / fog even if synthetic.",
+    "default": "false"
+  },
+  "alwaysReplace":{
+    "type": "boolean",
+    "doc": "whether this block can be replaced in all cases",
+    "default": "false"
+  },
+  "replaceable":{
+    "type": "boolean",
+    "doc": "if false, this block can never be replaced.",
+    "default": "true"
+  },
+  "group":{
+    "type": "mindustry.world.meta.BlockGroup",
+    "doc": "The block group. Unless {@link #canReplace} is overridden, blocks in the same group can replace each other.",
+    "default": "none"
+  },
+  "flags":{
+    "type": "arc.struct.EnumSet<mindustry.world.meta.BlockFlag>",
+    "doc": "List of block flags. Used for AI indexing."
+  },
+  "priority":{
+    "type": "float",
+    "doc": "Targeting priority of this block, as seen by enemies.",
+    "default": "base"
+  },
+  "unitCapModifier":{
+    "type": "int",
+    "doc": "How much this block affects the unit cap by.\nThe block flags must contain unitModifier in order for this to work.",
+    "default": "0"
+  },
+  "configurable":{
+    "type": "boolean",
+    "doc": "Whether the block can be tapped and selected to configure."
+  },
+  "configureSound":{
+    "type": "arc.audio.Sound",
+    "doc": "Sound played when this block is configured.",
+    "default": "click"
+  },
+  "ignoreResizeConfig":{
+    "type": "boolean",
+    "doc": "If true, this block does not have pointConfig with a transform called on map resize."
+  },
+  "commandable":{
+    "type": "boolean",
+    "doc": "If true, this building can be selected like a unit when commanding."
+  },
+  "allowConfigInventory":{
+    "type": "boolean",
+    "doc": "If true, the building inventory can be shown with the config.",
+    "default": "true"
+  },
+  "selectionRows":{
+    "type": "int",
+    "doc": "Defines how large selection menus, such as that of sorters, should be.",
+    "default": "5"
+  },
+  "selectionColumns":{
+    "type": "int",
+    "doc": "Defines how large selection menus, such as that of sorters, should be.",
+    "default": "5"
+  },
+  "logicConfigurable":{
+    "type": "boolean",
+    "doc": "If true, this block can be configured by logic.",
+    "default": "false"
+  },
+  "delayLandingConfig":{
+    "type": "boolean",
+    "doc": "If true, configuration is delayed when playing the landing block buildup animation. This may be removed in the future!"
+  },
+  "consumesTap":{
+    "type": "boolean",
+    "doc": "Whether this block consumes touchDown events when tapped."
+  },
+  "drawLiquidLight":{
+    "type": "boolean",
+    "doc": "Whether to draw the glow of the liquid for this block, if it has one.",
+    "default": "true"
+  },
+  "envRequired":{
+    "type": "int",
+    "doc": "Environmental flags that are *all* required for this block to function. 0 = any environment",
+    "default": "0"
+  },
+  "envEnabled":{
+    "type": "int",
+    "doc": "The environment flags that this block can function in. If the env matches any of these, it will be enabled.",
+    "default": "terrestrial"
+  },
+  "envDisabled":{
+    "type": "int",
+    "doc": "The environment flags that this block *cannot* function in. If the env matches any of these, it will be *disabled*.",
+    "default": "0"
+  },
+  "sync":{
+    "type": "boolean",
+    "doc": "Whether to periodically sync this block across the network."
+  },
+  "conveyorPlacement":{
+    "type": "boolean",
+    "doc": "Whether this block uses conveyor-type placement mode."
+  },
+  "allowDiagonal":{
+    "type": "boolean",
+    "doc": "If false, diagonal placement (ctrl) for this block is not allowed.",
+    "default": "true"
+  },
+  "swapDiagonalPlacement":{
+    "type": "boolean",
+    "doc": "Whether to swap the diagonal placement modes."
+  },
+  "allowRectanglePlacement":{
+    "type": "boolean",
+    "doc": "Whether to allow rectangular placement, as opposed to a line.",
+    "default": "false"
+  },
+  "schematicPriority":{
+    "type": "int",
+    "doc": "Build queue priority in schematics.",
+    "default": "0"
+  },
+  "mapColor":{
+    "type": "arc.graphics.Color",
+    "doc": "The color of this block when displayed on the minimap or map preview.\nDo not set manually! This is overridden when loading for most blocks."
+  },
+  "hasColor":{
+    "type": "boolean",
+    "doc": "Whether this block has a minimap color.",
+    "default": "false"
+  },
+  "targetable":{
+    "type": "boolean",
+    "doc": "Whether units target this block.",
+    "default": "true"
+  },
+  "attacks":{
+    "type": "boolean",
+    "doc": "If true, this block attacks and is considered a turret in the indexer. Building must implement Ranged.",
+    "default": "false"
+  },
+  "suppressable":{
+    "type": "boolean",
+    "doc": "If true, this block is mending-related and can be suppressed with special units/missiles.",
+    "default": "false"
+  },
+  "canOverdrive":{
+    "type": "boolean",
+    "doc": "Whether the overdrive core has any effect on this block.",
+    "default": "true"
+  },
+  "outlineColor":{
+    "type": "arc.graphics.Color",
+    "doc": "Outlined icon color."
+  },
+  "outlineIcon":{
+    "type": "boolean",
+    "doc": "Whether any icon region has an outline added.",
+    "default": "false"
+  },
+  "outlineRadius":{
+    "type": "int",
+    "doc": "Outline icon radius.",
+    "default": "4"
+  },
+  "outlinedIcon":{
+    "type": "int",
+    "doc": "Which of the icon regions gets the outline added. Uses last icon if <= 0.",
+    "default": "-1"
+  },
+  "hasShadow":{
+    "type": "boolean",
+    "doc": "Whether this block has a shadow under it.",
+    "default": "true"
+  },
+  "customShadow":{
+    "type": "boolean",
+    "doc": "If true, a custom shadow (name-shadow) is drawn under this block.",
+    "default": "false"
+  },
+  "placePitchChange":{
+    "type": "boolean",
+    "doc": "Should the sound made when this block is built change in pitch.",
+    "default": "true"
+  },
+  "breakPitchChange":{
+    "type": "boolean",
+    "doc": "Should the sound made when this block is deconstructed change in pitch.",
+    "default": "true"
+  },
+  "placeSound":{
+    "type": "arc.audio.Sound",
+    "doc": "Sound made when this block is built.",
+    "default": "unset"
+  },
+  "breakSound":{
+    "type": "arc.audio.Sound",
+    "doc": "Sound made when this block is deconstructed.",
+    "default": "unset"
+  },
+  "destroySound":{
+    "type": "arc.audio.Sound",
+    "doc": "Sounds made when this block is destroyed.",
+    "default": "unset"
+  },
+  "destroySoundVolume":{
+    "type": "float",
+    "doc": "Volume of destruction sound.",
+    "default": "1"
+  },
+  "destroyPitchMin":{
+    "type": "float",
+    "doc": "Range of destroy sound.",
+    "default": "1"
+  },
+  "destroyPitchMax":{
+    "type": "float",
+    "doc": "Range of destroy sound.",
+    "default": "1"
+  },
+  "albedo":{
+    "type": "float",
+    "doc": "How reflective this block is.",
+    "default": "0"
+  },
+  "lightColor":{
+    "type": "arc.graphics.Color",
+    "doc": "Environmental passive light color."
+  },
+  "emitLight":{
+    "type": "boolean",
+    "doc": "If true, drawLight() will be called for this block.",
+    "default": "false"
+  },
+  "obstructsLight":{
+    "type": "boolean",
+    "doc": "If true, this block obstructs light emitted by other blocks.",
+    "default": "true"
+  },
+  "lightRadius":{
+    "type": "float",
+    "doc": "Radius of the light emitted by this block.",
+    "default": "60"
+  },
+  "fogRadius":{
+    "type": "int",
+    "doc": "How much fog this block uncovers, in tiles. Cannot be dynamic. <= 0 to disable.",
+    "default": "-1"
+  },
+  "ambientSound":{
+    "type": "arc.audio.Sound",
+    "doc": "The sound that this block makes while idle. Uses one sound loop for all blocks.",
+    "default": "none"
+  },
+  "ambientSoundVolume":{
+    "type": "float",
+    "doc": "Idle sound base volume.",
+    "default": "05"
+  },
+  "requirements":{
+    "type": "mindustry.type.ItemStack[]",
+    "doc": "Cost of constructing this block.",
+    "default": "[]"
+  },
+  "category":{
+    "type": "mindustry.type.Category",
+    "doc": "Category in place menu.",
+    "default": "distribution"
+  },
+  "buildTime":{
+    "type": "float",
+    "doc": "Time to build this block in ticks. If this value is <0, it is calculated dynamically.",
+    "default": "-1"
+  },
+  "buildVisibility":{
+    "type": "mindustry.world.meta.BuildVisibility",
+    "doc": "Whether this block is visible and can currently be built.",
+    "default": "hidden"
+  },
+  "buildCostMultiplier":{
+    "type": "float",
+    "doc": "Multiplier for speed of building this block.",
+    "default": "1"
+  },
+  "deconstructThreshold":{
+    "type": "float",
+    "doc": "Build completion at which deconstruction finishes.",
+    "default": "0"
+  },
+  "instantDeconstruct":{
+    "type": "boolean",
+    "doc": "If true, this block deconstructs immediately. Instant deconstruction implies no resource refund.",
+    "default": "false"
+  },
+  "instantBuild":{
+    "type": "boolean",
+    "doc": "If true, this block constructs immediately. This implies no resource requirement, and ignores configs - do not use, this is for performance only!",
+    "default": "false"
+  },
+  "ignoreBuildDarkness":{
+    "type": "boolean",
+    "doc": "If true, this block can be placed even in \"dark\" areas. Only used for editor static walls.",
+    "default": "false"
+  },
+  "placeEffect":{
+    "type": "mindustry.entities.Effect",
+    "doc": "Effect for placing the block. Passes size as rotation.",
+    "default": "placeBlock"
+  },
+  "breakEffect":{
+    "type": "mindustry.entities.Effect",
+    "doc": "Effect for breaking the block. Passes size as rotation.",
+    "default": "breakBlock"
+  },
+  "destroyEffect":{
+    "type": "mindustry.entities.Effect",
+    "doc": "Effect for destroying the block.",
+    "default": "dynamicExplosion"
+  },
+  "researchCostMultiplier":{
+    "type": "float",
+    "doc": "Multiplier for cost of research in tech tree.",
+    "default": "1"
+  },
+  "researchCostMultipliers":{
+    "type": "arc.struct.ObjectFloatMap<mindustry.type.Item>",
+    "doc": "Cost multipliers per-item."
+  },
+  "researchCost":{
+    "type": "mindustry.type.ItemStack[]",
+    "nullable": true,
+    "doc": "Override for research cost. Uses multipliers above and building requirements if not set."
+  },
+  "forceTeam":{
+    "type": "mindustry.game.Team",
+    "nullable": true,
+    "doc": "If set, all blocks will be forced to be this team."
+  },
+  "instantTransfer":{
+    "type": "boolean",
+    "doc": "Whether this block has instant transfer.",
+    "default": "false"
+  },
+  "quickRotate":{
+    "type": "boolean",
+    "doc": "Whether you can rotate this block after it is placed.",
+    "default": "true"
+  },
+  "allowDerelictRepair":{
+    "type": "boolean",
+    "doc": "If true, this derelict block can be repair by clicking it.",
+    "default": "true"
+  },
+  "subclass":{
+    "type": "java.lang.Class<?>",
+    "nullable": true,
+    "doc": "Main subclass. Non-anonymous."
+  },
+  "selectScroll":{
+    "type": "float",
+    "doc": "Scroll position for certain blocks."
+  },
+  "buildType":{
+    "type": "arc.func.Prov<mindustry.gen.Building>",
+    "doc": "Building that is created for this block. Initialized in init() via reflection. Set manually if modded.",
+    "default": "null"
+  },
+  "configurations":{
+    "type": "arc.struct.ObjectMap<java.lang.Class<?>, arc.func.Cons2>",
+    "doc": "Configuration handlers by type."
+  },
+  "itemFilter":{
+    "type": "boolean[]",
+    "doc": "Consumption filters.",
+    "default": "[]"
+  },
+  "liquidFilter":{
+    "type": "boolean[]",
+    "doc": "Consumption filters.",
+    "default": "[]"
+  },
+  "consumers":{
+    "type": "mindustry.world.consumers.Consume[]",
+    "doc": "Array of consumers used by this block. Only populated after init().",
+    "default": "[]"
+  },
+  "optionalConsumers":{
+    "type": "mindustry.world.consumers.Consume[]",
+    "doc": "Array of consumers used by this block. Only populated after init().",
+    "default": "[]"
+  },
+  "nonOptionalConsumers":{
+    "type": "mindustry.world.consumers.Consume[]",
+    "doc": "Array of consumers used by this block. Only populated after init().",
+    "default": "[]"
+  },
+  "updateConsumers":{
+    "type": "mindustry.world.consumers.Consume[]",
+    "doc": "Array of consumers used by this block. Only populated after init().",
+    "default": "[]"
+  },
+  "hasConsumers":{
+    "type": "boolean",
+    "doc": "Set to true if this block has any consumers in its array."
+  },
+  "consPower":{
+    "type": "mindustry.world.consumers.ConsumePower",
+    "nullable": true,
+    "doc": "The single power consumer, if applicable."
+  },
+  "regionRotated1":{
+    "type": "int",
+    "doc": "Regions indexes from icons() that are rotated. If either of these is not -1, other regions won't be rotated in ConstructBlocks.",
+    "default": "-1"
+  },
+  "regionRotated2":{
+    "type": "int",
+    "doc": "Regions indexes from icons() that are rotated. If either of these is not -1, other regions won't be rotated in ConstructBlocks.",
+    "default": "-1"
+  },
+  "region":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "customShadowRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "teamRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "teamRegions":{
+    "type": "arc.graphics.g2d.TextureRegion[]"
+  },
+  "variantRegions":{
+    "type": "arc.graphics.g2d.TextureRegion[]"
+  },
+  "variantShadowRegions":{
+    "type": "arc.graphics.g2d.TextureRegion[]"
+  },
+  "dumpTime":{
+    "type": "int",
+    "doc": "How often to try dumping items in ticks, e.g. 5 = 12 times/sec",
+    "default": "5"
+  },
+  "stats":{
+    "type": "mindustry.world.meta.Stats",
+    "doc": "Stat storage for this content. Initialized on demand."
+  },
+  "localizedName":{
+    "type": "java.lang.String",
+    "doc": "Localized, formal name. Never null. Set to internal name if not found in bundle."
+  },
+  "description":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Localized description & details. May be null."
+  },
+  "details":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Localized description & details. May be null."
+  },
+  "credit":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Localized description & details. May be null."
+  },
+  "alwaysUnlocked":{
+    "type": "boolean",
+    "doc": "Whether this content is always unlocked in the tech tree.",
+    "default": "false"
+  },
+  "inlineDescription":{
+    "type": "boolean",
+    "doc": "Whether to show the description in the research dialog preview.",
+    "default": "true"
+  },
+  "hideDetails":{
+    "type": "boolean",
+    "doc": "Whether details are hidden in custom games if this hasn't been unlocked in campaign mode.",
+    "default": "true"
+  },
+  "hideDatabase":{
+    "type": "boolean",
+    "doc": "Whether this is hidden from the Core Database.",
+    "default": "false"
+  },
+  "generateIcons":{
+    "type": "boolean",
+    "doc": "If false, all icon generation is disabled for this content; createIcons is not called.",
+    "default": "true"
+  },
+  "selectionSize":{
+    "type": "float",
+    "doc": "How big the content appears in certain selection menus",
+    "default": "24"
+  },
+  "uiIcon":{
+    "type": "arc.graphics.g2d.TextureRegion",
+    "doc": "Icon of the content to use in UI."
+  },
+  "fullIcon":{
+    "type": "arc.graphics.g2d.TextureRegion",
+    "doc": "Icon of the full content. Unscaled."
+  },
+  "fullOverride":{
+    "type": "java.lang.String",
+    "doc": "Override for the full icon. Useful for mod content with duplicate icons. Overrides any other full icon.",
+    "default": "\"\""
+  },
+  "allDatabaseTabs":{
+    "type": "boolean",
+    "doc": "If true, this content will appear in all database tabs.",
+    "default": "false"
+  },
+  "shownPlanets":{
+    "type": "arc.struct.ObjectSet<mindustry.type.Planet>",
+    "doc": "Planets that this content is made for. If empty, a planet is decided based on item requirements.\nCurrently, this is only meaningful for blocks."
+  },
+  "databaseTabs":{
+    "type": "arc.struct.ObjectSet<mindustry.ctype.UnlockableContent>",
+    "doc": "Content - usually a planet - that dictates which database tab(s) this content will appear in.\nIf nothing is defined, it will use the values in shownPlanets.\nIf shownPlanets is also empty, it will use Serpulo as the \"default\" tab."
+  },
+  "databaseCategory":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Content category. Defines the primary category of content classification in core database.\nFor example, \"block\", \"liquid\", \"unit\".\nUses getContentType().name() as a fallback when the value is null or empty."
+  },
+  "databaseTag":{
+    "type": "java.lang.String",
+    "nullable": true,
+    "doc": "Category tags. Secondary category of content classification in core database.\nFor example, \"turret\", \"wall\" under databaseCategory \"block\", \"core-unit\", \"ground-unit\" under databaseCategory \"units\".\nUses \"default\" as a fallback when the value is null or empty. When using \"default\", no extra tag label are displayed."
+  },
+  "techNode":{
+    "type": "mindustry.content.TechTree$TechNode",
+    "nullable": true,
+    "doc": "The tech tree node for this content, if applicable. Null if not part of a tech tree."
+  },
+  "techNodes":{
+    "type": "arc.struct.Seq<mindustry.content.TechTree$TechNode>",
+    "doc": "Tech nodes for all trees that this content is part of."
+  },
+  "name":{
+    "type": "java.lang.String"
+  },
+  "id":{
+    "type": "short"
+  },
+  "minfo":{
+    "type": "mindustry.ctype.Content$ModContentInfo",
+    "doc": "Info on which mod this content was loaded from."
+  },
+  "removed":{
+    "type": "boolean",
+    "doc": "If true, this content is invalid (added in a data patch and then removed)."
+  }
+}

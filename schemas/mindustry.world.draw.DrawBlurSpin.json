@@ -1,0 +1,35 @@
+{
+  "superclass": "mindustry.world.draw.DrawBlock",
+  "region":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "blurRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "suffix":{
+    "type": "java.lang.String",
+    "default": "\"\""
+  },
+  "rotateSpeed":{
+    "type": "float",
+    "default": "1"
+  },
+  "x":{
+    "type": "float",
+    "default": "1"
+  },
+  "y":{
+    "type": "float",
+    "default": "1"
+  },
+  "blurThresh":{
+    "type": "float",
+    "default": "1"
+  },
+  "iconOverride":{
+    "type": "java.lang.String[]",
+    "nullable": true,
+    "doc": "If set, the icon is overridden to be these strings, in order. Each string is a suffix.",
+    "default": "null"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "superclass": "mindustry.world.draw.DrawBlock",
+  "blending":{
+    "type": "arc.graphics.Blending",
+    "default": "additive"
+  },
+  "suffix":{
+    "type": "java.lang.String",
+    "default": "\"-glow\""
+  },
+  "alpha":{
+    "type": "float",
+    "default": "9"
+  },
+  "glowScale":{
+    "type": "float",
+    "default": "9"
+  },
+  "glowIntensity":{
+    "type": "float",
+    "default": "9"
+  },
+  "rotateSpeed":{
+    "type": "float",
+    "default": "0"
+  },
+  "layer":{
+    "type": "float",
+    "default": "blockAdditive"
+  },
+  "rotate":{
+    "type": "boolean",
+    "default": "false"
+  },
+  "color":{
+    "type": "arc.graphics.Color"
+  },
+  "region":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "iconOverride":{
+    "type": "java.lang.String[]",
+    "nullable": true,
+    "doc": "If set, the icon is overridden to be these strings, in order. Each string is a suffix.",
+    "default": "null"
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "superclass": "mindustry.entities.Effect",
+  "doc": "The most essential effect class. Can create particles in various shapes.\n",
+  "colorFrom":{
+    "type": "arc.graphics.Color"
+  },
+  "colorTo":{
+    "type": "arc.graphics.Color"
+  },
+  "particles":{
+    "type": "int",
+    "default": "6"
+  },
+  "randLength":{
+    "type": "boolean",
+    "default": "true"
+  },
+  "casingFlip":{
+    "type": "boolean",
+    "doc": "Gives the effect flipping compatability like casing effects."
+  },
+  "cone":{
+    "type": "float",
+    "default": "180"
+  },
+  "length":{
+    "type": "float",
+    "default": "180"
+  },
+  "baseLength":{
+    "type": "float",
+    "default": "180"
+  },
+  "interp":{
+    "type": "arc.math.Interp",
+    "doc": "Particle size/length/radius interpolation.",
+    "default": "linear"
+  },
+  "sizeInterp":{
+    "type": "arc.math.Interp",
+    "nullable": true,
+    "doc": "Particle size interpolation. Null to use interp.",
+    "default": "null"
+  },
+  "offsetX":{
+    "type": "float"
+  },
+  "offsetY":{
+    "type": "float"
+  },
+  "lightScl":{
+    "type": "float",
+    "default": "2"
+  },
+  "lightOpacity":{
+    "type": "float",
+    "default": "2"
+  },
+  "lightColor":{
+    "type": "arc.graphics.Color",
+    "nullable": true
+  },
+  "spin":{
+    "type": "float",
+    "doc": "Spin in degrees per tick.",
+    "default": "0"
+  },
+  "sizeFrom":{
+    "type": "float",
+    "doc": "Controls the initial and final sprite sizes.",
+    "default": "2"
+  },
+  "sizeTo":{
+    "type": "float",
+    "doc": "Controls the initial and final sprite sizes.",
+    "default": "2"
+  },
+  "sizeChangeStart":{
+    "type": "float",
+    "doc": "Controls the amount of ticks the effect waits before changing size.",
+    "default": "0"
+  },
+  "useRotation":{
+    "type": "boolean",
+    "doc": "Whether the rotation adds with the parent",
+    "default": "true"
+  },
+  "offset":{
+    "type": "float",
+    "doc": "Rotation offset.",
+    "default": "0"
+  },
+  "region":{
+    "type": "java.lang.String",
+    "doc": "Sprite to draw.",
+    "default": "\"circle\""
+  },
+  "line":{
+    "type": "boolean"
+  },
+  "strokeFrom":{
+    "type": "float",
+    "default": "2"
+  },
+  "strokeTo":{
+    "type": "float",
+    "default": "2"
+  },
+  "lenFrom":{
+    "type": "float",
+    "default": "2"
+  },
+  "lenTo":{
+    "type": "float",
+    "default": "2"
+  },
+  "cap":{
+    "type": "boolean",
+    "default": "true"
+  },
+  "id":{
+    "type": "int"
+  },
+  "renderer":{
+    "type": "arc.func.Cons<mindustry.entities.Effect$EffectContainer>"
+  },
+  "lifetime":{
+    "type": "float",
+    "default": "50"
+  },
+  "clip":{
+    "type": "float",
+    "doc": "Clip size."
+  },
+  "startDelay":{
+    "type": "float",
+    "doc": "Time delay before the effect starts"
+  },
+  "baseRotation":{
+    "type": "float",
+    "doc": "Amount added to rotation"
+  },
+  "followParent":{
+    "type": "boolean",
+    "doc": "If true, parent unit is data are followed.",
+    "default": "true"
+  },
+  "rotWithParent":{
+    "type": "boolean",
+    "doc": "If this and followParent are true, the effect will offset and rotate with the parent's rotation."
+  },
+  "layer":{
+    "type": "float",
+    "default": "effect"
+  },
+  "layerDuration":{
+    "type": "float"
+  }
+}

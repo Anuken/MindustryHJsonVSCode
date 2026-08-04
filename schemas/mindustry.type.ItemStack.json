@@ -1,0 +1,10 @@
+{
+  "superclass": "java.lang.Object",
+  "item":{
+    "type": "mindustry.type.Item"
+  },
+  "amount":{
+    "type": "int",
+    "default": "0"
+  }
+}

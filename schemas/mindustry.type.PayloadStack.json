@@ -1,0 +1,11 @@
+{
+  "superclass": "java.lang.Object",
+  "item":{
+    "type": "mindustry.ctype.UnlockableContent",
+    "default": "router"
+  },
+  "amount":{
+    "type": "int",
+    "default": "1"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "superclass": "java.lang.Object",
+  "valid":{
+    "type": "boolean"
+  },
+  "x":{
+    "type": "int"
+  },
+  "y":{
+    "type": "int"
+  },
+  "name":{
+    "type": "java.lang.String"
+  },
+  "lastBuild":{
+    "type": "mindustry.gen.Building"
+  },
+  "logicVar":{
+    "type": "mindustry.logic.LVar",
+    "nullable": true
+  }
+}

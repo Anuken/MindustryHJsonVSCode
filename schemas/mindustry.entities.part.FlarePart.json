@@ -1,0 +1,84 @@
+{
+  "superclass": "mindustry.entities.part.DrawPart",
+  "sides":{
+    "type": "int",
+    "default": "4"
+  },
+  "radius":{
+    "type": "float",
+    "default": "100"
+  },
+  "radiusTo":{
+    "type": "float",
+    "default": "100"
+  },
+  "stroke":{
+    "type": "float",
+    "default": "100"
+  },
+  "innerScl":{
+    "type": "float",
+    "default": "100"
+  },
+  "innerRadScl":{
+    "type": "float",
+    "default": "100"
+  },
+  "x":{
+    "type": "float"
+  },
+  "y":{
+    "type": "float"
+  },
+  "rotation":{
+    "type": "float"
+  },
+  "rotMove":{
+    "type": "float"
+  },
+  "spinSpeed":{
+    "type": "float"
+  },
+  "followRotation":{
+    "type": "boolean"
+  },
+  "color1":{
+    "type": "arc.graphics.Color",
+    "default": "techBlue"
+  },
+  "color2":{
+    "type": "arc.graphics.Color",
+    "default": "techBlue"
+  },
+  "clampProgress":{
+    "type": "boolean",
+    "default": "true"
+  },
+  "progress":{
+    "type": "mindustry.entities.part.DrawPart$PartProgress",
+    "default": "warmup"
+  },
+  "layer":{
+    "type": "float",
+    "default": "effect"
+  },
+  "turretShading":{
+    "type": "boolean",
+    "doc": "If true, turret shading is used. Don't touch this, it is set up in unit/block init()!"
+  },
+  "under":{
+    "type": "boolean",
+    "doc": "If true, the layer is overridden to be under the weapon/turret itself.",
+    "default": "false"
+  },
+  "weaponIndex":{
+    "type": "int",
+    "doc": "For units, this is the index of the weapon this part gets its progress for.",
+    "default": "0"
+  },
+  "recoilIndex":{
+    "type": "int",
+    "doc": "Which recoil counter to use. < 0 to use base recoil.",
+    "default": "-1"
+  }
+}

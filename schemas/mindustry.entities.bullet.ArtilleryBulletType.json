@@ -1,0 +1,941 @@
+{
+  "superclass": "mindustry.entities.bullet.BasicBulletType",
+  "trailMult":{
+    "type": "float",
+    "default": "1"
+  },
+  "trailSize":{
+    "type": "float",
+    "default": "1"
+  },
+  "backColor":{
+    "type": "arc.graphics.Color",
+    "default": "bulletYellowBack"
+  },
+  "frontColor":{
+    "type": "arc.graphics.Color",
+    "default": "bulletYellowBack"
+  },
+  "mixColorFrom":{
+    "type": "arc.graphics.Color"
+  },
+  "mixColorTo":{
+    "type": "arc.graphics.Color"
+  },
+  "width":{
+    "type": "float",
+    "default": "5"
+  },
+  "height":{
+    "type": "float",
+    "default": "5"
+  },
+  "shrinkX":{
+    "type": "float",
+    "default": "0"
+  },
+  "shrinkY":{
+    "type": "float",
+    "default": "0"
+  },
+  "shrinkInterp":{
+    "type": "arc.math.Interp",
+    "default": "linear"
+  },
+  "spin":{
+    "type": "float",
+    "default": "0"
+  },
+  "rotationOffset":{
+    "type": "float",
+    "default": "0"
+  },
+  "sprite":{
+    "type": "java.lang.String"
+  },
+  "backSprite":{
+    "type": "java.lang.String",
+    "nullable": true
+  },
+  "backRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "frontRegion":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "lifetime":{
+    "type": "float",
+    "doc": "Lifetime in ticks.",
+    "default": "40"
+  },
+  "lifeScaleRandMin":{
+    "type": "float",
+    "doc": "Min/max multipliers for lifetime applied to this bullet when spawned.",
+    "default": "1"
+  },
+  "lifeScaleRandMax":{
+    "type": "float",
+    "doc": "Min/max multipliers for lifetime applied to this bullet when spawned.",
+    "default": "1"
+  },
+  "speed":{
+    "type": "float",
+    "doc": "Speed in units/tick.",
+    "default": "1"
+  },
+  "velocityScaleRandMin":{
+    "type": "float",
+    "doc": "Min/max multipliers for velocity applied to this bullet when spawned.",
+    "default": "1"
+  },
+  "velocityScaleRandMax":{
+    "type": "float",
+    "doc": "Min/max multipliers for velocity applied to this bullet when spawned.",
+    "default": "1"
+  },
+  "damage":{
+    "type": "float",
+    "doc": "Direct damage dealt on hit.",
+    "default": "1"
+  },
+  "hitSize":{
+    "type": "float",
+    "doc": "Hitbox size.",
+    "default": "4"
+  },
+  "drawSize":{
+    "type": "float",
+    "doc": "Clipping hitbox.",
+    "default": "40"
+  },
+  "angleOffset":{
+    "type": "float",
+    "doc": "Angle offset applied to bullet when spawned each time.",
+    "default": "0"
+  },
+  "randomAngleOffset":{
+    "type": "float",
+    "doc": "Angle offset applied to bullet when spawned each time.",
+    "default": "0"
+  },
+  "drag":{
+    "type": "float",
+    "doc": "Drag as fraction of velocity.",
+    "default": "0"
+  },
+  "accel":{
+    "type": "float",
+    "doc": "Acceleration per frame.",
+    "default": "0"
+  },
+  "pierce":{
+    "type": "boolean",
+    "doc": "Whether to pierce units."
+  },
+  "pierceBuilding":{
+    "type": "boolean",
+    "doc": "Whether to pierce buildings."
+  },
+  "pierceCap":{
+    "type": "int",
+    "doc": "Maximum # of pierced objects.",
+    "default": "-1"
+  },
+  "pierceDamageFactor":{
+    "type": "float",
+    "doc": "Multiplier of damage decreased per health pierced.",
+    "default": "0"
+  },
+  "maxDamageFraction":{
+    "type": "float",
+    "doc": "If positive, limits non-splash damage dealt to a fraction of the target's maximum health.",
+    "default": "-1"
+  },
+  "removeAfterPierce":{
+    "type": "boolean",
+    "doc": "If false, this bullet isn't removed after pierceCap is exceeded. Expert usage only.",
+    "default": "true"
+  },
+  "laserAbsorb":{
+    "type": "boolean",
+    "doc": "For piercing lasers, setting this to true makes it get absorbed by plastanium walls.",
+    "default": "true"
+  },
+  "optimalLifeFract":{
+    "type": "float",
+    "doc": "Life fraction at which this bullet has the best range/damage/etc. Used for lasers and continuous turrets.",
+    "default": "0"
+  },
+  "layer":{
+    "type": "float",
+    "doc": "Z layer to drawn on.",
+    "default": "bullet"
+  },
+  "hitEffect":{
+    "type": "mindustry.entities.Effect",
+    "doc": "Effect shown on direct hit.",
+    "default": "hitBulletSmall"
+  },
+  "despawnEffect":{
+    "type": "mindustry.entities.Effect",
+    "doc": "Effect shown when bullet despawns.",
+    "default": "hitBulletSmall"
+  },
+  "shootEffect":{
+    "type": "mindustry.entities.Effect",
+    "doc": "Effect created when shooting.",
+    "default": "shootSmall"
+  },
+  "shootPattern":{
+    "type": "mindustry.entities.pattern.ShootPattern",
+    "nullable": true,
+    "doc": "Pattern used to shoot this bullet. If null, uses turret's default pattern.",
+    "default": "null"
+  },
+  "chargeEffect":{
+    "type": "mindustry.entities.Effect",
+    "doc": "Effect created when charging starts; only usable in single-shot weapons with a firstShotDelay / shotDelay.",
+    "default": "none"
+  },
+  "smokeEffect":{
+    "type": "mindustry.entities.Effect",
+    "doc": "Extra smoke effect created when shooting.",
+    "default": "shootSmallSmoke"
+  },
+  "shootSound":{
+    "type": "arc.audio.Sound",
+    "doc": "Overrides the shoot sound in turrets if set. Does nothing in units, as they can't have multiple ammo types.",
+    "default": "none"
+  },
+  "hitSound":{
+    "type": "arc.audio.Sound",
+    "doc": "Sound made when hitting something or getting removed.",
+    "default": "none"
+  },
+  "despawnSound":{
+    "type": "arc.audio.Sound",
+    "doc": "Sound made when hitting something or getting removed.",
+    "default": "none"
+  },
+  "hitSoundPitch":{
+    "type": "float",
+    "doc": "Pitch of the sound made when hitting something",
+    "default": "1"
+  },
+  "hitSoundPitchRange":{
+    "type": "float",
+    "doc": "Pitch of the sound made when hitting something",
+    "default": "1"
+  },
+  "hitSoundVolume":{
+    "type": "float",
+    "doc": "Volume of the sound made when hitting something",
+    "default": "1"
+  },
+  "inaccuracy":{
+    "type": "float",
+    "doc": "Extra inaccuracy when firing.",
+    "default": "0"
+  },
+  "ammoMultiplier":{
+    "type": "float",
+    "doc": "How many bullets get created per ammo item/liquid.",
+    "default": "2"
+  },
+  "reloadMultiplier":{
+    "type": "float",
+    "doc": "Multiplied by turret reload speed to get final shoot speed.",
+    "default": "1"
+  },
+  "buildingDamageMultiplier":{
+    "type": "float",
+    "doc": "Multiplier of how much base damage is done to tiles.",
+    "default": "1"
+  },
+  "shieldDamageMultiplier":{
+    "type": "float",
+    "doc": "Multiplier of how much base damage is done to force shields.",
+    "default": "1"
+  },
+  "recoil":{
+    "type": "float",
+    "doc": "Recoil from shooter entities."
+  },
+  "killShooter":{
+    "type": "boolean",
+    "doc": "Whether to kill the shooter when this is shot. For suicide bombers."
+  },
+  "instantDisappear":{
+    "type": "boolean",
+    "doc": "Whether to instantly make the bullet disappear."
+  },
+  "splashDamage":{
+    "type": "float",
+    "doc": "Damage dealt in splash. 0 to disable.",
+    "default": "0"
+  },
+  "scaledSplashDamage":{
+    "type": "boolean",
+    "doc": "If true, splash damage is \"correctly\" affected by unit hitbox size. Used for projectiles that do not collide / have splash as their main source of damage.",
+    "default": "false"
+  },
+  "knockback":{
+    "type": "float",
+    "doc": "Knockback in velocity."
+  },
+  "impact":{
+    "type": "boolean",
+    "doc": "Should knockback follow the bullet's direction"
+  },
+  "status":{
+    "type": "mindustry.type.StatusEffect",
+    "doc": "Status effect applied on hit.",
+    "default": "none"
+  },
+  "statusDuration":{
+    "type": "float",
+    "doc": "Intensity of applied status effect in terms of duration.",
+    "default": "60 * 8"
+  },
+  "targetBlocks":{
+    "type": "boolean",
+    "doc": "Turret only. If false, blocks will not be targeted.",
+    "default": "true"
+  },
+  "targetMissiles":{
+    "type": "boolean",
+    "doc": "Turret only. If false, missiles will not be targeted.",
+    "default": "true"
+  },
+  "collidesTiles":{
+    "type": "boolean",
+    "doc": "Whether this bullet type collides with tiles.",
+    "default": "true"
+  },
+  "collidesTeam":{
+    "type": "boolean",
+    "doc": "Whether this bullet type collides with tiles that are of the same team.",
+    "default": "false"
+  },
+  "collidesAir":{
+    "type": "boolean",
+    "doc": "Whether this bullet type collides with air/ground units.",
+    "default": "true"
+  },
+  "collidesGround":{
+    "type": "boolean",
+    "doc": "Whether this bullet type collides with air/ground units.",
+    "default": "true"
+  },
+  "collides":{
+    "type": "boolean",
+    "doc": "Whether this bullet types collides with anything at all.",
+    "default": "true"
+  },
+  "collideFloor":{
+    "type": "boolean",
+    "doc": "If true, this projectile collides with non-surface floors.",
+    "default": "false"
+  },
+  "collideTerrain":{
+    "type": "boolean",
+    "doc": "If true, this projectile collides with static walls",
+    "default": "false"
+  },
+  "keepVelocity":{
+    "type": "boolean",
+    "doc": "Whether velocity is inherited from the shooter.",
+    "default": "true"
+  },
+  "scaleKeepVelocity":{
+    "type": "boolean",
+    "doc": "If keepVelocity = true, whether to reduce lifetime proportionally to the added speed, making range consistent.",
+    "default": "false"
+  },
+  "scaleLife":{
+    "type": "boolean",
+    "doc": "Whether to scale lifetime (not actually velocity!) to disappear at the target position. Used for artillery."
+  },
+  "hittable":{
+    "type": "boolean",
+    "doc": "Whether this bullet can be hit by point defense.",
+    "default": "true"
+  },
+  "reflectable":{
+    "type": "boolean",
+    "doc": "Whether this bullet can be reflected.",
+    "default": "true"
+  },
+  "absorbable":{
+    "type": "boolean",
+    "doc": "Whether this projectile can be absorbed by shields.",
+    "default": "true"
+  },
+  "ignoreSpawnAngle":{
+    "type": "boolean",
+    "doc": "If true, the angle param in create is ignored.",
+    "default": "false"
+  },
+  "createChance":{
+    "type": "float",
+    "doc": "Chance for this bullet to be created.",
+    "default": "1"
+  },
+  "maxRange":{
+    "type": "float",
+    "doc": "Bullet range positive override.",
+    "default": "-1"
+  },
+  "rangeOverride":{
+    "type": "float",
+    "doc": "When > 0, overrides range even if smaller than base range.",
+    "default": "-1"
+  },
+  "rangeChange":{
+    "type": "float",
+    "doc": "When used in a turret with multiple ammo types, this can be set to a non-zero value to influence range.",
+    "default": "0"
+  },
+  "extraRangeMargin":{
+    "type": "float",
+    "doc": "When used in turrets with limitRange() applied, this adds extra range to the bullets that extends past targeting range. Only particularly relevant in vanilla.",
+    "default": "0"
+  },
+  "range":{
+    "type": "float",
+    "doc": "Range initialized in init().",
+    "default": "0"
+  },
+  "minRangeChange":{
+    "type": "float",
+    "doc": "When used in a turret with multiple ammo types, this can be set to a non-zero value to influence minRange",
+    "default": "0"
+  },
+  "healPercent":{
+    "type": "float",
+    "doc": "% of block health healed *",
+    "default": "0"
+  },
+  "healAmount":{
+    "type": "float",
+    "doc": "flat amount of block health healed",
+    "default": "0"
+  },
+  "healSound":{
+    "type": "arc.audio.Sound",
+    "doc": "sound played when a block is healed",
+    "default": "blockHeal"
+  },
+  "healSoundVolume":{
+    "type": "float",
+    "doc": "volume of heal sound",
+    "default": "9"
+  },
+  "lifesteal":{
+    "type": "float",
+    "doc": "Fraction of bullet damage that heals that shooter.",
+    "default": "0"
+  },
+  "makeFire":{
+    "type": "boolean",
+    "doc": "Whether to make fire on impact",
+    "default": "false"
+  },
+  "hitUnder":{
+    "type": "boolean",
+    "doc": "Whether this bullet will always hit blocks under it.",
+    "default": "false"
+  },
+  "despawnHit":{
+    "type": "boolean",
+    "doc": "Whether to create hit effects on despawn. Forced to true if this bullet has any special effects like splash damage. Disable setDefaults to avoid override",
+    "default": "false"
+  },
+  "fragOnHit":{
+    "type": "boolean",
+    "doc": "If true, this bullet will create bullets when it hits anything",
+    "default": "true"
+  },
+  "fragOnDespawn":{
+    "type": "boolean",
+    "doc": "If true, this bullet will create bullets when it despawns",
+    "default": "true"
+  },
+  "fragOnAbsorb":{
+    "type": "boolean",
+    "doc": "If false, this bullet will not create frags when absorbed by a shield.",
+    "default": "true"
+  },
+  "pierceArmor":{
+    "type": "boolean",
+    "doc": "If true, unit armor is ignored in damage calculations.",
+    "default": "false"
+  },
+  "armorMultiplier":{
+    "type": "float",
+    "doc": "Multiplies the unit/building armor used in damage calculations. Used for armor weakness, armor piercing, and anti-armor.",
+    "default": "1"
+  },
+  "blockArmorMultiplier":{
+    "type": "float",
+    "doc": "Multiplies only the building armor used in damage calculations.",
+    "default": "1"
+  },
+  "sticky":{
+    "type": "boolean",
+    "doc": "If true, the bullet will \"stick\" to enemies and get deactivated on collision.",
+    "default": "false"
+  },
+  "stickyExtraLifetime":{
+    "type": "float",
+    "doc": "Extra time added to bullet when it sticks to something.",
+    "default": "0"
+  },
+  "setDefaults":{
+    "type": "boolean",
+    "doc": "Whether status and despawnHit should automatically be set.",
+    "default": "true"
+  },
+  "hitShake":{
+    "type": "float",
+    "doc": "Amount of shaking produced when this bullet hits something or despawns.",
+    "default": "0"
+  },
+  "despawnShake":{
+    "type": "float",
+    "doc": "Amount of shaking produced when this bullet hits something or despawns.",
+    "default": "0"
+  },
+  "fragBullet":{
+    "type": "mindustry.entities.bullet.BulletType",
+    "nullable": true,
+    "doc": "Bullet type that is created when this bullet expires.",
+    "default": "null"
+  },
+  "delayFrags":{
+    "type": "boolean",
+    "doc": "If true, frag bullets are delayed to the next frame. Fixes obscure bugs with piercing bullet types spawning frags immediately and screwing up the Damage temporary variables.",
+    "default": "false"
+  },
+  "fragRandomSpread":{
+    "type": "float",
+    "doc": "Degree spread range of fragmentation bullets.",
+    "default": "360"
+  },
+  "fragSpread":{
+    "type": "float",
+    "doc": "Uniform spread between each frag bullet in degrees.",
+    "default": "0"
+  },
+  "fragAngle":{
+    "type": "float",
+    "doc": "Angle offset of fragmentation bullets.",
+    "default": "0"
+  },
+  "fragBullets":{
+    "type": "int",
+    "doc": "Number of fragmentation bullets created.",
+    "default": "9"
+  },
+  "fragVelocityMin":{
+    "type": "float",
+    "doc": "Random range of frag velocity as a multiplier.",
+    "default": "2"
+  },
+  "fragVelocityMax":{
+    "type": "float",
+    "doc": "Random range of frag velocity as a multiplier.",
+    "default": "2"
+  },
+  "fragLifeMin":{
+    "type": "float",
+    "doc": "Random range of frag lifetime as a multiplier.",
+    "default": "1"
+  },
+  "fragLifeMax":{
+    "type": "float",
+    "doc": "Random range of frag lifetime as a multiplier.",
+    "default": "1"
+  },
+  "fragOffsetMin":{
+    "type": "float",
+    "doc": "Random offset of frag bullets from the parent bullet.",
+    "default": "1"
+  },
+  "fragOffsetMax":{
+    "type": "float",
+    "doc": "Random offset of frag bullets from the parent bullet.",
+    "default": "1"
+  },
+  "pierceFragCap":{
+    "type": "int",
+    "doc": "How many times this bullet can release frag bullets, if pierce = true.",
+    "default": "-1"
+  },
+  "intervalBullet":{
+    "type": "mindustry.entities.bullet.BulletType",
+    "nullable": true,
+    "doc": "Bullet that is created at a fixed interval."
+  },
+  "bulletInterval":{
+    "type": "float",
+    "doc": "Interval, in ticks, between which bullet spawn.",
+    "default": "20"
+  },
+  "intervalBullets":{
+    "type": "int",
+    "doc": "Number of bullet spawned per interval.",
+    "default": "1"
+  },
+  "intervalRandomSpread":{
+    "type": "float",
+    "doc": "Random angle added to interval bullets.",
+    "default": "360"
+  },
+  "intervalSpread":{
+    "type": "float",
+    "doc": "Angle spread between individual interval bullets.",
+    "default": "0"
+  },
+  "intervalAngle":{
+    "type": "float",
+    "doc": "Angle offset for interval bullets.",
+    "default": "0"
+  },
+  "intervalDelay":{
+    "type": "float",
+    "doc": "Use a negative value to disable interval bullet delay.",
+    "default": "-1"
+  },
+  "underwater":{
+    "type": "boolean",
+    "doc": "If true, this bullet is rendered underwater. Highly experimental!",
+    "default": "false"
+  },
+  "hitColor":{
+    "type": "arc.graphics.Color",
+    "doc": "Color used for hit/despawn effects.",
+    "default": "white"
+  },
+  "healColor":{
+    "type": "arc.graphics.Color",
+    "doc": "Color used for block heal effects.",
+    "default": "heal"
+  },
+  "healEffect":{
+    "type": "mindustry.entities.Effect",
+    "doc": "Effect emitted upon blocks that are healed.",
+    "default": "healBlockFull"
+  },
+  "spawnBullets":{
+    "type": "arc.struct.Seq<mindustry.entities.bullet.BulletType>",
+    "doc": "Bullets spawned when this bullet is created. Rarely necessary, used for visuals."
+  },
+  "showStats":{
+    "type": "boolean",
+    "doc": "Whether to display the stats of the spawned bullet.",
+    "default": "false"
+  },
+  "spawnBulletRandomSpread":{
+    "type": "float",
+    "doc": "Random angle spread of spawn bullets.",
+    "default": "0"
+  },
+  "spawnUnit":{
+    "type": "mindustry.type.UnitType",
+    "nullable": true,
+    "doc": "Unit spawned _instead of_ this bullet. Useful for missiles."
+  },
+  "despawnUnit":{
+    "type": "mindustry.type.UnitType",
+    "nullable": true,
+    "doc": "Unit spawned when this bullet hits something or despawns due to it hitting the end of its lifetime."
+  },
+  "despawnUnitChance":{
+    "type": "float",
+    "doc": "The chance for despawn units to spawn.",
+    "default": "1"
+  },
+  "despawnUnitCount":{
+    "type": "int",
+    "doc": "Amount of units spawned when this bullet despawns.",
+    "default": "1"
+  },
+  "despawnUnitRadius":{
+    "type": "float",
+    "doc": "Random offset distance from the original bullet despawn/hit coordinate.",
+    "default": "1"
+  },
+  "faceOutwards":{
+    "type": "boolean",
+    "doc": "If true, units spawned when this bullet despawns face away from the bullet instead of the same direction as the bullet.",
+    "default": "false"
+  },
+  "parts":{
+    "type": "arc.struct.Seq<mindustry.entities.part.DrawPart>",
+    "doc": "Extra visual parts for this bullet."
+  },
+  "trailColor":{
+    "type": "arc.graphics.Color",
+    "doc": "Color of trail behind bullet.",
+    "default": "missileYellowBack"
+  },
+  "trailChance":{
+    "type": "float",
+    "doc": "Chance of trail effect spawning on bullet per tick.",
+    "default": "0001"
+  },
+  "trailInterval":{
+    "type": "float",
+    "doc": "Uniform interval in which trail effect is spawned.",
+    "default": "0"
+  },
+  "trailMinVelocity":{
+    "type": "float",
+    "doc": "Min velocity required for trail effect to spawn.",
+    "default": "0"
+  },
+  "trailEffect":{
+    "type": "mindustry.entities.Effect",
+    "doc": "Trail effect that is spawned.",
+    "default": "missileTrail"
+  },
+  "trailSpread":{
+    "type": "float",
+    "doc": "Random offset of trail effect.",
+    "default": "0"
+  },
+  "trailParam":{
+    "type": "float",
+    "doc": "Rotation/size parameter that is passed to trail. Usually, this controls size.",
+    "default": "2"
+  },
+  "trailRotation":{
+    "type": "boolean",
+    "doc": "Whether the parameter passed to the trail is the bullet rotation, instead of a flat value.",
+    "default": "false"
+  },
+  "trailInterp":{
+    "type": "arc.math.Interp",
+    "doc": "Interpolation for trail width as function of bullet lifetime",
+    "default": "one"
+  },
+  "trailLength":{
+    "type": "int",
+    "doc": "Length of trail quads. Any value <= 0 disables the trail.",
+    "default": "-1"
+  },
+  "trailWidth":{
+    "type": "float",
+    "doc": "Width of trail, if trailLength > 0",
+    "default": "2"
+  },
+  "trailSinMag":{
+    "type": "float",
+    "doc": "If trailSinMag > 0, these values are applied as a sine curve to trail width.",
+    "default": "0"
+  },
+  "trailSinScl":{
+    "type": "float",
+    "doc": "If trailSinMag > 0, these values are applied as a sine curve to trail width.",
+    "default": "0"
+  },
+  "circleShooter":{
+    "type": "boolean",
+    "doc": "If true, the bullet will attempt to circle around its shooting entity.",
+    "default": "false"
+  },
+  "circleShooterRadius":{
+    "type": "float",
+    "doc": "Radius that the bullet attempts to circle at.",
+    "default": "13"
+  },
+  "circleShooterRadiusSmooth":{
+    "type": "float",
+    "doc": "Smooth extra radius value for circling.",
+    "default": "10"
+  },
+  "circleShooterRotateSpeed":{
+    "type": "float",
+    "doc": "Multiplier of speed that is used to adjust velocity when circling.",
+    "default": "3"
+  },
+  "splashDamageRadius":{
+    "type": "float",
+    "doc": "Use a negative value to disable splash damage.",
+    "default": "-1"
+  },
+  "splashDamagePierce":{
+    "type": "boolean",
+    "doc": "If true, splash damage pierces through tiles.",
+    "default": "false"
+  },
+  "incendAmount":{
+    "type": "int",
+    "doc": "Amount of fires attempted around bullet.",
+    "default": "0"
+  },
+  "incendSpread":{
+    "type": "float",
+    "doc": "Spread of fires around bullet.",
+    "default": "8"
+  },
+  "incendChance":{
+    "type": "float",
+    "doc": "Chance of fire being created.",
+    "default": "1"
+  },
+  "homingPower":{
+    "type": "float",
+    "doc": "Power of bullet ability. Usually a number between 0 and 1; try 0.1 as a starting point.",
+    "default": "0"
+  },
+  "homingRange":{
+    "type": "float",
+    "doc": "Range of homing effect around bullet.",
+    "default": "50"
+  },
+  "homingDelay":{
+    "type": "float",
+    "doc": "Use a negative value to disable homing delay.",
+    "default": "-1"
+  },
+  "followAimSpeed":{
+    "type": "float",
+    "doc": "Speed at which bullet rotates to follow cursor. <= 0 to disable.",
+    "default": "0"
+  },
+  "suppressionRange":{
+    "type": "float",
+    "doc": "Range of healing block suppression effect.",
+    "default": "-1"
+  },
+  "suppressionDuration":{
+    "type": "float",
+    "doc": "Duration of healing block suppression effect.",
+    "default": "60f * 8"
+  },
+  "suppressionEffectChance":{
+    "type": "float",
+    "doc": "Chance of suppression effect occurring on block, scaled down by number of blocks.",
+    "default": "50"
+  },
+  "suppressColor":{
+    "type": "arc.graphics.Color",
+    "doc": "Color used for the regenSuppressSeek effect.",
+    "default": "sapBullet"
+  },
+  "lightningColor":{
+    "type": "arc.graphics.Color",
+    "doc": "Color of lightning created by bullet.",
+    "default": "surge"
+  },
+  "lightning":{
+    "type": "int",
+    "doc": "Number of separate lightning \"roots\"."
+  },
+  "lightningLength":{
+    "type": "int",
+    "doc": "Length of each lightning strand.",
+    "default": "5"
+  },
+  "lightningLengthRand":{
+    "type": "int",
+    "doc": "Extra random length added onto base length of lightning.",
+    "default": "0"
+  },
+  "lightningDamage":{
+    "type": "float",
+    "doc": "Use a negative value to use default bullet damage.",
+    "default": "-1"
+  },
+  "lightningCone":{
+    "type": "float",
+    "doc": "Spread of lightning, relative to bullet rotation.",
+    "default": "360"
+  },
+  "lightningAngle":{
+    "type": "float",
+    "doc": "Offset of lightning relative to bullet rotation.",
+    "default": "0"
+  },
+  "lightningType":{
+    "type": "mindustry.entities.bullet.BulletType",
+    "nullable": true,
+    "doc": "The bullet created at lightning points.",
+    "default": "null"
+  },
+  "weaveScale":{
+    "type": "float",
+    "doc": "Scale of bullet weave pattern. Higher -> less vibration.",
+    "default": "1"
+  },
+  "weaveMag":{
+    "type": "float",
+    "doc": "Intensity of bullet weaving. Note that this may make bullets inaccurate.",
+    "default": "0"
+  },
+  "weaveRandom":{
+    "type": "boolean",
+    "doc": "If true, the bullet weave will randomly switch directions on spawn.",
+    "default": "true"
+  },
+  "rotateSpeed":{
+    "type": "float",
+    "doc": "Rotation speed of the bullet velocity as it travels.",
+    "default": "0"
+  },
+  "puddles":{
+    "type": "int",
+    "doc": "Number of individual puddles created."
+  },
+  "puddleRange":{
+    "type": "float",
+    "doc": "Range of puddles around bullet position."
+  },
+  "puddleAmount":{
+    "type": "float",
+    "doc": "Liquid count of each puddle created.",
+    "default": "5"
+  },
+  "puddleLiquid":{
+    "type": "mindustry.type.Liquid",
+    "doc": "Liquid that puddles created are made of.",
+    "default": "water"
+  },
+  "displayAmmoMultiplier":{
+    "type": "boolean",
+    "doc": "Whether to display the ammo multiplayer for this bullet type in its stats.",
+    "default": "true"
+  },
+  "statLiquidConsumed":{
+    "type": "float",
+    "doc": "If >0, this is displayed divided by the ammo multiplier."
+  },
+  "lightRadius":{
+    "type": "float",
+    "doc": "Radius of light emitted by this bullet; <0 to use defaults.",
+    "default": "-1"
+  },
+  "lightOpacity":{
+    "type": "float",
+    "doc": "Opacity of light color.",
+    "default": "3"
+  },
+  "lightColor":{
+    "type": "arc.graphics.Color",
+    "doc": "Color of light emitted by this bullet.",
+    "default": "powerLight"
+  },
+  "id":{
+    "type": "short"
+  },
+  "minfo":{
+    "type": "mindustry.ctype.Content$ModContentInfo",
+    "doc": "Info on which mod this content was loaded from."
+  },
+  "removed":{
+    "type": "boolean",
+    "doc": "If true, this content is invalid (added in a data patch and then removed)."
+  }
+}

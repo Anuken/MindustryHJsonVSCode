@@ -1,0 +1,44 @@
+{
+  "superclass": "mindustry.world.draw.DrawBlock",
+  "heat":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "glow":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "top1":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "top2":{
+    "type": "arc.graphics.g2d.TextureRegion"
+  },
+  "heatColor":{
+    "type": "arc.graphics.Color"
+  },
+  "heatPulse":{
+    "type": "float",
+    "default": "3"
+  },
+  "heatPulseScl":{
+    "type": "float",
+    "default": "3"
+  },
+  "glowMult":{
+    "type": "float",
+    "default": "3"
+  },
+  "rotOffset":{
+    "type": "int",
+    "default": "0"
+  },
+  "drawGlow":{
+    "type": "boolean",
+    "default": "true"
+  },
+  "iconOverride":{
+    "type": "java.lang.String[]",
+    "nullable": true,
+    "doc": "If set, the icon is overridden to be these strings, in order. Each string is a suffix.",
+    "default": "null"
+  }
+}

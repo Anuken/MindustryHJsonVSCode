@@ -1,0 +1,9 @@
+{
+  "superclass": "mindustry.entities.units.AIController",
+  "targetPos":{
+    "type": "arc.math.geom.Vec2"
+  },
+  "targetAngle":{
+    "type": "float"
+  }
+}

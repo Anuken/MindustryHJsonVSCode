@@ -1,0 +1,48 @@
+{
+  "superclass": "mindustry.world.draw.DrawBlock",
+  "color":{
+    "type": "arc.graphics.Color"
+  },
+  "amount":{
+    "type": "int",
+    "default": "10"
+  },
+  "layers":{
+    "type": "int",
+    "default": "10"
+  },
+  "stroke":{
+    "type": "float",
+    "default": "2"
+  },
+  "rotateSpeed":{
+    "type": "float",
+    "default": "2"
+  },
+  "radius":{
+    "type": "float",
+    "default": "6"
+  },
+  "length":{
+    "type": "float",
+    "default": "6"
+  },
+  "x":{
+    "type": "float",
+    "default": "6"
+  },
+  "y":{
+    "type": "float",
+    "default": "6"
+  },
+  "layerSpeed":{
+    "type": "float",
+    "default": "6"
+  },
+  "iconOverride":{
+    "type": "java.lang.String[]",
+    "nullable": true,
+    "doc": "If set, the icon is overridden to be these strings, in order. Each string is a suffix.",
+    "default": "null"
+  }
+}

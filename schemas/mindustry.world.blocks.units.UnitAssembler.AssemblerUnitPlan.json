@@ -1,0 +1,21 @@
+{
+  "superclass": "java.lang.Object",
+  "unit":{
+    "type": "mindustry.type.UnitType"
+  },
+  "requirements":{
+    "type": "arc.struct.Seq<mindustry.type.PayloadStack>",
+    "nullable": true
+  },
+  "itemReq":{
+    "type": "mindustry.type.ItemStack[]",
+    "nullable": true
+  },
+  "liquidReq":{
+    "type": "mindustry.type.LiquidStack[]",
+    "nullable": true
+  },
+  "time":{
+    "type": "float"
+  }
+}

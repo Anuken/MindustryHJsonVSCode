@@ -1,0 +1,6 @@
+{
+  "superclass": "java.lang.Object",
+  "build":{
+    "type": "mindustry.gen.Building"
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "superclass": "java.lang.Object",
+  "doc": "Holds some static temporary variables, required due to some RoboVM bugs\n"
+}

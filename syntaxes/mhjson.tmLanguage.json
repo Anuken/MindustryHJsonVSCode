@@ -1,0 +1,89 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Mindustry HJSON",
+  "scopeName": "source.mhjson",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#member" },
+    { "include": "#value" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        { "name": "comment.line.number-sign.mhjson", "match": "#.*$" },
+        { "name": "comment.line.double-slash.mhjson", "match": "//.*$" },
+        { "name": "comment.block.mhjson", "begin": "/\\*", "end": "\\*/" }
+      ]
+    },
+    "member": {
+      "begin": "(?:^|[,{\\[])\\s*([A-Za-z_$][\\w$.\\-]*|\"(?:[^\"\\\\]|\\\\.)*\"|'(?:[^'\\\\]|\\\\.)*')\\s*(:)",
+      "beginCaptures": {
+        "1": { "name": "support.type.property-name.mhjson entity.name.tag.mhjson" },
+        "2": { "name": "punctuation.separator.key-value.mhjson" }
+      },
+      "end": "(?=[,\\n}\\]]|#|//|/\\*)",
+      "patterns": [
+        { "include": "#comments" },
+        { "include": "#value" }
+      ]
+    },
+    "value": {
+      "patterns": [
+        { "include": "#comments" },
+        { "include": "#triple-string" },
+        { "include": "#string" },
+        { "include": "#number" },
+        { "include": "#constant" },
+        { "include": "#array" },
+        { "include": "#object" },
+        { "include": "#bareword" }
+      ]
+    },
+    "array": {
+      "begin": "\\[",
+      "beginCaptures": { "0": { "name": "punctuation.definition.array.begin.mhjson" } },
+      "end": "\\]",
+      "endCaptures": { "0": { "name": "punctuation.definition.array.end.mhjson" } },
+      "patterns": [
+        { "include": "#comments" },
+        { "include": "#member" },
+        { "include": "#value" },
+        { "match": ",", "name": "punctuation.separator.array.mhjson" }
+      ]
+    },
+    "object": {
+      "begin": "\\{",
+      "beginCaptures": { "0": { "name": "punctuation.definition.object.begin.mhjson" } },
+      "end": "\\}",
+      "endCaptures": { "0": { "name": "punctuation.definition.object.end.mhjson" } },
+      "patterns": [
+        { "include": "#comments" },
+        { "include": "#member" },
+        { "match": ",", "name": "punctuation.separator.object.mhjson" }
+      ]
+    },
+    "triple-string": {
+      "name": "string.quoted.triple.mhjson",
+      "begin": "'''",
+      "end": "'''"
+    },
+    "string": {
+      "patterns": [
+        { "name": "string.quoted.double.mhjson", "begin": "\"", "end": "\"", "patterns": [ { "match": "\\\\.", "name": "constant.character.escape.mhjson" } ] },
+        { "name": "string.quoted.single.mhjson", "begin": "'", "end": "'", "patterns": [ { "match": "\\\\.", "name": "constant.character.escape.mhjson" } ] }
+      ]
+    },
+    "number": {
+      "match": "(?<=[:,\\[]|^)\\s*-?\\b\\d+(\\.\\d+)?([eE][+\\-]?\\d+)?\\b(?=\\s*[,\\]\\}\\n#]|\\s*//|\\s*/\\*|\\s*$)",
+      "name": "constant.numeric.mhjson"
+    },
+    "constant": {
+      "match": "\\b(true|false|null)\\b",
+      "name": "constant.language.mhjson"
+    },
+    "bareword": {
+      "name": "string.unquoted.mhjson",
+      "match": "[^,\\[\\]{}\\n#]+"
+    }
+  }
+}

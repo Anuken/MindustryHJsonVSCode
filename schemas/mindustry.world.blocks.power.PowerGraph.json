@@ -1,0 +1,15 @@
+{
+  "superclass": "java.lang.Object",
+  "producers":{
+    "type": "arc.struct.Seq<mindustry.gen.Building>"
+  },
+  "consumers":{
+    "type": "arc.struct.Seq<mindustry.gen.Building>"
+  },
+  "batteries":{
+    "type": "arc.struct.Seq<mindustry.gen.Building>"
+  },
+  "all":{
+    "type": "arc.struct.Seq<mindustry.gen.Building>"
+  }
+}

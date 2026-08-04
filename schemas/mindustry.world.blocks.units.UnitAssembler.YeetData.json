@@ -1,0 +1,10 @@
+{
+  "superclass": "java.lang.Object",
+  "doc": "hbgwerjhbagjegwg\n",
+  "target":{
+    "type": "arc.math.geom.Vec2"
+  },
+  "item":{
+    "type": "mindustry.ctype.UnlockableContent"
+  }
+}

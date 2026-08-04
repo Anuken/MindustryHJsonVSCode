@@ -1,0 +1,65 @@
+{
+  "superclass": "mindustry.entities.Effect",
+  "doc": "Plays a sound effect when created and simultaneously renders an effect.\n",
+  "sound":{
+    "type": "arc.audio.Sound",
+    "default": "none"
+  },
+  "minPitch":{
+    "type": "float",
+    "default": "8"
+  },
+  "maxPitch":{
+    "type": "float",
+    "default": "2"
+  },
+  "minVolume":{
+    "type": "float",
+    "default": "1"
+  },
+  "maxVolume":{
+    "type": "float",
+    "default": "1"
+  },
+  "effect":{
+    "type": "mindustry.entities.Effect"
+  },
+  "id":{
+    "type": "int"
+  },
+  "renderer":{
+    "type": "arc.func.Cons<mindustry.entities.Effect$EffectContainer>"
+  },
+  "lifetime":{
+    "type": "float",
+    "default": "50"
+  },
+  "clip":{
+    "type": "float",
+    "doc": "Clip size."
+  },
+  "startDelay":{
+    "type": "float",
+    "doc": "Time delay before the effect starts"
+  },
+  "baseRotation":{
+    "type": "float",
+    "doc": "Amount added to rotation"
+  },
+  "followParent":{
+    "type": "boolean",
+    "doc": "If true, parent unit is data are followed.",
+    "default": "true"
+  },
+  "rotWithParent":{
+    "type": "boolean",
+    "doc": "If this and followParent are true, the effect will offset and rotate with the parent's rotation."
+  },
+  "layer":{
+    "type": "float",
+    "default": "effect"
+  },
+  "layerDuration":{
+    "type": "float"
+  }
+}

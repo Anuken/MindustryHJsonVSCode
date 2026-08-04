@@ -1,0 +1,97 @@
+{
+  "superclass": "mindustry.entities.Effect",
+  "doc": "Effect that renders noise layers over the camera view.\n",
+  "noisePath":{
+    "type": "java.lang.String",
+    "default": "png\""
+  },
+  "color":{
+    "type": "arc.graphics.Color",
+    "nullable": true
+  },
+  "noiseScl":{
+    "type": "float",
+    "default": "1000"
+  },
+  "opacity":{
+    "type": "float",
+    "default": "3"
+  },
+  "baseSpeed":{
+    "type": "float",
+    "default": "4"
+  },
+  "intensity":{
+    "type": "float",
+    "default": "1"
+  },
+  "windX":{
+    "type": "float",
+    "default": "1"
+  },
+  "windY":{
+    "type": "float",
+    "default": "0"
+  },
+  "layers":{
+    "type": "int",
+    "default": "4"
+  },
+  "layerSpeedMul":{
+    "type": "float",
+    "default": "3"
+  },
+  "layerAlphaMul":{
+    "type": "float",
+    "default": "7"
+  },
+  "layerSclMul":{
+    "type": "float",
+    "default": "8"
+  },
+  "layerColorMul":{
+    "type": "float",
+    "default": "9"
+  },
+  "tex":{
+    "type": "arc.graphics.Texture"
+  },
+  "id":{
+    "type": "int"
+  },
+  "renderer":{
+    "type": "arc.func.Cons<mindustry.entities.Effect$EffectContainer>"
+  },
+  "lifetime":{
+    "type": "float",
+    "default": "50"
+  },
+  "clip":{
+    "type": "float",
+    "doc": "Clip size."
+  },
+  "startDelay":{
+    "type": "float",
+    "doc": "Time delay before the effect starts"
+  },
+  "baseRotation":{
+    "type": "float",
+    "doc": "Amount added to rotation"
+  },
+  "followParent":{
+    "type": "boolean",
+    "doc": "If true, parent unit is data are followed.",
+    "default": "true"
+  },
+  "rotWithParent":{
+    "type": "boolean",
+    "doc": "If this and followParent are true, the effect will offset and rotate with the parent's rotation."
+  },
+  "layer":{
+    "type": "float",
+    "default": "effect"
+  },
+  "layerDuration":{
+    "type": "float"
+  }
+}

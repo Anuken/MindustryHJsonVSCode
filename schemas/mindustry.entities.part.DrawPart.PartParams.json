@@ -1,0 +1,42 @@
+{
+  "superclass": "java.lang.Object",
+  "doc": "Parameters for drawing a part in draw().\n",
+  "warmup":{
+    "type": "float"
+  },
+  "reload":{
+    "type": "float"
+  },
+  "smoothReload":{
+    "type": "float"
+  },
+  "heat":{
+    "type": "float"
+  },
+  "recoil":{
+    "type": "float"
+  },
+  "life":{
+    "type": "float"
+  },
+  "charge":{
+    "type": "float"
+  },
+  "x":{
+    "type": "float"
+  },
+  "y":{
+    "type": "float"
+  },
+  "rotation":{
+    "type": "float"
+  },
+  "sideOverride":{
+    "type": "int",
+    "default": "-1"
+  },
+  "sideMultiplier":{
+    "type": "int",
+    "default": "-1"
+  }
+}

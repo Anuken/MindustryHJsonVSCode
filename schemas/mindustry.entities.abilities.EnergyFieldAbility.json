@@ -1,0 +1,122 @@
+{
+  "superclass": "mindustry.entities.abilities.Ability",
+  "damage":{
+    "type": "float",
+    "default": "1"
+  },
+  "reload":{
+    "type": "float",
+    "default": "1"
+  },
+  "range":{
+    "type": "float",
+    "default": "1"
+  },
+  "healEffect":{
+    "type": "mindustry.entities.Effect",
+    "default": "heal"
+  },
+  "hitEffect":{
+    "type": "mindustry.entities.Effect",
+    "default": "heal"
+  },
+  "damageEffect":{
+    "type": "mindustry.entities.Effect",
+    "default": "heal"
+  },
+  "status":{
+    "type": "mindustry.type.StatusEffect",
+    "default": "electrified"
+  },
+  "shootSound":{
+    "type": "arc.audio.Sound",
+    "default": "shootEnergyField"
+  },
+  "statusDuration":{
+    "type": "float",
+    "default": "60f * 6"
+  },
+  "x":{
+    "type": "float"
+  },
+  "y":{
+    "type": "float"
+  },
+  "targetGround":{
+    "type": "boolean",
+    "default": "true"
+  },
+  "targetAir":{
+    "type": "boolean",
+    "default": "true"
+  },
+  "hitBuildings":{
+    "type": "boolean",
+    "default": "true"
+  },
+  "hitUnits":{
+    "type": "boolean",
+    "default": "true"
+  },
+  "maxTargets":{
+    "type": "int",
+    "default": "25"
+  },
+  "healPercent":{
+    "type": "float",
+    "default": "3"
+  },
+  "sameTypeHealMult":{
+    "type": "float",
+    "doc": "Multiplies healing to units of the same type by this amount.",
+    "default": "1"
+  },
+  "displayHeal":{
+    "type": "boolean",
+    "default": "true"
+  },
+  "layer":{
+    "type": "float",
+    "default": "001"
+  },
+  "blinkScl":{
+    "type": "float",
+    "default": "001"
+  },
+  "blinkSize":{
+    "type": "float",
+    "default": "001"
+  },
+  "effectRadius":{
+    "type": "float",
+    "default": "5"
+  },
+  "sectorRad":{
+    "type": "float",
+    "default": "5"
+  },
+  "rotateSpeed":{
+    "type": "float",
+    "default": "5"
+  },
+  "sectors":{
+    "type": "int",
+    "default": "5"
+  },
+  "color":{
+    "type": "arc.graphics.Color",
+    "default": "heal"
+  },
+  "useAmmo":{
+    "type": "boolean",
+    "default": "true"
+  },
+  "display":{
+    "type": "boolean",
+    "doc": "If false, this ability does not show in unit stats.",
+    "default": "true"
+  },
+  "data":{
+    "type": "float"
+  }
+}

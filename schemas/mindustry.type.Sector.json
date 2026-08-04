@@ -1,0 +1,41 @@
+{
+  "superclass": "java.lang.Object",
+  "doc": "A small section of a planet.\n",
+  "rect":{
+    "type": "mindustry.type.Sector$SectorRect"
+  },
+  "plane":{
+    "type": "arc.math.geom.Plane"
+  },
+  "planet":{
+    "type": "mindustry.type.Planet"
+  },
+  "tile":{
+    "type": "mindustry.graphics.g3d.PlanetGrid$Ptile"
+  },
+  "id":{
+    "type": "int"
+  },
+  "save":{
+    "type": "mindustry.game.Saves$SaveSlot",
+    "nullable": true
+  },
+  "preset":{
+    "type": "mindustry.type.SectorPreset",
+    "nullable": true
+  },
+  "shieldTarget":{
+    "type": "mindustry.type.Sector",
+    "nullable": true
+  },
+  "info":{
+    "type": "mindustry.game.SectorInfo"
+  },
+  "threat":{
+    "type": "float",
+    "doc": "Number 0-1 indicating the difficulty based on nearby bases."
+  },
+  "generateEnemyBase":{
+    "type": "boolean"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "superclass": "java.lang.Object",
+  "planet":{
+    "type": "mindustry.type.Planet"
+  }
+}

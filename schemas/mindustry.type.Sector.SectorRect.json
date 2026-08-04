@@ -1,0 +1,21 @@
+{
+  "superclass": "java.lang.Object",
+  "center":{
+    "type": "arc.math.geom.Vec3"
+  },
+  "top":{
+    "type": "arc.math.geom.Vec3"
+  },
+  "right":{
+    "type": "arc.math.geom.Vec3"
+  },
+  "result":{
+    "type": "arc.math.geom.Vec3"
+  },
+  "radius":{
+    "type": "float"
+  },
+  "rotation":{
+    "type": "float"
+  }
+}

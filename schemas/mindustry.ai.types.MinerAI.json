@@ -1,0 +1,13 @@
+{
+  "superclass": "mindustry.entities.units.AIController",
+  "mining":{
+    "type": "boolean",
+    "default": "true"
+  },
+  "targetItem":{
+    "type": "mindustry.type.Item"
+  },
+  "ore":{
+    "type": "mindustry.world.Tile"
+  }
+}

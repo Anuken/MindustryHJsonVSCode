@@ -1,0 +1,101 @@
+{
+  "superclass": "mindustry.entities.Effect",
+  "waveColor":{
+    "type": "arc.graphics.Color",
+    "default": "missileYellow"
+  },
+  "smokeColor":{
+    "type": "arc.graphics.Color",
+    "default": "missileYellow"
+  },
+  "sparkColor":{
+    "type": "arc.graphics.Color",
+    "default": "missileYellow"
+  },
+  "waveLife":{
+    "type": "float",
+    "default": "6"
+  },
+  "waveStroke":{
+    "type": "float",
+    "default": "6"
+  },
+  "waveRad":{
+    "type": "float",
+    "default": "6"
+  },
+  "waveRadBase":{
+    "type": "float",
+    "default": "6"
+  },
+  "sparkStroke":{
+    "type": "float",
+    "default": "6"
+  },
+  "sparkRad":{
+    "type": "float",
+    "default": "6"
+  },
+  "sparkLen":{
+    "type": "float",
+    "default": "6"
+  },
+  "smokeSize":{
+    "type": "float",
+    "default": "6"
+  },
+  "smokeSizeBase":{
+    "type": "float",
+    "default": "6"
+  },
+  "smokeRad":{
+    "type": "float",
+    "default": "6"
+  },
+  "smokes":{
+    "type": "int",
+    "default": "5"
+  },
+  "sparks":{
+    "type": "int",
+    "default": "5"
+  },
+  "id":{
+    "type": "int"
+  },
+  "renderer":{
+    "type": "arc.func.Cons<mindustry.entities.Effect$EffectContainer>"
+  },
+  "lifetime":{
+    "type": "float",
+    "default": "50"
+  },
+  "clip":{
+    "type": "float",
+    "doc": "Clip size."
+  },
+  "startDelay":{
+    "type": "float",
+    "doc": "Time delay before the effect starts"
+  },
+  "baseRotation":{
+    "type": "float",
+    "doc": "Amount added to rotation"
+  },
+  "followParent":{
+    "type": "boolean",
+    "doc": "If true, parent unit is data are followed.",
+    "default": "true"
+  },
+  "rotWithParent":{
+    "type": "boolean",
+    "doc": "If this and followParent are true, the effect will offset and rotate with the parent's rotation."
+  },
+  "layer":{
+    "type": "float",
+    "default": "effect"
+  },
+  "layerDuration":{
+    "type": "float"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "superclass": "java.lang.Object",
+  "from":{
+    "type": "mindustry.world.blocks.distribution.MassDriver$MassDriverBuild"
+  },
+  "to":{
+    "type": "mindustry.world.blocks.distribution.MassDriver$MassDriverBuild"
+  },
+  "items":{
+    "type": "int[]",
+    "default": "[]"
+  }
+}

@@ -1,0 +1,7 @@
+mindustry-hjson-0.0.1.vsixnode_modules/
+node_modules/
+out/
+dist/
+*.vsix
+.vscode-test/
+test-fixtures/
