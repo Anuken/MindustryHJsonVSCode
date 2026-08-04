@@ -5,6 +5,7 @@ import {
 	findExplicitTypeField,
 	inferImplicitType,
 	contentTypeSimpleName,
+	arrayContentTypeSimpleName,
 	stackContentType,
 	stackArrayContentType,
 } from '../schema/typeResolver';
@@ -145,7 +146,7 @@ function visit(node: Jval, ctx: TypeContext, offset: number, result: LocateResul
 					const explicit = findExplicitTypeField(member.value as JvalObject);
 					childCtx = ctx.forField(field).withExplicitType(explicit);
 				} else if (member.value.type === 'array') {
-					const arrayContentType = field ? contentTypeSimpleName(field.type) : undefined;
+					const arrayContentType = field ? arrayContentTypeSimpleName(field.type) : undefined;
 					if (arrayContentType) {
 						checkContentArrayElement(member.value as JvalArray, arrayContentType, offset, result);
 						return;

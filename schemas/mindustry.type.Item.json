@@ -137,7 +137,7 @@
     "default": "false"
   },
   "shownPlanets":{
-    "type": "arc.struct.Seq<mindustry.type.Planet>",
+    "type": "arc.struct.ObjectSet<mindustry.type.Planet>",
     "doc": "Planets that this content is made for. If empty, a planet is decided based on item requirements.\nCurrently, this is only meaningful for blocks."
   },
   "databaseTabs":{

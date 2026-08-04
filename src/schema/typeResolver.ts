@@ -42,6 +42,23 @@ export function contentTypeSimpleName(type: string): string | undefined {
 }
 
 /**
+ * Like `contentTypeSimpleName`, but for an *array*-of-content field, e.g.
+ * `Seq<Item>`, `ObjectSet<Planet>`, or `Block[]`. Unwraps the array/generic
+ * wrapper first (via `arrayElementSimpleName`) before checking the element
+ * type against CONTENT_TYPE_SIMPLE_NAMES - `contentTypeSimpleName` itself
+ * can't be used directly here since it only strips the text after the type's
+ * *last* dot, which for a generic type like `arc.struct.ObjectSet<mindustry.
+ * type.Planet>` lands inside the type parameter (yielding "Planet>", not
+ * "Planet") rather than at the wrapper's own simple name.
+ */
+export function arrayContentTypeSimpleName(type: string): string | undefined {
+	const el = arrayElementSimpleName(type);
+	if (!el) return undefined;
+	if (el === ANY_CONTENT_TYPE_SIMPLE_NAME) return ANY_CONTENT_TYPE_SIMPLE_NAME;
+	return CONTENT_TYPE_SIMPLE_NAMES.has(el) ? el : undefined;
+}
+
+/**
  * Simple names of abstract/base classes that are never actually instantiated
  * bare - Mindustry substitutes a concrete default subclass when an object of
  * this declared type has no explicit `type: X` of its own. Keyed and valued

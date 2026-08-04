@@ -485,6 +485,10 @@
     "type": "boolean",
     "doc": "If true, this content is invalid (added in a data patch and then removed)."
   },
+  "sectorSize":{
+    "type": "int",
+    "doc": "Planet sector subdivisions"
+  },
   "research":{
     "type": "Research",
     "nullable": true,
