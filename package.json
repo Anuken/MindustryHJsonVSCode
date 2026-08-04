@@ -1,13 +1,14 @@
 {
   "name": "mindustry-hjson",
-  "displayName": "Mindustry HJSON",
+  "displayName": "Mindustry HJSON Mod Support",
   "description": "Syntax highlighting, schema-driven autocomplete, diagnostics and hover docs for Mindustry mod (H)JSON content files.",
   "version": "0.0.6",
-  "publisher": "local-dev",
+  "publisher": "actually-not-anuke",
   "engines": { "vscode": "^1.85.0" },
   "categories": ["Programming Languages", "Linters"],
   "activationEvents": [ "onLanguage:mhjson" ],
   "main": "./out/extension.js",
+  "icon": "icon.png",
   "contributes": {
     "languages": [
       {
