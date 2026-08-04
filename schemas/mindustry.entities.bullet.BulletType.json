@@ -863,16 +863,5 @@
     "type": "arc.graphics.Color",
     "doc": "Color of light emitted by this bullet.",
     "default": "powerLight"
-  },
-  "id":{
-    "type": "short"
-  },
-  "minfo":{
-    "type": "mindustry.ctype.Content$ModContentInfo",
-    "doc": "Info on which mod this content was loaded from."
-  },
-  "removed":{
-    "type": "boolean",
-    "doc": "If true, this content is invalid (added in a data patch and then removed)."
   }
 }

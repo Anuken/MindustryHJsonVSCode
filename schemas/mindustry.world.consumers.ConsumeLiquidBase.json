@@ -3,22 +3,5 @@
   "amount":{
     "type": "float",
     "doc": "amount used per frame"
-  },
-  "optional":{
-    "type": "boolean",
-    "doc": "If true, this consumer will not influence consumer validity."
-  },
-  "booster":{
-    "type": "boolean",
-    "doc": "If true, this consumer will be displayed as a boost input."
-  },
-  "update":{
-    "type": "boolean",
-    "doc": "If false, this consumer will still be checked, but it will need to updated manually.",
-    "default": "true"
-  },
-  "multiplier":{
-    "type": "arc.func.Floatf<mindustry.gen.Building>",
-    "doc": "Multiplier for costs. Does not work for power consumers."
   }
 }

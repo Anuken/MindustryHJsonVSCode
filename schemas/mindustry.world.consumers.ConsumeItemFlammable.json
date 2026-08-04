@@ -2,30 +2,5 @@
   "superclass": "mindustry.world.consumers.ConsumeItemEfficiency",
   "minFlammability":{
     "type": "float"
-  },
-  "itemDurationMultipliers":{
-    "type": "arc.struct.ObjectFloatMap<mindustry.type.Item>",
-    "nullable": true,
-    "doc": "This has no effect on the consumer itself, but is used for stat display."
-  },
-  "filter":{
-    "type": "arc.func.Boolf<mindustry.type.Item>"
-  },
-  "optional":{
-    "type": "boolean",
-    "doc": "If true, this consumer will not influence consumer validity."
-  },
-  "booster":{
-    "type": "boolean",
-    "doc": "If true, this consumer will be displayed as a boost input."
-  },
-  "update":{
-    "type": "boolean",
-    "doc": "If false, this consumer will still be checked, but it will need to updated manually.",
-    "default": "true"
-  },
-  "multiplier":{
-    "type": "arc.func.Floatf<mindustry.gen.Building>",
-    "doc": "Multiplier for costs. Does not work for power consumers."
   }
 }

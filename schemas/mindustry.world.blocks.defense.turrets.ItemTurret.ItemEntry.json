@@ -2,8 +2,5 @@
   "superclass": "mindustry.world.blocks.defense.turrets.Turret.AmmoEntry",
   "item":{
     "type": "mindustry.type.Item"
-  },
-  "amount":{
-    "type": "int"
   }
 }

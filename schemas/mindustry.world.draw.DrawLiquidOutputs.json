@@ -3,11 +3,5 @@
   "doc": "This must be used in conjunction with another DrawBlock; it only draws outputs.\n",
   "liquidOutputRegions":{
     "type": "arc.graphics.g2d.TextureRegion[][]"
-  },
-  "iconOverride":{
-    "type": "java.lang.String[]",
-    "nullable": true,
-    "doc": "If set, the icon is overridden to be these strings, in order. Each string is a suffix.",
-    "default": "null"
   }
 }
