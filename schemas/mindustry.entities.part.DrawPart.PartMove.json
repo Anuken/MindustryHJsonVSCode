@@ -1,0 +1,22 @@
+{
+  "superclass": "java.lang.Object",
+  "progress":{
+    "type": "mindustry.entities.part.DrawPart$PartProgress",
+    "default": "warmup"
+  },
+  "x":{
+    "type": "float"
+  },
+  "y":{
+    "type": "float"
+  },
+  "gx":{
+    "type": "float"
+  },
+  "gy":{
+    "type": "float"
+  },
+  "rot":{
+    "type": "float"
+  }
+}
