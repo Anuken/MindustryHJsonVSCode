@@ -15,7 +15,6 @@ I haven't set up proper releases yet.
 ```
 npm install
 npm run compile
-npm run test-parser test-fixtures        # parses the bundled sample files
 ```
 To actually run the extension in a VSCode Extension Development Host, open
 this folder in VSCode and press F5 (needs `@types/vscode` already installed
