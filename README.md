@@ -1,45 +1,17 @@
-# THIS CODE IS SLOP
-
-But it works and it was free
-
 # Mindustry HJSON (VSCode extension)
 
 Syntax highlighting, schema-driven autocomplete, unknown-field warnings, and
 hover docs for Mindustry mod `.hjson` content files.
 
-## What's here now
-- `src/parser/mhjsonParser.ts` — a from-scratch parser ported directly from
-  Mindustry's own `JvalReader`, not the stock `hjson` npm package. Handles:
-  optional root braces, optional commas, quoteless ("TFNNS") scalars that
-  terminate on `,`/`]`/`}` so `[a, b, c]` and `{a: x, b: y}` work inline,
-  `#`/`//`/`/* */` comments, and `'''` multiline strings.
-  Verified against **all 740** `.hjson` files in the provided Allure mod —
-  0 parse errors (`npm run test-parser` or see below).
-- `src/schema/schemaLoader.ts` — loads the flat folder of
-  `Fully.Qualified.ClassName.json` schema files (see `schemas/` for the one
-  example you provided) into a registry, indexed by FQCN and by simple name,
-  with superclass field inheritance resolved and cached.
-- `src/schema/typeResolver.ts` + `src/features/locate.ts` — walks the parsed
-  tree to figure out "what schema applies here", handling explicit
-  `type: Foo`, implicit types from `contentTypeFolders` (units/, blocks/,
-  weathers/, etc., configurable), nested objects, and generic array element
-  types like `arc.struct.Seq<mindustry.type.Weapon>`.
-- `src/features/diagnostics.ts` — warns on unknown fields once a schema is
-  resolved for an object.
-- `src/features/completion.ts` / `hover.ts` — field-name completion (with
-  snippet default values) and hover docs (type / doc / default), plus
-  completion of `type: ` values from all loaded schema simple names.
-- `syntaxes/mhjson.tmLanguage.json` + `language-configuration.json` — basic
-  TextMate grammar (comments, strings incl. triple-quoted, numbers, bare
-  words, brackets) so files get colored immediately, independent of the
-  custom parser (the parser drives diagnostics/completion/hover; the grammar
-  only drives colors).
-- `src/extension.ts` — wires it all up: loads schemas from
-  `mindustryHjson.schemaFolder` (or `<workspace>/.mindustry-schemas`, or the
-  bundled `schemas/` folder), re-lints on open/edit, registers the
-  completion + hover providers.
+**This extension is AI-generated.** Documentation, including this README, is mostly slop.[^1]
 
-## Try it
+# Installing
+
+Download the latest VSIX file from the [releases](https://github.com/Anuken/MindustryHJSONVSCode/releases/latest) tab. In VSCode, open the Extensions tab, click the three dots in the top right -> "Install From VSIX..." -> select the downloaded VSIX file.
+
+I haven't set up proper releases yet.
+
+## Running
 ```
 npm install
 npm run compile
@@ -49,17 +21,29 @@ To actually run the extension in a VSCode Extension Development Host, open
 this folder in VSCode and press F5 (needs `@types/vscode` already installed
 here; no further setup required for step 1/skeleton testing).
 
+## Development
+
+```
+npm install -g @vscode/vsce   # if you want to build a .vsix
+vsce package
+```
+
+Or just press `F5` in VS Code with this folder open to launch an Extension
+Development Host for testing.
+
+## Using
+
+Simply open a (H)JSON mod folder, and browse its content files. Note that *only* HJSON files are supported - files with the JSON extension are not.
+
+## Missing Features
+
+- Some container types aren't resolved properly, e.g. `ObjectFloatMap`
+- Vanilla effect names and sounds aren't resolved
+- Type checking is not very strict
+
 ## Schemas
 
-`schemas/` ships with the two example schemas provided
-(`mindustry.entities.abilities.LiquidExplodeAbility.json`,
-`mindustry.type.Item.json`). Drop the full generated set of
-`Fully.Qualified.ClassName.json` files in there (or point
-`mindustryHjson.schemaFolder` at wherever you generate them, or drop a
-`.mindustry-schemas/` folder at your workspace root) to light up
-completion/hover/diagnostics for every field of every content type. The
-extension re-scans on the `Mindustry HJSON: Reload Schemas` command or
-whenever the setting changes.
+Schemas are taken from Mindustry's `tools:updateScripts` task, which outputs schemas into `build/schemas`. These are not 'real' JSON schemas - merely descriptions of fields, docs and types encoded into a format that this plugin can easily read.
 
 Each schema file's fields are `{ "fieldName": { "type": "<FQCN or primitive,
 optionally generic like arc.struct.Seq<mindustry.type.Weapon>>", "doc":
@@ -99,8 +83,7 @@ object."), independent of whatever schemas are loaded.
 1. **Parser** (`src/parser/mhjsonParser.ts`) — from-scratch parser matching
    Mindustry's own relaxed HJSON dialect (optional root braces, optional
    commas, quoteless scalars, `[a, b, c]` / `{a: x, b: y}` on one line,
-   `#`/`//`/`/* */` comments, `'''` multiline strings). Verified against all
-   **740** `.hjson` files in the provided Allure mod — 0 parse errors
+   `#`/`//`/`/* */` comments, `'''` multiline strings).
    (`npm run test-parser test-fixtures`, or point it at any mod folder).
 2. **Syntax highlighting** — `syntaxes/mhjson.tmLanguage.json` +
    `language-configuration.json`; a plain TextMate grammar independent of the
@@ -163,16 +146,36 @@ bundled `schemas/` folder), builds the content index, re-lints on open/edit,
 registers the completion, hover, and definition providers, and exposes
 `Mindustry HJSON: Reload Schemas`.
 
-## Known simplifications
-- Duplicate-key merge semantics (Mindustry's `putAdd`) aren't fully
-  replicated — both entries are kept in the AST rather than deep-merged;
-  fine for tooling purposes (diagnostics/completion don't care) but worth
-  revisiting for exact round-trip semantics.
-- Ambiguous simple names (two schema files with the same short class name in
-  different packages) resolve to whichever was loaded first; not currently
-  surfaced as a warning.
-- No formatter/rename — out of scope here.
-- Content resolution doesn't flag unresolved references as diagnostics,
-  since a name not found in the mod's own folders may still be valid vanilla
-  content (e.g. `copper`, `water`) — it's purely additive (completion/hover/
-  go-to-definition).
+## Structure
+- `src/parser/mhjsonParser.ts` — a from-scratch parser ported directly from
+  Mindustry's own `JvalReader`, not the stock `hjson` npm package. Handles:
+  optional root braces, optional commas, quoteless ("TFNNS") scalars that
+  terminate on `,`/`]`/`}` so `[a, b, c]` and `{a: x, b: y}` work inline,
+  `#`/`//`/`/* */` comments, and `'''` multiline strings.
+- `src/schema/schemaLoader.ts` — loads the flat folder of
+  `Fully.Qualified.ClassName.json` schema files (see `schemas/` for the one
+  example you provided) into a registry, indexed by FQCN and by simple name,
+  with superclass field inheritance resolved and cached.
+- `src/schema/typeResolver.ts` + `src/features/locate.ts` — walks the parsed
+  tree to figure out "what schema applies here", handling explicit
+  `type: Foo`, implicit types from `contentTypeFolders` (units/, blocks/,
+  weathers/, etc., configurable), nested objects, and generic array element
+  types like `arc.struct.Seq<mindustry.type.Weapon>`.
+- `src/features/diagnostics.ts` — warns on unknown fields once a schema is
+  resolved for an object.
+- `src/features/completion.ts` / `hover.ts` — field-name completion (with
+  snippet default values) and hover docs (type / doc / default), plus
+  completion of `type: ` values from all loaded schema simple names.
+- `syntaxes/mhjson.tmLanguage.json` + `language-configuration.json` — basic
+  TextMate grammar (comments, strings incl. triple-quoted, numbers, bare
+  words, brackets) so files get colored immediately, independent of the
+  custom parser (the parser drives diagnostics/completion/hover; the grammar
+  only drives colors).
+- `src/extension.ts` — wires it all up: loads schemas from
+  `mindustryHjson.schemaFolder` (or `<workspace>/.mindustry-schemas`, or the
+  bundled `schemas/` folder), re-lints on open/edit, registers the
+  completion + hover providers.
+
+---
+
+[^1]: If you have concerns about ethics, keep in mind: This was generated on the free tier; I didn't pay for it, nor am I supporting the AI industry in any way. If you have concerns about quality... it's a simple plugin with useful diagnostics, and the alternative is not having a plugin at all. If you still find this objectionable, don't use it.
