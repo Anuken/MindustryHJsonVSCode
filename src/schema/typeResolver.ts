@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { Jval, JvalObject, JvalArray } from '../parser/mhjsonParser';
+import { Jval, JvalObject, JvalArray, JvalType } from '../parser/mhjsonParser';
 import { SchemaRegistry, unwrapGenericElementType, FieldSchema, ClassSchema } from './schemaLoader';
 
 /**
@@ -30,15 +30,32 @@ export const CONTENT_TYPE_SIMPLE_NAMES = new Set([
 export const ANY_CONTENT_TYPE_SIMPLE_NAME = 'UnlockableContent';
 
 /**
+ * Simple name of `mindustry.type.Research`, the class backing a content's
+ * `research: {parent: ..., ...}` tech-tree placement. Its schema doc says it
+ * "Also accepts a plain string, treated as 'parent'" - so a bare string in a
+ * `research`-typed field is shorthand for `{parent: <that string>}`, and
+ * `parent` itself is any UnlockableContent (an Item, Block, ...).
+ * `contentTypeSimpleName` special-cases this below so that a bare string
+ * value for a `research`-typed field is checked/completed as any
+ * UnlockableContent, exactly as if the field itself were declared
+ * `UnlockableContent`. This only affects the bare-string case: a `research:
+ * {...}` object is unaffected and still resolves its own `parent` field
+ * (typed `UnlockableContent`) normally.
+ */
+const RESEARCH_TYPE_SIMPLE_NAME = 'Research';
+
+/**
  * If `type` (a field type, generic-element type, or map key/value type -
  * already unwrapped of any `Seq<...>`/`ObjectMap<...>` wrapper) names one of
  * the CONTENT_TYPE_SIMPLE_NAMES classes, returns that simple name. A field
  * typed as the abstract `UnlockableContent` returns ANY_CONTENT_TYPE_SIMPLE_NAME
- * instead, meaning "any content type" rather than one specific one.
+ * instead, meaning "any content type" rather than one specific one. Likewise
+ * for a field typed `Research` - see RESEARCH_TYPE_SIMPLE_NAME above.
  */
 export function contentTypeSimpleName(type: string): string | undefined {
 	const name = shortName(type);
 	if (name === ANY_CONTENT_TYPE_SIMPLE_NAME) return ANY_CONTENT_TYPE_SIMPLE_NAME;
+	if (name === RESEARCH_TYPE_SIMPLE_NAME) return ANY_CONTENT_TYPE_SIMPLE_NAME;
 	return CONTENT_TYPE_SIMPLE_NAMES.has(name) ? name : undefined;
 }
 
@@ -336,6 +353,138 @@ export function arrayEnumInfo(registry: SchemaRegistry, type: string): EnumInfo 
 export function findExplicitTypeField(obj: JvalObject): string | undefined {
 	for (const m of obj.entries) {
 		if (m.key === 'type' && m.value.type === 'string') return (m.value as any).value;
+	}
+	return undefined;
+}
+
+/**
+ * ---------------------------------------------------------------------
+ * Structural ("shape") type checking.
+ *
+ * Distinct from the content-name/enum-value checks above, which validate
+ * the *contents* of a string value against a known set of legal strings,
+ * the functions below validate that the *kind* of JSON value given (number,
+ * boolean, array, object, ...) is even the right shape for the field's
+ * declared Java type, for the handful of type categories whose shape we can
+ * recognize purely from the type string: numeric primitives/wrappers,
+ * booleans, arrays (bracket syntax or a single-type-param generic wrapper
+ * like Seq/ObjectSet), and ObjectMap-style two-type-param maps.
+ *
+ * Any other declared type (an ordinary class like `Sound` or `Color`, a
+ * content type, an enum, a bare generic type parameter, ...) is left
+ * completely alone by this section - `checkPrimitiveShapeMismatch` simply
+ * returns undefined for those, so behavior for types this plugin doesn't
+ * know how to structurally validate is unchanged.
+ * ---------------------------------------------------------------------
+ */
+
+const NUMERIC_TYPE_NAMES = new Set([
+	'float',
+	'double',
+	'int',
+	'long',
+	'short',
+	'byte',
+	'Float',
+	'Double',
+	'Integer',
+	'Int',
+	'Long',
+	'Short',
+	'Byte',
+]);
+
+const BOOLEAN_TYPE_NAMES = new Set(['boolean', 'Boolean']);
+
+/** True if `type` (simple name or FQCN) names a Java numeric primitive or boxed wrapper (float, int, long, ...). */
+export function isNumericType(type: string): boolean {
+	return NUMERIC_TYPE_NAMES.has(shortName(type));
+}
+
+/** True if `type` (simple name or FQCN) names a Java boolean primitive or boxed wrapper. */
+export function isBooleanType(type: string): boolean {
+	return BOOLEAN_TYPE_NAMES.has(shortName(type));
+}
+
+/**
+ * Full (possibly FQCN) element type string of an array/Seq/ObjectSet-like
+ * field, whether declared with bracket syntax (`Foo[]`) or a single-type-
+ * param generic wrapper (`Seq<Foo>`, `ObjectSet<Foo>`, ...). Unlike
+ * `arrayElementSimpleName`, this keeps the full type string (rather than
+ * just its simple name) so callers can run further checks - e.g.
+ * `isNumericType`/`isBooleanType` - on the element type itself. Returns
+ * undefined for two-type-param generics (maps - see `isMapType`) or any
+ * type that isn't array-shaped at all.
+ */
+export function arrayElementTypeString(type: string): string | undefined {
+	const t = type.trim();
+	if (t.endsWith('[]')) {
+		const inner = t.slice(0, -2).trim();
+		return inner.length > 0 ? inner : undefined;
+	}
+	return unwrapGenericElementType(t);
+}
+
+/** True if `type` is array-shaped: bracket syntax (`Foo[]`) or a single-type-param generic wrapper (`Seq<Foo>`, `ObjectSet<Foo>`, ...). Two-param generics (maps) are excluded - see `isMapType`. */
+export function isArrayLikeType(type: string): boolean {
+	return arrayElementTypeString(type) !== undefined;
+}
+
+/** True if `type` is a two-type-param generic map wrapper, e.g. `ObjectMap<K, V>`. */
+export function isMapType(type: string): boolean {
+	return unwrapMapTypes(type) !== undefined;
+}
+
+/** Short human-readable description of a parsed JSON value's kind, for diagnostic messages. */
+export function describeJvalType(t: JvalType): string {
+	switch (t) {
+		case 'double':
+		case 'long':
+			return 'a number';
+		case 'boolean':
+			return 'a boolean';
+		case 'string':
+			return 'a string';
+		case 'array':
+			return 'an array';
+		case 'object':
+			return 'an object';
+		case 'null':
+			return 'null';
+	}
+}
+
+/**
+ * Checks a field's declared Java type against the *shape* of the JSON value
+ * actually given for it, for the type categories `isNumericType`/
+ * `isBooleanType`/`isArrayLikeType`/`isMapType` recognize. Returns a warning
+ * message if the value's kind disagrees with the declared type, or
+ * undefined if they agree - or if `fieldType` isn't one of these recognized
+ * categories at all, which this function deliberately leaves unflagged (see
+ * the section doc comment above).
+ *
+ * `null` is always accepted regardless of declared type: mods commonly
+ * write `field: null` to explicitly clear/disable an inherited default, and
+ * Mindustry's Json reader accepts a null for (almost) any field.
+ */
+export function checkPrimitiveShapeMismatch(fieldType: string, valueType: JvalType): string | undefined {
+	if (valueType === 'null') return undefined;
+
+	if (isBooleanType(fieldType)) {
+		if (valueType === 'boolean') return undefined;
+		return `Expected a boolean for type '${prettyType(fieldType)}', got ${describeJvalType(valueType)}`;
+	}
+	if (isNumericType(fieldType)) {
+		if (valueType === 'double' || valueType === 'long') return undefined;
+		return `Expected a number for type '${prettyType(fieldType)}', got ${describeJvalType(valueType)}`;
+	}
+	if (isMapType(fieldType)) {
+		if (valueType === 'object') return undefined;
+		return `Expected an object (map) for type '${prettyType(fieldType)}', got ${describeJvalType(valueType)}`;
+	}
+	if (isArrayLikeType(fieldType)) {
+		if (valueType === 'array') return undefined;
+		return `Expected an array for type '${prettyType(fieldType)}', got ${describeJvalType(valueType)}`;
 	}
 	return undefined;
 }

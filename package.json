@@ -2,7 +2,7 @@
   "name": "mindustry-hjson",
   "displayName": "Mindustry HJSON Mod Support",
   "description": "Syntax highlighting, schema-driven autocomplete, diagnostics and hover docs for Mindustry mod (H)JSON content files.",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "publisher": "actually-not-anuke",
   "engines": { "vscode": "^1.85.0" },
   "categories": ["Programming Languages", "Linters"],

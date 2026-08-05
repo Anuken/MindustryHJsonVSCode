@@ -15,6 +15,11 @@ import {
 	arrayEnumInfo,
 	prettyType,
 	resolveObjectType,
+	checkPrimitiveShapeMismatch,
+	arrayElementTypeString,
+	isNumericType,
+	isBooleanType,
+	describeJvalType,
 } from '../schema/typeResolver';
 
 export function makeDiagnosticCollection(): vscode.DiagnosticCollection {
@@ -126,6 +131,27 @@ function checkStringArray(
 	}
 }
 
+/** For an array field whose element type is a numeric or boolean primitive (e.g. `float[]`, `Seq<Boolean>`), warns on any element whose JSON value kind doesn't match. Elements of any other (unrecognized) element type are left alone, same as `checkPrimitiveShapeMismatch`. */
+function checkArrayElementPrimitives(arr: JvalArray, fieldType: string, doc: vscode.TextDocument, out: vscode.Diagnostic[]) {
+	const elementType = arrayElementTypeString(fieldType);
+	if (!elementType) return;
+	const numeric = isNumericType(elementType);
+	const boolean = isBooleanType(elementType);
+	if (!numeric && !boolean) return;
+	for (const el of arr.elements) {
+		if (el.type === 'null') continue;
+		const ok = numeric ? el.type === 'double' || el.type === 'long' : el.type === 'boolean';
+		if (ok) continue;
+		const diag = new vscode.Diagnostic(
+			rangeOf(doc, el.range),
+			`Expected ${numeric ? 'a number' : 'a boolean'} element for type '${prettyType(fieldType)}', got ${describeJvalType(el.type)}`,
+			vscode.DiagnosticSeverity.Warning,
+		);
+		diag.code = 'type-mismatch';
+		out.push(diag);
+	}
+}
+
 function walk(
 	node: Jval,
 	ctx: TypeContext,
@@ -170,6 +196,15 @@ function walk(
 				out.push(diag);
 			}
 
+			if (field) {
+				const mismatch = checkPrimitiveShapeMismatch(field.type, member.value.type);
+				if (mismatch) {
+					const diag = new vscode.Diagnostic(rangeOf(doc, member.value.range), mismatch, vscode.DiagnosticSeverity.Warning);
+					diag.code = 'type-mismatch';
+					out.push(diag);
+				}
+			}
+
 			let childCtx: TypeContext;
 			if (member.value.type === 'object') {
 				const mapField = ctx.resolveMapField(field);
@@ -180,7 +215,10 @@ function walk(
 				const explicit = findExplicitTypeField(member.value as JvalObject);
 				childCtx = resolveObjectType(ctx.forField(field), explicit);
 			} else if (member.value.type === 'array') {
-				if (field) checkStringArray(member.value as JvalArray, field.type, registry, doc, out, contentIndex, vanillaContent);
+				if (field) {
+					checkStringArray(member.value as JvalArray, field.type, registry, doc, out, contentIndex, vanillaContent);
+					checkArrayElementPrimitives(member.value as JvalArray, field.type, doc, out);
+				}
 				childCtx = ctx.forArrayElement(field);
 			} else {
 				childCtx = new TypeContext(registry, undefined);
