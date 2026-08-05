@@ -7,7 +7,7 @@ hover docs for Mindustry mod `.hjson` content files.
 
 # Installing
 
-Download the latest VSIX file from the [releases](https://github.com/Anuken/MindustryHJSONVSCode/releases/latest) tab. In VSCode, open the Extensions tab, click the three dots in the top right -> "Install From VSIX..." -> select the downloaded VSIX file.
+Download the latest VSIX file from the [releases](https://github.com/Anuken/MindustryHJsonVSCode/releases/latest) tab. In VSCode, open the Extensions tab, click the three dots in the top right -> "Install From VSIX..." -> select the downloaded VSIX file.
 
 I haven't set up proper releases yet.
 
