@@ -1,9 +1,9 @@
 {
   "name": "mindustry-hjson",
   "displayName": "Mindustry HJSON Mod Support",
-  "description": "Syntax highlighting, schema-driven autocomplete, diagnostics and hover docs for Mindustry mod (H)JSON content files.",
-  "version": "0.0.9",
-  "publisher": "actually-not-anuke",
+  "description": "Syntax highlighting, schema-driven autocomplete, diagnostics and hover docs for Mindustry mod HJSON content files.",
+  "version": "0.1.0",
+  "publisher": "Anuken",
   "repository": "https://github.com/Anuken/MindustryHJSONVSCode",
   "engines": { "vscode": "^1.85.0" },
   "categories": ["Programming Languages", "Linters"],
@@ -54,6 +54,7 @@
             "liquids": "Liquid",
             "planets": "Planet",
             "status": "StatusEffect",
+            "statuses": "StatusEffect",
             "blocks": "Block",
             "units": "UnitType"
           },
