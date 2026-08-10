@@ -1,0 +1,4 @@
+{
+  "doc": "All attribute names.",
+  "values": ["heat", "spores", "water", "oil", "light", "sand", "steam"]
+}

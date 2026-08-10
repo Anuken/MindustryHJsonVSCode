@@ -21,6 +21,8 @@ export function activate(context: vscode.ExtensionContext) {
 	const vanillaContent = new VanillaContentIndex();
 	const vanillaEffects = new NameListIndex();
 	const vanillaSounds = new NameListIndex();
+	const vanillaTeams = new NameListIndex();
+	const vanillaAttributes = new NameListIndex();
 	const soundIndex = new SoundIndex();
 	const collection = makeDiagnosticCollection();
 	context.subscriptions.push(collection);
@@ -65,6 +67,8 @@ export function activate(context: vscode.ExtensionContext) {
 		vanillaContent.load(folder);
 		vanillaEffects.load(folder, 'allEffects.json');
 		vanillaSounds.load(folder, 'allSounds.json');
+		vanillaTeams.load(folder, 'allTeams.json');
+		vanillaAttributes.load(folder, 'allAttributes.json');
 		vscode.window.setStatusBarMessage(`Mindustry HJSON: loaded ${loaded} schemas from ${folder}`, 4000);
 		for (const e of errors) console.warn('[mindustry-hjson]', e);
 		lintAllOpenDocuments();
@@ -73,7 +77,7 @@ export function activate(context: vscode.ExtensionContext) {
 	function lintDocument(doc: vscode.TextDocument) {
 		if (doc.languageId !== LANGUAGE_ID) return;
 		const parse = parseMHJson(doc.getText());
-		refreshDiagnostics(doc, parse, registry, getContentTypeFolders(), collection, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex);
+		refreshDiagnostics(doc, parse, registry, getContentTypeFolders(), collection, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex, vanillaTeams);
 	}
 
 	function lintAllOpenDocuments() {
@@ -110,12 +114,12 @@ export function activate(context: vscode.ExtensionContext) {
 		soundWatcher,
 		vscode.languages.registerCompletionItemProvider(
 			{ language: LANGUAGE_ID },
-			new MHJsonCompletionProvider(registry, getContentTypeFolders, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex),
-			':', ' ', '"',
+			new MHJsonCompletionProvider(registry, getContentTypeFolders, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex, vanillaTeams, vanillaAttributes),
+			':', ' ', '"', '/',
 		),
 		vscode.languages.registerHoverProvider(
 			{ language: LANGUAGE_ID },
-			new MHJsonHoverProvider(registry, getContentTypeFolders, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex),
+			new MHJsonHoverProvider(registry, getContentTypeFolders, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex, vanillaTeams, vanillaAttributes),
 		),
 		vscode.languages.registerDefinitionProvider(
 			{ language: LANGUAGE_ID },

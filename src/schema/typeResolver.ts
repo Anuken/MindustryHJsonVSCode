@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { Jval, JvalObject, JvalArray, JvalType } from '../parser/mhjsonParser';
+import { Jval, JvalObject, JvalArray, JvalString, JvalType, Range } from '../parser/mhjsonParser';
 import { SchemaRegistry, unwrapGenericElementType, FieldSchema, ClassSchema } from './schemaLoader';
 
 /**
@@ -342,6 +342,87 @@ export function isSoundArrayType(type: string): boolean {
 	return arrayElementSimpleName(type) === 'Sound';
 }
 
+/**
+ * True if `type` names `mindustry.game.Team` (or just the bare simple name `Team`). A *string*
+ * value for such a field is a bare-name reference to a team (e.g. `forceTeam: sharded`) - see
+ * NameListIndex over schemas/allTeams.json. Unlike Effect/Sound/Attribute, team names are a fixed,
+ * non-extensible set - there's no `Team.add(...)` equivalent in Mindustry, so any name not in
+ * allTeams.json is always unknown and should always be flagged (see checkStringValue).
+ */
+export function isTeamType(type: string): boolean {
+	return shortName(type) === 'Team';
+}
+
+/** True if `type` is an array of `mindustry.game.Team` (e.g. `Seq<Team>`, `Team[]`). */
+export function isTeamArrayType(type: string): boolean {
+	return arrayElementSimpleName(type) === 'Team';
+}
+
+/**
+ * True if `type` names `mindustry.world.meta.Attribute` (or just the bare simple name
+ * `Attribute`) - the *singular* attribute-name field (e.g. `AttributeCrafter.attribute: heat`).
+ * A string value here is a bare attribute name. Like Effect/Sound, attribute names are
+ * extensible at runtime (`Attribute.exists(name) ? Attribute.get(name) : Attribute.add(name)` -
+ * see the Java reference in the task description), so an unrecognized name is never an error,
+ * only something to offer completion/hover for against schemas/allAttributes.json (see
+ * NameListIndex). Don't confuse with the *plural* `Attributes` map type - see `isAttributesType`.
+ */
+export function isAttributeType(type: string): boolean {
+	return shortName(type) === 'Attribute';
+}
+
+/**
+ * True if `type` names `mindustry.world.blocks.Attributes` (or just the bare simple name
+ * `Attributes`) - the plural map-shaped type backing a field like `Block.attributes: {heat: 10}`
+ * or `Planet.defaultAttributes: {...}`. Per the Java reference in the task description, a value
+ * for such a field must be a JSON *object*; each entry's key is an (extensible, never-erroring)
+ * attribute name and each entry's value must be a number. See `isAttributeType` for the singular
+ * per-attribute-name field type, and diagnostics.ts/locate.ts for how this map's entries are
+ * walked (their keys aren't schema fields, so they're handled separately from ordinary objects).
+ */
+export function isAttributesType(type: string): boolean {
+	return shortName(type) === 'Attributes';
+}
+
+/**
+ * Parsed form of a "stack" shorthand string (`ItemStack`/`LiquidStack`, e.g.
+ * `"territe-alloy/1200"`) - see `stackContentType`/`stackArrayContentType`. Splits the raw string
+ * on its first `/` into a content name (`name`/`nameRange`) and, if a `/` was actually present, an
+ * amount portion (`amount`/`amountRange`) - both ranges already account for the node's quoting, so
+ * they can be used directly for diagnostics/hover/completion. `amount`/`amountRange` are undefined
+ * when there's no `/` in the string at all (bare `name`-only shorthand, which is still legal).
+ */
+export interface StackShorthand {
+	name: string;
+	nameRange: Range;
+	amount: string | undefined;
+	amountRange: Range | undefined;
+}
+
+/** Splits a stack-shorthand string node (`"name/amount"`) into its name and amount parts - see `StackShorthand`. */
+export function parseStackShorthand(node: JvalString): StackShorthand {
+	const quoteOffset = node.quoted ? 1 : 0;
+	const base = node.range.start + quoteOffset;
+	const idx = node.value.indexOf('/');
+	if (idx < 0) {
+		return { name: node.value, nameRange: { start: base, end: base + node.value.length }, amount: undefined, amountRange: undefined };
+	}
+	return {
+		name: node.value.slice(0, idx),
+		nameRange: { start: base, end: base + idx },
+		amount: node.value.slice(idx + 1),
+		amountRange: { start: base + idx + 1, end: base + node.value.length },
+	};
+}
+
+/** Permissive check for whether `s` parses as a Java float/int literal (optional leading `-`, digits, optional `.digits`). Used to validate the amount portion of a stack shorthand string - see `parseStackShorthand`. */
+export function isValidNumberString(s: string): boolean {
+	return /^-?\d+(\.\d+)?$/.test(s);
+}
+
+/** A handful of common amounts to offer as completion for a stack shorthand's amount portion (after the `/`) - there's no fixed legal set the way there is for content/enum names, so this is just a convenience shortlist. */
+export const COMMON_STACK_AMOUNTS = ['1', '5', '10', '25', '50', '100', '200', '500', '1000'];
+
 export function shortName(fqcnOrSimple: string): string {
 	return fqcnOrSimple.includes('.') ? fqcnOrSimple.slice(fqcnOrSimple.lastIndexOf('.') + 1) : fqcnOrSimple;
 }
@@ -512,6 +593,11 @@ export function checkPrimitiveShapeMismatch(fieldType: string, valueType: JvalTy
 	if (isMapType(fieldType)) {
 		if (valueType === 'object') return undefined;
 		return `Expected an object (map) for type '${prettyType(fieldType)}', got ${describeJvalType(valueType)}`;
+	}
+	if (isAttributesType(fieldType)) {
+		// Mirrors the Java reference impl's own check: "Attributes definitions must be objects, e.g. {heat: 10}".
+		if (valueType === 'object') return undefined;
+		return `Attributes definitions must be objects, e.g. {heat: 10} - got ${describeJvalType(valueType)}`;
 	}
 	if (isArrayLikeType(fieldType)) {
 		if (valueType === 'array') return undefined;

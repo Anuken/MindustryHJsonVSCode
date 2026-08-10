@@ -5,7 +5,7 @@ import { ContentIndex } from '../schema/contentIndex';
 import { VanillaContentIndex } from '../schema/vanillaContent';
 import { NameListIndex } from '../schema/nameListIndex';
 import { SoundIndex } from '../schema/soundIndex';
-import { prettyType } from '../schema/typeResolver';
+import { prettyType, COMMON_STACK_AMOUNTS } from '../schema/typeResolver';
 import { locate } from './locate';
 
 /** Chars that can appear in a bare key/type token being typed. */
@@ -38,6 +38,8 @@ export class MHJsonCompletionProvider implements vscode.CompletionItemProvider {
 		private vanillaEffects: NameListIndex,
 		private vanillaSounds: NameListIndex,
 		private soundIndex: SoundIndex,
+		private vanillaTeams: NameListIndex,
+		private vanillaAttributes: NameListIndex,
 	) {}
 
 	provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] {
@@ -97,6 +99,39 @@ export class MHJsonCompletionProvider implements vscode.CompletionItemProvider {
 				items.push(item);
 			}
 			return items;
+		}
+
+		// completing a bare-string Team reference -> suggest team names (a fixed, non-extensible set)
+		if (loc.teamRef) {
+			return this.vanillaTeams.namesFor().map((name) => {
+				const item = new vscode.CompletionItem(name, vscode.CompletionItemKind.EnumMember);
+				item.detail = 'Team';
+				item.range = token.range;
+				return item;
+			});
+		}
+
+		// completing a bare-string attribute name (an `Attribute`-typed field's value, or a key
+		// inside an `Attributes`-typed map object) -> suggest known vanilla attribute names. The set
+		// is extensible, so this is just a convenience list, not the full set of legal values.
+		if (loc.attributeRef) {
+			return this.vanillaAttributes.namesFor().map((name) => {
+				const item = new vscode.CompletionItem(name, vscode.CompletionItemKind.Reference);
+				item.detail = 'Attribute';
+				item.range = token.range;
+				return item;
+			});
+		}
+
+		// completing the amount portion of a stack shorthand string (`"name/amount"`) -> offer a
+		// shortlist of common amounts (there's no fixed legal set the way there is for names).
+		if (loc.stackAmountRef) {
+			return COMMON_STACK_AMOUNTS.map((amount) => {
+				const item = new vscode.CompletionItem(amount, vscode.CompletionItemKind.Value);
+				item.detail = 'Amount';
+				item.range = token.range;
+				return item;
+			});
 		}
 
 		// completing a bare-string enum field value (e.g. `category: `) -> suggest the enum's legal values

@@ -16,6 +16,11 @@ import {
 	isEffectType,
 	isSoundType,
 	isSoundArrayType,
+	isTeamType,
+	isTeamArrayType,
+	isAttributeType,
+	isAttributesType,
+	parseStackShorthand,
 } from '../schema/typeResolver';
 
 /** A bare-string token that refers to named content (an Item, Block, Liquid, ...) by name. */
@@ -37,6 +42,28 @@ export interface EffectRef {
 /** A bare-string token that refers to a Sound by name - either vanilla or one of the mod's own sounds/ files. Also used for each element of a "random sound" array (a Sound field given a JSON array of names). */
 export interface SoundRef {
 	name: string;
+	range: Range;
+}
+
+/** A bare-string token that refers to a Team by name (e.g. `forceTeam: sharded`, or an element of a Team[]/Seq<Team> field). Team names are a fixed, non-extensible set - see `isTeamType`. */
+export interface TeamRef {
+	name: string;
+	range: Range;
+}
+
+/**
+ * A bare-string token naming an attribute - either the value of a singular `Attribute`-typed
+ * field (e.g. `AttributeCrafter.attribute: heat`), or a key inside a plural `Attributes`-typed
+ * map object (e.g. `attributes: {heat: 10}`). Attribute names are extensible (see `isAttributeType`),
+ * so this is only used for completion/hover, never for a "must be known" diagnostic.
+ */
+export interface AttributeRef {
+	name: string;
+	range: Range;
+}
+
+/** The offset sits inside the amount portion (after the `/`) of a stack shorthand string (`"name/amount"` - see `parseStackShorthand`). Drives amount completion/hover. */
+export interface StackAmountRef {
 	range: Range;
 }
 
@@ -76,6 +103,12 @@ export interface LocateResult {
 	effectRef: EffectRef | undefined;
 	/** Set when the offset sits on a bare-string token that refers to a Sound by name (a string value of a Sound-typed field, or an element of that field's "random sound" array shorthand). */
 	soundRef: SoundRef | undefined;
+	/** Set when the offset sits on a bare-string token that refers to a Team by name (a string value of a Team-typed field, or an element of a Team array field). */
+	teamRef: TeamRef | undefined;
+	/** Set when the offset sits on a bare-string token naming an attribute - either a singular `Attribute`-typed field's value, or a key inside a plural `Attributes`-typed map object. */
+	attributeRef: AttributeRef | undefined;
+	/** Set when the offset sits inside the amount portion of a stack shorthand string (`"name/amount"`). */
+	stackAmountRef: StackAmountRef | undefined;
 }
 
 export function locate(
@@ -104,6 +137,9 @@ export function locate(
 		enumRef: undefined,
 		effectRef: undefined,
 		soundRef: undefined,
+		teamRef: undefined,
+		attributeRef: undefined,
+		stackAmountRef: undefined,
 	};
 	if (!parse.root) return result;
 	visit(parse.root, rootCtx, offset, result, registry);
@@ -124,32 +160,13 @@ function checkContentArrayElement(arr: JvalArray, contentType: string, offset: n
 	}
 }
 
-/**
- * "Stack" values (ItemStack, LiquidStack, ...) are written in mod HJSON as
- * shorthand strings `"name/amount"` (e.g. `territe-alloy/1200`, a
- * LiquidStack's `water/12.5`) rather than nested `{item/liquid, amount}`
- * objects. Given the string node, returns the name and its source range -
- * the part of the token up to (but not including) the `/`, or the whole
- * token if no `/` has been typed yet (so completion still works while the
- * name is being typed). Assumes no escape sequences appear before the `/`,
- * which holds for any real content name.
- */
-function stackNameRange(node: JvalString): { name: string; range: Range } {
-	const idx = node.value.indexOf('/');
-	const end = idx < 0 ? node.value.length : idx;
-	const quoteOffset = node.quoted ? 1 : 0;
-	return {
-		name: node.value.slice(0, end),
-		range: { start: node.range.start + quoteOffset, end: node.range.start + quoteOffset + end },
-	};
-}
-
-/** Checks whether a stack-array-typed array (ItemStack[], LiquidStack[], ...) has a string element (shorthand `name/amount`) containing `offset`. If `offset` sits on the name portion (left of the `/`), records it as a ContentRef of `contentType`. */
+/** Checks whether a stack-array-typed array (ItemStack[], LiquidStack[], ...) has a string element (shorthand `name/amount`) containing `offset`. If `offset` sits on the name portion (left of the `/`), records it as a ContentRef of `contentType`; if it sits on the amount portion (right of the `/`), records a StackAmountRef instead - see `parseStackShorthand`. */
 function checkStackArrayElement(arr: JvalArray, contentType: string, offset: number, result: LocateResult) {
 	for (const el of arr.elements) {
 		if (contains(el.range, offset) && el.type === 'string') {
-			const { name, range } = stackNameRange(el as JvalString);
-			if (contains(range, offset)) result.contentRef = { type: contentType, name, range };
+			const { name, nameRange, amountRange } = parseStackShorthand(el as JvalString);
+			if (contains(nameRange, offset)) result.contentRef = { type: contentType, name, range: nameRange };
+			else if (amountRange && contains(amountRange, offset)) result.stackAmountRef = { range: amountRange };
 			return;
 		}
 	}
@@ -160,6 +177,16 @@ function checkSoundArrayElement(arr: JvalArray, offset: number, result: LocateRe
 	for (const el of arr.elements) {
 		if (contains(el.range, offset) && el.type === 'string') {
 			result.soundRef = { name: (el as any).value, range: el.range };
+			return;
+		}
+	}
+}
+
+/** Like `checkSoundArrayElement`, but for a Team array field (`Team[]`/`Seq<Team>`) - each element is a bare team name. */
+function checkTeamArrayElement(arr: JvalArray, offset: number, result: LocateResult) {
+	for (const el of arr.elements) {
+		if (contains(el.range, offset) && el.type === 'string') {
+			result.teamRef = { name: (el as any).value, range: el.range };
 			return;
 		}
 	}
@@ -193,6 +220,10 @@ function visit(node: Jval, ctx: TypeContext, offset: number, result: LocateResul
 				const field = fields.get(member.key);
 				let childCtx: TypeContext;
 				if (member.value.type === 'object') {
+					if (field && isAttributesType(field.type)) {
+						visitAttributesEntries(member.value as JvalObject, offset, result, registry);
+						return;
+					}
 					const mapField = ctx.resolveMapField(field);
 					if (mapField) {
 						visitMapEntries(member.value as JvalObject, mapField.keyType, mapField.valueType, mapField.valueCtx, offset, result, registry);
@@ -203,6 +234,10 @@ function visit(node: Jval, ctx: TypeContext, offset: number, result: LocateResul
 				} else if (member.value.type === 'array') {
 					if (field && (isSoundType(field.type) || isSoundArrayType(field.type))) {
 						checkSoundArrayElement(member.value as JvalArray, offset, result);
+						return;
+					}
+					if (field && isTeamArrayType(field.type)) {
+						checkTeamArrayElement(member.value as JvalArray, offset, result);
 						return;
 					}
 					const arrayContentType = field ? arrayContentTypeSimpleName(field.type) : undefined;
@@ -230,6 +265,10 @@ function visit(node: Jval, ctx: TypeContext, offset: number, result: LocateResul
 							result.effectRef = { name: (member.value as any).value, range: member.value.range };
 						} else if (isSoundType(field.type)) {
 							result.soundRef = { name: (member.value as any).value, range: member.value.range };
+						} else if (isTeamType(field.type)) {
+							result.teamRef = { name: (member.value as any).value, range: member.value.range };
+						} else if (isAttributeType(field.type)) {
+							result.attributeRef = { name: (member.value as any).value, range: member.value.range };
 						} else {
 							const contentType = contentTypeSimpleName(field.type);
 							if (contentType) {
@@ -237,8 +276,9 @@ function visit(node: Jval, ctx: TypeContext, offset: number, result: LocateResul
 							} else {
 								const stackType = stackContentType(field.type);
 								if (stackType) {
-									const { name, range } = stackNameRange(member.value as JvalString);
-									if (contains(range, offset)) result.contentRef = { type: stackType, name, range };
+									const { name, nameRange, amountRange } = parseStackShorthand(member.value as JvalString);
+									if (contains(nameRange, offset)) result.contentRef = { type: stackType, name, range: nameRange };
+									else if (amountRange && contains(amountRange, offset)) result.stackAmountRef = { range: amountRange };
 								} else {
 									const enumInfo = resolveEnumInfo(registry, field.type);
 									if (enumInfo) result.enumRef = { info: enumInfo, range: member.value.range };
@@ -305,11 +345,36 @@ function visitMapEntries(
 				} else {
 					const stackType = stackContentType(valueType);
 					if (stackType) {
-						const { name, range } = stackNameRange(entry.value as JvalString);
-						if (contains(range, offset)) result.contentRef = { type: stackType, name, range };
+						const { name, nameRange, amountRange } = parseStackShorthand(entry.value as JvalString);
+						if (contains(nameRange, offset)) result.contentRef = { type: stackType, name, range: nameRange };
+						else if (amountRange && contains(amountRange, offset)) result.stackAmountRef = { range: amountRange };
 					}
 				}
 			}
+			return;
+		}
+	}
+}
+
+/**
+ * Like `visitMapEntries`, but for the literal object of an `Attributes`-typed field (e.g.
+ * `attributes: {heat: 10}`) - entries are extensible attribute names (not fixed schema fields, and
+ * never "unknown"), and each entry's *value* is a plain number rather than something with its own
+ * nested TypeContext, so unlike `visitMapEntries` there's no `valueCtx` to recurse into.
+ */
+function visitAttributesEntries(obj: JvalObject, offset: number, result: LocateResult, registry: SchemaRegistry) {
+	if (!contains(obj.range, offset)) return;
+	result.object = obj;
+	result.ctx = new TypeContext(registry, undefined);
+	result.isMapEntries = true;
+	for (const entry of obj.entries) {
+		if (contains(entry.keyRange, offset)) {
+			result.onKey = entry;
+			result.attributeRef = { name: entry.key, range: entry.keyRange };
+			return;
+		}
+		if (contains(entry.value.range, offset)) {
+			result.onValue = entry;
 			return;
 		}
 	}

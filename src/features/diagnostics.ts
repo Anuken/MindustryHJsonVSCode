@@ -25,6 +25,12 @@ import {
 	isEffectType,
 	isSoundType,
 	isSoundArrayType,
+	isTeamType,
+	isTeamArrayType,
+	isAttributeType,
+	isAttributesType,
+	parseStackShorthand,
+	isValidNumberString,
 } from '../schema/typeResolver';
 
 export function makeDiagnosticCollection(): vscode.DiagnosticCollection {
@@ -42,6 +48,7 @@ export function refreshDiagnostics(
 	vanillaEffects: NameListIndex,
 	vanillaSounds: NameListIndex,
 	soundIndex: SoundIndex,
+	vanillaTeams: NameListIndex,
 ) {
 	const diagnostics: vscode.Diagnostic[] = [];
 
@@ -56,10 +63,39 @@ export function refreshDiagnostics(
 			const explicit = findExplicitTypeField(parse.root as JvalObject);
 			ctx = resolveObjectType(ctx, explicit);
 		}
-		walk(parse.root, ctx, doc, diagnostics, registry, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex);
+		walk(parse.root, ctx, doc, diagnostics, registry, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex, vanillaTeams);
 	}
 
 	collection.set(doc.uri, diagnostics);
+}
+
+/** Validates the amount portion of a stack shorthand string (`"name/amount"`), pushing a warning if it's missing or not a valid number. No-op if the string has no `/` at all (the amount-less shorthand is legal on its own). */
+function checkStackAmount(value: JvalString, doc: vscode.TextDocument, out: vscode.Diagnostic[]) {
+	const { amount, amountRange } = parseStackShorthand(value);
+	if (amount === undefined) return;
+	if (amount.length === 0) {
+		const diag = new vscode.Diagnostic(rangeOf(doc, amountRange!), `Missing amount after '/'`, vscode.DiagnosticSeverity.Warning);
+		diag.code = 'invalid-amount';
+		out.push(diag);
+	} else if (!isValidNumberString(amount)) {
+		const diag = new vscode.Diagnostic(rangeOf(doc, amountRange!), `Invalid amount '${amount}' - expected a number`, vscode.DiagnosticSeverity.Warning);
+		diag.code = 'invalid-amount';
+		out.push(diag);
+	}
+}
+
+/** Validates an object literal given for an `Attributes`-typed field (e.g. `attributes: {heat: 10}`): the object's keys are extensible attribute names (never flagged as unknown), but every value must be a number. */
+function checkAttributesObject(obj: JvalObject, doc: vscode.TextDocument, out: vscode.Diagnostic[]) {
+	for (const entry of obj.entries) {
+		if (entry.value.type === 'double' || entry.value.type === 'long' || entry.value.type === 'null') continue;
+		const diag = new vscode.Diagnostic(
+			rangeOf(doc, entry.value.range),
+			`Expected a number for attribute '${entry.key}', got ${describeJvalType(entry.value.type)}`,
+			vscode.DiagnosticSeverity.Warning,
+		);
+		diag.code = 'type-mismatch';
+		out.push(diag);
+	}
 }
 
 /** Checks a bare-string value against a content-typed or enum-typed field, pushing a warning if it's unresolvable/unknown. */
@@ -74,6 +110,7 @@ function checkStringValue(
 	vanillaEffects: NameListIndex,
 	vanillaSounds: NameListIndex,
 	soundIndex: SoundIndex,
+	vanillaTeams: NameListIndex,
 ) {
 	if (isEffectType(fieldType)) {
 		if (!vanillaEffects.has(value.value)) {
@@ -89,6 +126,21 @@ function checkStringValue(
 			diag.code = 'unknown-sound';
 			out.push(diag);
 		}
+		return;
+	}
+	if (isTeamType(fieldType)) {
+		// Unlike Effect/Sound/Attribute, team names aren't extensible - anything not in
+		// allTeams.json is always unknown, never just "not indexed yet".
+		if (!vanillaTeams.has(value.value)) {
+			const diag = new vscode.Diagnostic(rangeOf(doc, value.range), `Unknown team '${value.value}'`, vscode.DiagnosticSeverity.Warning);
+			diag.code = 'unknown-team';
+			out.push(diag);
+		}
+		return;
+	}
+	if (isAttributeType(fieldType)) {
+		// Attribute names are extensible at runtime (Attribute.add(...) for anything unrecognized) -
+		// never flagged as unknown, same as Effect/Sound would be if they had a similar `.add`.
 		return;
 	}
 	const contentType = contentTypeSimpleName(fieldType);
@@ -109,6 +161,7 @@ function checkStringValue(
 			diag.code = 'unknown-content';
 			out.push(diag);
 		}
+		checkStackAmount(value, doc, out);
 		return;
 	}
 	const enumInfo = resolveEnumInfo(registry, fieldType);
@@ -134,6 +187,7 @@ function checkStringArray(
 	vanillaContent: VanillaContentIndex,
 	vanillaSounds: NameListIndex,
 	soundIndex: SoundIndex,
+	vanillaTeams: NameListIndex,
 ) {
 	// A Sound[]-typed field (or rather, a JSON array given for a Sound-typed
 	// field - Mindustry's "random sound" shorthand) isn't a Seq<Sound> field
@@ -155,7 +209,20 @@ function checkStringArray(
 		}
 		return;
 	}
+	if (isTeamArrayType(fieldType)) {
+		for (const el of arr.elements) {
+			if (el.type !== 'string') continue;
+			const str = el as JvalString;
+			if (!vanillaTeams.has(str.value)) {
+				const diag = new vscode.Diagnostic(rangeOf(doc, str.range), `Unknown team '${str.value}'`, vscode.DiagnosticSeverity.Warning);
+				diag.code = 'unknown-team';
+				out.push(diag);
+			}
+		}
+		return;
+	}
 	const contentType = arrayContentTypeSimpleName(fieldType) ?? stackArrayContentType(fieldType);
+	const isStackArray = contentType !== undefined && stackArrayContentType(fieldType) !== undefined;
 	const enumInfo = contentType ? undefined : arrayEnumInfo(registry, fieldType);
 	if (!contentType && !enumInfo) return;
 	for (const el of arr.elements) {
@@ -168,6 +235,7 @@ function checkStringArray(
 				diag.code = 'unknown-content';
 				out.push(diag);
 			}
+			if (isStackArray) checkStackAmount(str, doc, out);
 		} else if (enumInfo && !enumInfo.values.includes(str.value)) {
 			const diag = new vscode.Diagnostic(
 				rangeOf(doc, str.range),
@@ -212,6 +280,7 @@ function walk(
 	vanillaEffects: NameListIndex,
 	vanillaSounds: NameListIndex,
 	soundIndex: SoundIndex,
+	vanillaTeams: NameListIndex,
 ) {
 	if (node.type === 'object') {
 		const fields = ctx.schemaFields;
@@ -224,7 +293,7 @@ function walk(
 					// Schema declares its own 'type' field (e.g. UnitType.type: JsonUnitType) -
 					// it's a normal field, not the polymorphic subclass selector below.
 					if (member.value.type === 'string') {
-						checkStringValue(member.value as JvalString, field.type, registry, doc, out, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex);
+						checkStringValue(member.value as JvalString, field.type, registry, doc, out, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex, vanillaTeams);
 					}
 				} else if (member.value.type === 'string') {
 					// Default polymorphic subclass selector, e.g. `type: FlakBulletType` - warn if unresolved.
@@ -259,26 +328,30 @@ function walk(
 
 			let childCtx: TypeContext;
 			if (member.value.type === 'object') {
+				if (field && isAttributesType(field.type)) {
+					checkAttributesObject(member.value as JvalObject, doc, out);
+					continue;
+				}
 				const mapField = ctx.resolveMapField(field);
 				if (mapField) {
-					walkMapEntries(member.value as JvalObject, mapField.valueCtx, doc, out, registry, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex);
+					walkMapEntries(member.value as JvalObject, mapField.valueCtx, doc, out, registry, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex, vanillaTeams);
 					continue;
 				}
 				const explicit = findExplicitTypeField(member.value as JvalObject);
 				childCtx = resolveObjectType(ctx.forField(field), explicit);
 			} else if (member.value.type === 'array') {
 				if (field) {
-					checkStringArray(member.value as JvalArray, field.type, registry, doc, out, contentIndex, vanillaContent, vanillaSounds, soundIndex);
+					checkStringArray(member.value as JvalArray, field.type, registry, doc, out, contentIndex, vanillaContent, vanillaSounds, soundIndex, vanillaTeams);
 					checkArrayElementPrimitives(member.value as JvalArray, field.type, doc, out);
 				}
 				childCtx = ctx.forArrayElement(field);
 			} else {
 				childCtx = new TypeContext(registry, undefined);
 				if (member.value.type === 'string' && field) {
-					checkStringValue(member.value as JvalString, field.type, registry, doc, out, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex);
+					checkStringValue(member.value as JvalString, field.type, registry, doc, out, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex, vanillaTeams);
 				}
 			}
-			walk(member.value, childCtx, doc, out, registry, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex);
+			walk(member.value, childCtx, doc, out, registry, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex, vanillaTeams);
 		}
 	} else if (node.type === 'array') {
 		for (const el of node.elements) {
@@ -287,7 +360,7 @@ function walk(
 				const explicit = findExplicitTypeField(el as JvalObject);
 				elCtx = resolveObjectType(ctx, explicit);
 			}
-			walk(el, elCtx, doc, out, registry, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex);
+			walk(el, elCtx, doc, out, registry, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex, vanillaTeams);
 		}
 	}
 }
@@ -305,6 +378,7 @@ function walkMapEntries(
 	vanillaEffects: NameListIndex,
 	vanillaSounds: NameListIndex,
 	soundIndex: SoundIndex,
+	vanillaTeams: NameListIndex,
 ) {
 	for (const entry of mapObj.entries) {
 		let childCtx = valueCtx;
@@ -314,7 +388,7 @@ function walkMapEntries(
 		} else if (entry.value.type === 'array') {
 			childCtx = new TypeContext(registry, undefined);
 		}
-		walk(entry.value, childCtx, doc, out, registry, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex);
+		walk(entry.value, childCtx, doc, out, registry, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex, vanillaTeams);
 	}
 }
 

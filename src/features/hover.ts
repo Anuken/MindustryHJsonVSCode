@@ -18,6 +18,8 @@ export class MHJsonHoverProvider implements vscode.HoverProvider {
 		private vanillaEffects: NameListIndex,
 		private vanillaSounds: NameListIndex,
 		private soundIndex: SoundIndex,
+		private vanillaTeams: NameListIndex,
+		private vanillaAttributes: NameListIndex,
 	) {}
 
 	provideHover(document: vscode.TextDocument, position: vscode.Position): vscode.Hover | undefined {
@@ -74,6 +76,37 @@ export class MHJsonHoverProvider implements vscode.HoverProvider {
 			} else {
 				md.appendMarkdown(`\n\n*Unknown sound '${name}'.*`);
 			}
+			const hoverRange = new vscode.Range(document.positionAt(range.start), document.positionAt(range.end));
+			return new vscode.Hover(md, hoverRange);
+		}
+
+		// Hovering a bare-string Team reference -> confirm it's a known team (or flag it as unknown - team names aren't extensible).
+		if (loc.teamRef) {
+			const { name, range } = loc.teamRef;
+			const md = new vscode.MarkdownString();
+			md.appendCodeblock(`${name}: Team`, 'java');
+			md.appendMarkdown(this.vanillaTeams.has(name) ? `\n\n*Team.*` : `\n\n*Unknown team '${name}'.*`);
+			const hoverRange = new vscode.Range(document.positionAt(range.start), document.positionAt(range.end));
+			return new vscode.Hover(md, hoverRange);
+		}
+
+		// Hovering a bare-string attribute name (either an `Attribute`-typed field's value, or a key
+		// inside an `Attributes`-typed map object) -> show whether it's a known vanilla attribute.
+		// Attribute names are extensible, so an unrecognized one is just "custom", never "unknown".
+		if (loc.attributeRef) {
+			const { name, range } = loc.attributeRef;
+			const md = new vscode.MarkdownString();
+			md.appendCodeblock(`${name}: Attribute`, 'java');
+			md.appendMarkdown(this.vanillaAttributes.has(name) ? `\n\n*Vanilla attribute.*` : `\n\n*Custom attribute.*`);
+			const hoverRange = new vscode.Range(document.positionAt(range.start), document.positionAt(range.end));
+			return new vscode.Hover(md, hoverRange);
+		}
+
+		// Hovering the amount portion of a stack shorthand string (`"name/amount"`).
+		if (loc.stackAmountRef) {
+			const { range } = loc.stackAmountRef;
+			const md = new vscode.MarkdownString();
+			md.appendCodeblock(`amount: float`, 'java');
 			const hoverRange = new vscode.Range(document.positionAt(range.start), document.positionAt(range.end));
 			return new vscode.Hover(md, hoverRange);
 		}
