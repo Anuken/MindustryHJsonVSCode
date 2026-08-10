@@ -76,6 +76,10 @@
     "type": "mindustry.entities.Effect",
     "default": "shieldBreak"
   },
+  "forceShrinkEffect":{
+    "type": "mindustry.entities.Effect",
+    "default": "forceShrink"
+  },
   "topRegion":{
     "type": "arc.graphics.g2d.TextureRegion"
   },

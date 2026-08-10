@@ -3,7 +3,7 @@
   "displayName": "Mindustry HJSON Mod Support",
   "description": "Syntax highlighting, schema-driven autocomplete, diagnostics and hover docs for Mindustry mod HJSON content files.",
   "version": "0.1.0",
-  "publisher": "Anuken",
+  "publisher": "anuken",
   "repository": "https://github.com/Anuken/MindustryHJSONVSCode",
   "engines": { "vscode": "^1.85.0" },
   "categories": ["Programming Languages", "Linters"],
