@@ -62,6 +62,7 @@ export class SchemaRegistry {
 		for (const file of fs.readdirSync(folder)) {
 			if (!file.endsWith('.json')) continue;
 			if (file === 'allContent.json') continue; // vanilla content index, not a class schema - see VanillaContentIndex
+			if (file === 'allEffects.json' || file === 'allSounds.json') continue; // flat vanilla name lists, not class schemas - see NameListIndex
 			const fqcn = file.slice(0, -'.json'.length);
 			const full = path.join(folder, file);
 			try {

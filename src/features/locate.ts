@@ -13,6 +13,9 @@ import {
 	arrayEnumInfo,
 	EnumInfo,
 	resolveObjectType,
+	isEffectType,
+	isSoundType,
+	isSoundArrayType,
 } from '../schema/typeResolver';
 
 /** A bare-string token that refers to named content (an Item, Block, Liquid, ...) by name. */
@@ -22,6 +25,18 @@ export interface ContentRef {
 	/** The referenced content's name, as written. */
 	name: string;
 	/** Source range of just the name token (the whole string value, or the map key). */
+	range: Range;
+}
+
+/** A bare-string token that refers to a vanilla Effect by name (e.g. `hitEffect: hitBulletSmall`). */
+export interface EffectRef {
+	name: string;
+	range: Range;
+}
+
+/** A bare-string token that refers to a Sound by name - either vanilla or one of the mod's own sounds/ files. Also used for each element of a "random sound" array (a Sound field given a JSON array of names). */
+export interface SoundRef {
+	name: string;
 	range: Range;
 }
 
@@ -57,6 +72,10 @@ export interface LocateResult {
 	 * "Enum"`). Drives enum-value completion/hover/diagnostics.
 	 */
 	enumRef: { info: EnumInfo; range: Range } | undefined;
+	/** Set when the offset sits on a bare-string token that refers to a vanilla Effect by name (a string value of an Effect-typed field). */
+	effectRef: EffectRef | undefined;
+	/** Set when the offset sits on a bare-string token that refers to a Sound by name (a string value of a Sound-typed field, or an element of that field's "random sound" array shorthand). */
+	soundRef: SoundRef | undefined;
 }
 
 export function locate(
@@ -83,6 +102,8 @@ export function locate(
 		mapKeyType: undefined,
 		contentRef: undefined,
 		enumRef: undefined,
+		effectRef: undefined,
+		soundRef: undefined,
 	};
 	if (!parse.root) return result;
 	visit(parse.root, rootCtx, offset, result, registry);
@@ -134,6 +155,16 @@ function checkStackArrayElement(arr: JvalArray, contentType: string, offset: num
 	}
 }
 
+/** Checks whether a "random sound" array (a Sound-typed field given a JSON array) has a string element containing `offset`, recording it as a SoundRef - each element is a bare sound name, same as a scalar Sound field's value. */
+function checkSoundArrayElement(arr: JvalArray, offset: number, result: LocateResult) {
+	for (const el of arr.elements) {
+		if (contains(el.range, offset) && el.type === 'string') {
+			result.soundRef = { name: (el as any).value, range: el.range };
+			return;
+		}
+	}
+}
+
 /** If `arr` has a string element containing `offset`, records it as an enumRef using the given EnumInfo. */
 function checkEnumArrayElement(arr: JvalArray, info: EnumInfo, offset: number, result: LocateResult) {
 	for (const el of arr.elements) {
@@ -170,6 +201,10 @@ function visit(node: Jval, ctx: TypeContext, offset: number, result: LocateResul
 					const explicit = findExplicitTypeField(member.value as JvalObject);
 					childCtx = resolveObjectType(ctx.forField(field), explicit);
 				} else if (member.value.type === 'array') {
+					if (field && (isSoundType(field.type) || isSoundArrayType(field.type))) {
+						checkSoundArrayElement(member.value as JvalArray, offset, result);
+						return;
+					}
 					const arrayContentType = field ? arrayContentTypeSimpleName(field.type) : undefined;
 					if (arrayContentType) {
 						checkContentArrayElement(member.value as JvalArray, arrayContentType, offset, result);
@@ -191,17 +226,23 @@ function visit(node: Jval, ctx: TypeContext, offset: number, result: LocateResul
 				} else {
 					childCtx = new TypeContext(registry, undefined);
 					if (member.value.type === 'string' && field) {
-						const contentType = contentTypeSimpleName(field.type);
-						if (contentType) {
-							result.contentRef = { type: contentType, name: (member.value as any).value, range: member.value.range };
+						if (isEffectType(field.type)) {
+							result.effectRef = { name: (member.value as any).value, range: member.value.range };
+						} else if (isSoundType(field.type)) {
+							result.soundRef = { name: (member.value as any).value, range: member.value.range };
 						} else {
-							const stackType = stackContentType(field.type);
-							if (stackType) {
-								const { name, range } = stackNameRange(member.value as JvalString);
-								if (contains(range, offset)) result.contentRef = { type: stackType, name, range };
+							const contentType = contentTypeSimpleName(field.type);
+							if (contentType) {
+								result.contentRef = { type: contentType, name: (member.value as any).value, range: member.value.range };
 							} else {
-								const enumInfo = resolveEnumInfo(registry, field.type);
-								if (enumInfo) result.enumRef = { info: enumInfo, range: member.value.range };
+								const stackType = stackContentType(field.type);
+								if (stackType) {
+									const { name, range } = stackNameRange(member.value as JvalString);
+									if (contains(range, offset)) result.contentRef = { type: stackType, name, range };
+								} else {
+									const enumInfo = resolveEnumInfo(registry, field.type);
+									if (enumInfo) result.enumRef = { info: enumInfo, range: member.value.range };
+								}
 							}
 						}
 					}

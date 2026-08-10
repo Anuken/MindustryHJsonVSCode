@@ -311,6 +311,37 @@ export function isColorArrayType(type: string): boolean {
 	return arrayElementSimpleName(type) === 'Color';
 }
 
+/**
+ * True if `type` names `mindustry.entities.Effect` (or just the bare simple
+ * name `Effect`). A *string* value for such a field is a bare-name
+ * reference to a vanilla effect (e.g. `hitEffect: hitBulletSmall`) - see
+ * NameListIndex over schemas/allEffects.json. Any other JSON shape (object,
+ * array, ...) for this field is a custom effect declared inline instead, and
+ * is left to the ordinary object/array schema walk - see the module doc in
+ * diagnostics.ts.
+ */
+export function isEffectType(type: string): boolean {
+	return shortName(type) === 'Effect';
+}
+
+/**
+ * True if `type` names `arc.audio.Sound` (or just the bare simple name
+ * `Sound`). A *string* value is a bare-name reference to a sound - either
+ * vanilla (NameListIndex over schemas/allSounds.json) or one of the mod's
+ * own files under sounds/ (SoundIndex). Unlike Effect, a Sound field can
+ * also legally be an *array* of such names - Mindustry samples one at
+ * random each time (a "random sound") - see `isSoundArrayType`. Sound has
+ * no legal object shape at all.
+ */
+export function isSoundType(type: string): boolean {
+	return shortName(type) === 'Sound';
+}
+
+/** True if `type` is an array of `arc.audio.Sound` (a "random sound" - see `isSoundType`). */
+export function isSoundArrayType(type: string): boolean {
+	return arrayElementSimpleName(type) === 'Sound';
+}
+
 export function shortName(fqcnOrSimple: string): string {
 	return fqcnOrSimple.includes('.') ? fqcnOrSimple.slice(fqcnOrSimple.lastIndexOf('.') + 1) : fqcnOrSimple;
 }

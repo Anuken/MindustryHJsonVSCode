@@ -5,6 +5,8 @@ import { parseMHJson } from './parser/mhjsonParser';
 import { SchemaRegistry } from './schema/schemaLoader';
 import { ContentIndex } from './schema/contentIndex';
 import { VanillaContentIndex } from './schema/vanillaContent';
+import { NameListIndex } from './schema/nameListIndex';
+import { SoundIndex } from './schema/soundIndex';
 import { refreshDiagnostics, makeDiagnosticCollection } from './features/diagnostics';
 import { MHJsonCompletionProvider } from './features/completion';
 import { MHJsonHoverProvider } from './features/hover';
@@ -17,6 +19,9 @@ export function activate(context: vscode.ExtensionContext) {
 	const registry = new SchemaRegistry();
 	const contentIndex = new ContentIndex();
 	const vanillaContent = new VanillaContentIndex();
+	const vanillaEffects = new NameListIndex();
+	const vanillaSounds = new NameListIndex();
+	const soundIndex = new SoundIndex();
 	const collection = makeDiagnosticCollection();
 	context.subscriptions.push(collection);
 
@@ -28,11 +33,11 @@ export function activate(context: vscode.ExtensionContext) {
 	function scheduleContentIndexRefresh() {
 		if (contentIndexRefreshTimer) clearTimeout(contentIndexRefreshTimer);
 		contentIndexRefreshTimer = setTimeout(async () => {
-			await contentIndex.refresh(getContentTypeFolders());
-			// Only re-lint once the (async, filesystem-scanning) refresh above
-			// has actually finished - otherwise this runs against a
+			await Promise.all([contentIndex.refresh(getContentTypeFolders()), soundIndex.refresh()]);
+			// Only re-lint once the (async, filesystem-scanning) refreshes above
+			// have actually finished - otherwise this runs against a
 			// still-being-populated index and reintroduces the same stale
-			// "unknown content" diagnostics we're trying to clear.
+			// "unknown content"/"unknown sound" diagnostics we're trying to clear.
 			lintAllOpenDocuments();
 		}, 300);
 	}
@@ -58,6 +63,8 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 		const { loaded, errors } = registry.loadFolder(folder);
 		vanillaContent.load(folder);
+		vanillaEffects.load(folder, 'allEffects.json');
+		vanillaSounds.load(folder, 'allSounds.json');
 		vscode.window.setStatusBarMessage(`Mindustry HJSON: loaded ${loaded} schemas from ${folder}`, 4000);
 		for (const e of errors) console.warn('[mindustry-hjson]', e);
 		lintAllOpenDocuments();
@@ -66,7 +73,7 @@ export function activate(context: vscode.ExtensionContext) {
 	function lintDocument(doc: vscode.TextDocument) {
 		if (doc.languageId !== LANGUAGE_ID) return;
 		const parse = parseMHJson(doc.getText());
-		refreshDiagnostics(doc, parse, registry, getContentTypeFolders(), collection, contentIndex, vanillaContent);
+		refreshDiagnostics(doc, parse, registry, getContentTypeFolders(), collection, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex);
 	}
 
 	function lintAllOpenDocuments() {
@@ -79,6 +86,13 @@ export function activate(context: vscode.ExtensionContext) {
 	const contentWatcher = vscode.workspace.createFileSystemWatcher('**/*.hjson');
 	contentWatcher.onDidCreate(scheduleContentIndexRefresh);
 	contentWatcher.onDidDelete(scheduleContentIndexRefresh);
+
+	// Mods can add their own sounds under sounds/ (see SoundIndex) - watch for
+	// files being added/removed/renamed so unknown-sound diagnostics and
+	// completion stay in sync, same as the .hjson content watcher above.
+	const soundWatcher = vscode.workspace.createFileSystemWatcher('**/sounds/**/*.{ogg,mp3}');
+	soundWatcher.onDidCreate(scheduleContentIndexRefresh);
+	soundWatcher.onDidDelete(scheduleContentIndexRefresh);
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand('mindustryHjson.reloadSchemas', loadSchemas),
@@ -93,13 +107,20 @@ export function activate(context: vscode.ExtensionContext) {
 		}),
 		vscode.workspace.onDidChangeWorkspaceFolders(scheduleContentIndexRefresh),
 		contentWatcher,
+		soundWatcher,
 		vscode.languages.registerCompletionItemProvider(
 			{ language: LANGUAGE_ID },
-			new MHJsonCompletionProvider(registry, getContentTypeFolders, contentIndex, vanillaContent),
+			new MHJsonCompletionProvider(registry, getContentTypeFolders, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex),
 			':', ' ', '"',
 		),
-		vscode.languages.registerHoverProvider({ language: LANGUAGE_ID }, new MHJsonHoverProvider(registry, getContentTypeFolders, contentIndex, vanillaContent)),
-		vscode.languages.registerDefinitionProvider({ language: LANGUAGE_ID }, new MHJsonDefinitionProvider(registry, getContentTypeFolders, contentIndex, vanillaContent)),
+		vscode.languages.registerHoverProvider(
+			{ language: LANGUAGE_ID },
+			new MHJsonHoverProvider(registry, getContentTypeFolders, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex),
+		),
+		vscode.languages.registerDefinitionProvider(
+			{ language: LANGUAGE_ID },
+			new MHJsonDefinitionProvider(registry, getContentTypeFolders, contentIndex, vanillaContent, soundIndex),
+		),
 		vscode.languages.registerColorProvider({ language: LANGUAGE_ID }, new MHJsonColorProvider(registry, getContentTypeFolders, vanillaContent)),
 	);
 

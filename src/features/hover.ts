@@ -4,6 +4,8 @@ import { parseMHJson, JvalString } from '../parser/mhjsonParser';
 import { SchemaRegistry, TYPE_FIELD } from '../schema/schemaLoader';
 import { ContentIndex } from '../schema/contentIndex';
 import { VanillaContentIndex } from '../schema/vanillaContent';
+import { NameListIndex } from '../schema/nameListIndex';
+import { SoundIndex } from '../schema/soundIndex';
 import { prettyType } from '../schema/typeResolver';
 import { locate } from './locate';
 
@@ -13,6 +15,9 @@ export class MHJsonHoverProvider implements vscode.HoverProvider {
 		private getContentTypeFolders: () => Record<string, string>,
 		private contentIndex: ContentIndex,
 		private vanillaContent: VanillaContentIndex,
+		private vanillaEffects: NameListIndex,
+		private vanillaSounds: NameListIndex,
+		private soundIndex: SoundIndex,
 	) {}
 
 	provideHover(document: vscode.TextDocument, position: vscode.Position): vscode.Hover | undefined {
@@ -37,6 +42,37 @@ export class MHJsonHoverProvider implements vscode.HoverProvider {
 				md.appendMarkdown(`\n\n*Vanilla content.*`);
 			} else {
 				md.appendMarkdown(`\n\n*Unknown ${type} '${name}'.*`);
+			}
+			const hoverRange = new vscode.Range(document.positionAt(range.start), document.positionAt(range.end));
+			return new vscode.Hover(md, hoverRange);
+		}
+
+		// Hovering a bare-string Effect reference -> confirm it's a known vanilla effect (or flag it as unknown).
+		if (loc.effectRef) {
+			const { name, range } = loc.effectRef;
+			const md = new vscode.MarkdownString();
+			md.appendCodeblock(`${name}: Effect`, 'java');
+			md.appendMarkdown(this.vanillaEffects.has(name) ? `\n\n*Vanilla effect.*` : `\n\n*Unknown effect '${name}'.*`);
+			const hoverRange = new vscode.Range(document.positionAt(range.start), document.positionAt(range.end));
+			return new vscode.Hover(md, hoverRange);
+		}
+
+		// Hovering a bare-string Sound reference -> show the file it resolves to (or 'Vanilla sound'/unknown).
+		if (loc.soundRef) {
+			const { name, range } = loc.soundRef;
+			const uris = this.soundIndex.lookup(name);
+			const md = new vscode.MarkdownString();
+			md.appendCodeblock(`${name}: Sound`, 'java');
+			if (uris.length > 0) {
+				const wsFolder = vscode.workspace.getWorkspaceFolder(uris[0]);
+				for (const uri of uris) {
+					const rel = wsFolder ? path.relative(wsFolder.uri.fsPath, uri.fsPath) : uri.fsPath;
+					md.appendMarkdown(`\n\n${rel}`);
+				}
+			} else if (this.vanillaSounds.has(name)) {
+				md.appendMarkdown(`\n\nVanilla sound`);
+			} else {
+				md.appendMarkdown(`\n\n*Unknown sound '${name}'.*`);
 			}
 			const hoverRange = new vscode.Range(document.positionAt(range.start), document.positionAt(range.end));
 			return new vscode.Hover(md, hoverRange);

@@ -3,6 +3,8 @@ import { parseMHJson } from '../parser/mhjsonParser';
 import { SchemaRegistry, TYPE_FIELD } from '../schema/schemaLoader';
 import { ContentIndex } from '../schema/contentIndex';
 import { VanillaContentIndex } from '../schema/vanillaContent';
+import { NameListIndex } from '../schema/nameListIndex';
+import { SoundIndex } from '../schema/soundIndex';
 import { prettyType } from '../schema/typeResolver';
 import { locate } from './locate';
 
@@ -33,6 +35,9 @@ export class MHJsonCompletionProvider implements vscode.CompletionItemProvider {
 		private getContentTypeFolders: () => Record<string, string>,
 		private contentIndex: ContentIndex,
 		private vanillaContent: VanillaContentIndex,
+		private vanillaEffects: NameListIndex,
+		private vanillaSounds: NameListIndex,
+		private soundIndex: SoundIndex,
 	) {}
 
 	provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] {
@@ -58,6 +63,36 @@ export class MHJsonCompletionProvider implements vscode.CompletionItemProvider {
 				if (modNames.has(name)) continue;
 				const item = new vscode.CompletionItem(name, vscode.CompletionItemKind.Reference);
 				item.detail = `${type} (vanilla)`;
+				item.range = token.range;
+				items.push(item);
+			}
+			return items;
+		}
+
+		// completing a bare-string Effect reference -> suggest vanilla effect names
+		if (loc.effectRef) {
+			return this.vanillaEffects.namesFor().map((name) => {
+				const item = new vscode.CompletionItem(name, vscode.CompletionItemKind.Reference);
+				item.detail = 'Effect (vanilla)';
+				item.range = token.range;
+				return item;
+			});
+		}
+
+		// completing a bare-string Sound reference (scalar field, or an element of its "random sound" array) -> suggest vanilla sound names plus the mod's own sounds/ files
+		if (loc.soundRef) {
+			const modNames = new Set(this.soundIndex.namesFor());
+			const items: vscode.CompletionItem[] = [];
+			for (const name of modNames) {
+				const item = new vscode.CompletionItem(name, vscode.CompletionItemKind.Reference);
+				item.detail = 'Sound';
+				item.range = token.range;
+				items.push(item);
+			}
+			for (const name of this.vanillaSounds.namesFor()) {
+				if (modNames.has(name)) continue;
+				const item = new vscode.CompletionItem(name, vscode.CompletionItemKind.Reference);
+				item.detail = 'Sound (vanilla)';
 				item.range = token.range;
 				items.push(item);
 			}
