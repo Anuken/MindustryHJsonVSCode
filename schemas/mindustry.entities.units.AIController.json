@@ -1,0 +1,5 @@
+{
+  "doc": "Type of unit AI",
+  "superclass": "Enum",
+  "values": ["BoostAI", "AssemblerAI", "CargoAI", "HugAI", "SuicideAI", "MissileAI", "PrebuildAI", "DefenderAI", "CommandAI", "RepairAI", "MinerAI", "FlyingFollowAI", "LogicAI", "GroundAI", "BuilderAI", "FlyingAI"]
+}

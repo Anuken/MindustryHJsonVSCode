@@ -5,7 +5,7 @@
     "default": "[]"
   },
   "plans":{
-    "type": "arc.struct.Seq<mindustry.world.blocks.units.UnitFactory$UnitPlan>"
+    "type": "arc.struct.Seq<mindustry.world.blocks.units.UnitFactory.UnitPlan>"
   },
   "createSound":{
     "type": "arc.audio.Sound",

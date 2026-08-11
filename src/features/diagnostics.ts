@@ -7,7 +7,7 @@ import { NameListIndex } from '../schema/nameListIndex';
 import { SoundIndex } from '../schema/soundIndex';
 import {
 	TypeContext,
-	findExplicitTypeField,
+	findExplicitTypeMember,
 	resolveImplicitTypeContext,
 	contentTypeSimpleName,
 	arrayContentTypeSimpleName,
@@ -60,8 +60,7 @@ export function refreshDiagnostics(
 		let ctx = new TypeContext(registry, undefined);
 		if (parse.root.type === 'object') {
 			ctx = resolveImplicitTypeContext(registry, doc.uri.fsPath, contentTypeFolders, vanillaContent);
-			const explicit = findExplicitTypeField(parse.root as JvalObject);
-			ctx = resolveObjectType(ctx, explicit);
+			ctx = resolveObjectTypeChecked(ctx, parse.root as JvalObject, doc, diagnostics);
 		}
 		walk(parse.root, ctx, doc, diagnostics, registry, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex, vanillaTeams);
 	}
@@ -269,6 +268,30 @@ function checkArrayElementPrimitives(arr: JvalArray, fieldType: string, doc: vsc
 	}
 }
 
+/**
+ * Resolves an object literal's effective TypeContext (see `resolveObjectType`), additionally
+ * pushing a warning diagnostic if its own `type: X` entry (when present, and actually being used
+ * as a polymorphic subclass selector) names a class that isn't really a subclass of `baseCtx` -
+ * e.g. `destroyBullet: {type: Conveyor}` where `destroyBullet` is BulletType-typed, or a block file
+ * under `blocks/` declaring `type: Item`. See `TypeContext.checkSubclassMismatch`.
+ */
+function resolveObjectTypeChecked(baseCtx: TypeContext, obj: JvalObject, doc: vscode.TextDocument, out: vscode.Diagnostic[]): TypeContext {
+	const member = findExplicitTypeMember(obj);
+	if (!member) return baseCtx;
+	const value = member.value as JvalString;
+	const mismatch = baseCtx.checkSubclassMismatch(value.value);
+	if (mismatch) {
+		const diag = new vscode.Diagnostic(rangeOf(doc, value.range), mismatch, vscode.DiagnosticSeverity.Warning);
+		diag.code = 'type-mismatch';
+		out.push(diag);
+		// Don't apply the mismatched override - keep checking this object's other members against
+		// the *expected* base type instead of cascading into "unknown field" spam for every field
+		// that doesn't happen to exist on the (wrong) type the mod author wrote.
+		return baseCtx;
+	}
+	return resolveObjectType(baseCtx, value.value);
+}
+
 function walk(
 	node: Jval,
 	ctx: TypeContext,
@@ -337,8 +360,7 @@ function walk(
 					walkMapEntries(member.value as JvalObject, mapField.valueCtx, doc, out, registry, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex, vanillaTeams);
 					continue;
 				}
-				const explicit = findExplicitTypeField(member.value as JvalObject);
-				childCtx = resolveObjectType(ctx.forField(field), explicit);
+				childCtx = resolveObjectTypeChecked(ctx.forField(field), member.value as JvalObject, doc, out);
 			} else if (member.value.type === 'array') {
 				if (field) {
 					checkStringArray(member.value as JvalArray, field.type, registry, doc, out, contentIndex, vanillaContent, vanillaSounds, soundIndex, vanillaTeams);
@@ -357,8 +379,7 @@ function walk(
 		for (const el of node.elements) {
 			let elCtx = ctx;
 			if (el.type === 'object') {
-				const explicit = findExplicitTypeField(el as JvalObject);
-				elCtx = resolveObjectType(ctx, explicit);
+				elCtx = resolveObjectTypeChecked(ctx, el as JvalObject, doc, out);
 			}
 			walk(el, elCtx, doc, out, registry, contentIndex, vanillaContent, vanillaEffects, vanillaSounds, soundIndex, vanillaTeams);
 		}
@@ -383,8 +404,7 @@ function walkMapEntries(
 	for (const entry of mapObj.entries) {
 		let childCtx = valueCtx;
 		if (entry.value.type === 'object') {
-			const explicit = findExplicitTypeField(entry.value as JvalObject);
-			childCtx = resolveObjectType(valueCtx, explicit);
+			childCtx = resolveObjectTypeChecked(valueCtx, entry.value as JvalObject, doc, out);
 		} else if (entry.value.type === 'array') {
 			childCtx = new TypeContext(registry, undefined);
 		}

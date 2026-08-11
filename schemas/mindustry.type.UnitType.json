@@ -565,8 +565,8 @@
     "doc": "Controller used when the unit is not on the player team."
   },
   "controller":{
-    "type": "arc.func.Func<mindustry.gen.Unit, ? extends mindustry.entities.units.UnitController>",
-    "doc": "Function that chooses AI controller based on unit entity."
+    "type": "mindustry.entities.units.AIController",
+    "doc": "Controller used when the unit is not on the player team. Equivalent to aiController."
   },
   "constructor":{
     "type": "arc.func.Prov<? extends mindustry.gen.Unit>",
@@ -704,7 +704,7 @@
     "doc": "extra (usually animated) visual parts"
   },
   "engines":{
-    "type": "arc.struct.Seq<mindustry.type.UnitType$UnitEngine>",
+    "type": "arc.struct.Seq<mindustry.type.UnitType.UnitEngine>",
     "doc": "list of engines, or \"thrusters\""
   },
   "useEngineElevation":{
@@ -739,7 +739,7 @@
     "default": "-1"
   },
   "pathCost":{
-    "type": "mindustry.ai.Pathfinder$PathCost",
+    "type": "mindustry.ai.Pathfinder.PathCost",
     "nullable": true,
     "doc": "Function used for calculating cost of moving with ControlPathfinder. Does not affect \"normal\" flow field pathfinding."
   },

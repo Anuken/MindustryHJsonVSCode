@@ -55,17 +55,17 @@
     "default": "true"
   },
   "progress":{
-    "type": "mindustry.entities.part.DrawPart$PartProgress",
+    "type": "mindustry.entities.part.DrawPart.PartProgress",
     "doc": "Progress function for determining position/rotation.",
     "default": "warmup"
   },
   "growProgress":{
-    "type": "mindustry.entities.part.DrawPart$PartProgress",
+    "type": "mindustry.entities.part.DrawPart.PartProgress",
     "doc": "Progress function for scaling.",
     "default": "warmup"
   },
   "heatProgress":{
-    "type": "mindustry.entities.part.DrawPart$PartProgress",
+    "type": "mindustry.entities.part.DrawPart.PartProgress",
     "doc": "Progress function for heat alpha.",
     "default": "heat"
   },
@@ -156,6 +156,6 @@
     "type": "arc.struct.Seq<mindustry.entities.part.DrawPart>"
   },
   "moves":{
-    "type": "arc.struct.Seq<mindustry.entities.part.DrawPart$PartMove>"
+    "type": "arc.struct.Seq<mindustry.entities.part.DrawPart.PartMove>"
   }
 }

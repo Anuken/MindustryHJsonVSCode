@@ -1,5 +1,0 @@
-{
-  "doc": "Type of value used for progress.",
-  "superclass": "Enum",
-  "values": ["inv", "slope", "clamp", "delay", "sustain", "shorten", "compress", "add", "blend", "mul", "min", "sin", "absin", "mod", "loop", "curve"]
-}

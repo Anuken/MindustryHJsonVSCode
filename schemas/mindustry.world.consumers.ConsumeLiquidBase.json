@@ -1,4 +1,5 @@
 {
+  "abstract": true,
   "superclass": "mindustry.world.consumers.Consume",
   "amount":{
     "type": "float",

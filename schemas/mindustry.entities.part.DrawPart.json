@@ -1,4 +1,5 @@
 {
+  "abstract": true,
   "superclass": "java.lang.Object",
   "turretShading":{
     "type": "boolean",

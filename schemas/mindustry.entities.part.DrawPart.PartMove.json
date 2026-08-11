@@ -1,7 +1,7 @@
 {
   "superclass": "java.lang.Object",
   "progress":{
-    "type": "mindustry.entities.part.DrawPart$PartProgress",
+    "type": "mindustry.entities.part.DrawPart.PartProgress",
     "default": "warmup"
   },
   "x":{

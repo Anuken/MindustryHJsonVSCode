@@ -1,4 +1,5 @@
 {
+  "abstract": true,
   "superclass": "mindustry.ctype.MappableContent",
   "doc": "Base interface for an unlockable content type.\n",
   "stats":{
@@ -91,12 +92,12 @@
     "doc": "Category tags. Secondary category of content classification in core database.\nFor example, \"turret\", \"wall\" under databaseCategory \"block\", \"core-unit\", \"ground-unit\" under databaseCategory \"units\".\nUses \"default\" as a fallback when the value is null or empty. When using \"default\", no extra tag label are displayed."
   },
   "techNode":{
-    "type": "mindustry.content.TechTree$TechNode",
+    "type": "mindustry.content.TechTree.TechNode",
     "nullable": true,
     "doc": "The tech tree node for this content, if applicable. Null if not part of a tech tree."
   },
   "techNodes":{
-    "type": "arc.struct.Seq<mindustry.content.TechTree$TechNode>",
+    "type": "arc.struct.Seq<mindustry.content.TechTree.TechNode>",
     "doc": "Tech nodes for all trees that this content is part of."
   }
 }

@@ -1,5 +1,5 @@
 {
-  "superclass": "java.lang.Object",
+  "superclass": "mindustry.game.Objectives.Objective",
   "content":{
     "type": "mindustry.ctype.UnlockableContent"
   }

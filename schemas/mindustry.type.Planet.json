@@ -300,7 +300,7 @@
     "doc": "All planets orbiting this one, in ascending order of radius."
   },
   "techTree":{
-    "type": "mindustry.content.TechTree$TechNode",
+    "type": "mindustry.content.TechTree.TechNode",
     "nullable": true,
     "doc": "Default root node shown when the tech tree is opened here."
   },
@@ -369,7 +369,7 @@
     "default": "false"
   },
   "data":{
-    "type": "mindustry.type.Planet$PlanetData",
+    "type": "mindustry.type.Planet.PlanetData",
     "nullable": true,
     "doc": "Data indicating attack sector positions and sector mappings."
   },

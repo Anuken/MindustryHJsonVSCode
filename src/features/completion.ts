@@ -46,6 +46,10 @@ export class MHJsonCompletionProvider implements vscode.CompletionItemProvider {
 		const text = document.getText();
 		const offset = document.offsetAt(position);
 		const parse = parseMHJson(text);
+
+		// Never offer completions inside a `#`/`//`/`/* */` comment.
+		if (parse.comments.some((c) => offset >= c.range.start && offset <= c.range.end)) return [];
+
 		const loc = locate(parse, offset, this.registry, document.uri.fsPath, this.getContentTypeFolders(), this.vanillaContent);
 		const token = currentToken(text, offset, document);
 
@@ -148,7 +152,13 @@ export class MHJsonCompletionProvider implements vscode.CompletionItemProvider {
 		// doesn't declare its own 'type' field - e.g. UnitType.type: JsonUnitType is a normal enum
 		// field, handled by loc.enumRef above, not the polymorphic subclass-selector 'type')
 		if (loc.onValue && loc.onValue.key === 'type' && !loc.ctx.schemaFields.has('type')) {
-			return this.registry.getAllSimpleNames().map((name) => {
+			// Restrict to actual subclasses of the expected base type implied by this object's
+			// position (a field's declared type, an array/map element type, or a file's implicit
+			// folder type) - e.g. only BulletType subclasses inside a `destroyBullet: {}`, only
+			// Block subclasses at the top level of a `blocks/` file. Falls back to every known
+			// class when there's no expected base type to restrict against (e.g. an untyped root).
+			const names = loc.ctx.declaredFqcn ? loc.ctx.subclassSimpleNames() : this.registry.getAllSimpleNames();
+			return names.map((name) => {
 				const item = new vscode.CompletionItem(name, vscode.CompletionItemKind.Class);
 				const schema = this.registry.getBySimpleName(name);
 				item.detail = schema ? prettyType(schema.fqcn) : undefined;
@@ -157,6 +167,12 @@ export class MHJsonCompletionProvider implements vscode.CompletionItemProvider {
 				return item;
 			});
 		}
+
+		// A string value's own contents (any recognized bare-string reference kind - content,
+		// enum, effect, sound, ... - was already handled and returned above by this point, as was
+		// the `type: ` subclass-selector case) is free text, not something to offer field/type
+		// completion inside - e.g. typing inside a `name: "..."` or `displayName: "..."` value.
+		if (loc.onValue && loc.onValue.value.type === 'string') return [];
 
 		// completing a field name inside an object with a known schema
 		if (loc.object) {

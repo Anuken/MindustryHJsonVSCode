@@ -1,4 +1,5 @@
 {
+  "abstract": true,
   "superclass": "mindustry.ctype.Content",
   "name":{
     "type": "java.lang.String"

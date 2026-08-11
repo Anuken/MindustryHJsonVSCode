@@ -163,7 +163,7 @@
     "default": "true"
   },
   "unitSort":{
-    "type": "mindustry.entities.Units$Sortf",
+    "type": "mindustry.entities.Units.Sortf",
     "doc": "Function for choosing which unit to target.",
     "default": "closest"
   },

@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { Jval, JvalObject, JvalArray, JvalString, JvalType, Range } from '../parser/mhjsonParser';
+import { Jval, JvalObject, JvalArray, JvalMember, JvalString, JvalType, Range } from '../parser/mhjsonParser';
 import { SchemaRegistry, unwrapGenericElementType, FieldSchema, ClassSchema } from './schemaLoader';
 
 /**
@@ -181,8 +181,34 @@ export function unwrapMapTypes(type: string): { keyType: string; valueType: stri
 	return m ? { keyType: m[1], valueType: m[2] } : undefined;
 }
 
+/**
+ * Simple names of bare (non-array-declared) field types that Mindustry itself gives special
+ * "array is secretly a Multi-wrapper" treatment to: giving a JSON array directly for a field
+ * declared as one of these (not `Seq<...>`-wrapped) is shorthand for a Multi* wrapper holding one
+ * instance of the type per array element, rather than the field's own type appearing as an array
+ * literal. `Effect` -> MultiEffect, `DrawBlock` -> DrawMulti, and `GenericMesh` -> MultiMesh (e.g.
+ * `Planet.mesh`) are the instances of this in Mindustry's content schema. See
+ * `TypeContext.forArrayElement`.
+ */
+const MULTI_ARRAY_SHORTHAND_TYPES = new Set(['Effect', 'DrawBlock', 'GenericMesh']);
+
 export class TypeContext {
-	constructor(private registry: SchemaRegistry, public fqcn: string | undefined) {}
+	/**
+	 * `declaredFqcn` is the type as actually *declared* (a field's own type, an array/map element
+	 * type, or a file's implicit folder type) - NOT substituted for its DEFAULT_TYPE_RESOLUTIONS
+	 * default the way `fqcn` is. It defaults to `fqcn` itself for contexts where the two never
+	 * diverge (the root of the file, or after an object's own explicit `type: X` has already been
+	 * folded in via `withExplicitType` - see there).
+	 *
+	 * The distinction matters for ancestry checking (`checkSubclassMismatch`/
+	 * `subclassSimpleNames`): a `BulletType`-typed field defaults to `BasicBulletType` when no
+	 * explicit `type:` is given (so `fqcn` is `BasicBulletType`, for schema-field lookups), but an
+	 * explicit `type: LaserBulletType` is still perfectly legal even though `LaserBulletType`
+	 * extends `BulletType` directly, NOT `BasicBulletType` - checking ancestry against the
+	 * *defaulted* `fqcn` would wrongly reject it. `declaredFqcn` (`BulletType` here) is what
+	 * ancestry is actually checked against.
+	 */
+	constructor(private registry: SchemaRegistry, public fqcn: string | undefined, public declaredFqcn: string | undefined = fqcn) {}
 
 	get schemaFields(): Map<string, FieldSchema> {
 		return this.fqcn ? this.registry.getEffectiveFields(this.fqcn) : new Map();
@@ -194,29 +220,34 @@ export class TypeContext {
 		const elementType = unwrapGenericElementType(field.type);
 		const targetType = elementType ?? field.type;
 		const resolved = resolveClassForType(this.registry, targetType);
-		return new TypeContext(this.registry, resolved?.fqcn);
+		const declared = this.registry.getByFqcn(targetType) ?? this.registry.getBySimpleName(shortName(targetType));
+		return new TypeContext(this.registry, resolved?.fqcn, declared?.fqcn ?? resolved?.fqcn);
 	}
 
 	/**
-	 * Resolve the TypeContext for an array element. Handles both a generic
-	 * array field type like `Seq<Weapon>` (element type = Weapon), and the
-	 * special case of a bare `Effect`-typed field being given a JSON array
-	 * directly - Mindustry treats each element of that array as its own
-	 * Effect (the array *is* the MultiEffect shorthand, not a Seq<Effect>
-	 * field), so every element resolves against the field's own type
-	 * (defaulting to ParticleEffect per DEFAULT_TYPE_RESOLUTIONS, same as any
-	 * other bare Effect, unless the element itself has an explicit `type:`).
+	 * Resolve the TypeContext for an array element. Handles a bracket-syntax array field type like
+	 * `ItemStack[]`/`mindustry.type.Objective[]` as well as a generic wrapper like `Seq<Weapon>`
+	 * (`arrayElementTypeString` unwraps both forms - element type = ItemStack/Objective/Weapon
+	 * respectively), and the special case of a bare field typed as one of
+	 * MULTI_ARRAY_SHORTHAND_TYPES (`Effect`, `DrawBlock`, `GenericMesh`) being given a JSON array
+	 * directly - Mindustry treats each element of that array as its own instance of the field's own
+	 * type (the array *is* the Multi-wrapper shorthand, e.g. MultiEffect, DrawMulti, or MultiMesh,
+	 * not a `Seq<...>`/`[]` field), so every element resolves against the field's own type
+	 * (defaulting per DEFAULT_TYPE_RESOLUTIONS, same as any other bare instance of that type, unless
+	 * the element itself has an explicit `type:`).
 	 */
 	forArrayElement(field: FieldSchema | undefined): TypeContext {
 		if (!field) return new TypeContext(this.registry, undefined);
-		const elementType = unwrapGenericElementType(field.type);
+		const elementType = arrayElementTypeString(field.type);
 		if (elementType) {
 			const resolved = resolveClassForType(this.registry, elementType);
-			return new TypeContext(this.registry, resolved?.fqcn);
+			const declared = this.registry.getByFqcn(elementType) ?? this.registry.getBySimpleName(shortName(elementType));
+			return new TypeContext(this.registry, resolved?.fqcn, declared?.fqcn ?? resolved?.fqcn);
 		}
-		if (shortName(field.type) === 'Effect') {
+		if (MULTI_ARRAY_SHORTHAND_TYPES.has(shortName(field.type))) {
 			const resolved = resolveClassForType(this.registry, field.type);
-			return new TypeContext(this.registry, resolved?.fqcn);
+			const declared = this.registry.getByFqcn(field.type) ?? this.registry.getBySimpleName(shortName(field.type));
+			return new TypeContext(this.registry, resolved?.fqcn, declared?.fqcn ?? resolved?.fqcn);
 		}
 		return new TypeContext(this.registry, undefined);
 	}
@@ -227,19 +258,47 @@ export class TypeContext {
 		const map = unwrapMapTypes(field.type);
 		if (!map) return undefined;
 		const resolved = resolveClassForType(this.registry, map.valueType);
-		return { keyType: map.keyType, valueType: map.valueType, valueCtx: new TypeContext(this.registry, resolved?.fqcn) };
+		const declared = this.registry.getByFqcn(map.valueType) ?? this.registry.getBySimpleName(shortName(map.valueType));
+		return { keyType: map.keyType, valueType: map.valueType, valueCtx: new TypeContext(this.registry, resolved?.fqcn, declared?.fqcn ?? resolved?.fqcn) };
 	}
 
-	/** If an object literal has its own explicit `type: X`, that overrides the inferred/field type. */
+	/** If an object literal has its own explicit `type: X`, that overrides the inferred/field type. Both `fqcn` and `declaredFqcn` become X's own resolved class - once an object has a concrete explicit type, there's no longer an abstract "declared" type distinct from it. */
 	withExplicitType(explicitSimpleName: string | undefined): TypeContext {
 		if (!explicitSimpleName) return this;
 		const resolved = this.registry.getBySimpleName(explicitSimpleName);
-		return resolved ? new TypeContext(this.registry, resolved.fqcn) : this;
+		return resolved ? new TypeContext(this.registry, resolved.fqcn, resolved.fqcn) : this;
 	}
 
 	/** True if `simpleName` names an actual loaded class schema (a real subclass candidate). */
 	namesKnownClass(simpleName: string): boolean {
 		return this.registry.getBySimpleName(simpleName) !== undefined;
+	}
+
+	/**
+	 * Validates a `type: explicitTypeValue` entry on an object whose *expected* base type is this
+	 * context (a field's declared type, an array/map element type, or a file's implicit folder
+	 * type) - returning a warning message if `explicitTypeValue` doesn't actually name a class that
+	 * inherits from this context's own `fqcn`. Returns undefined when there's nothing to flag:
+	 *  - `type` isn't being read as a polymorphic subclass selector here at all (e.g. `UnitType.type:
+	 *    JsonUnitType` is an ordinary enum-typed field of its own - same carve-out as
+	 *    `resolveObjectType`),
+	 *  - `explicitTypeValue` isn't a known class (already flagged separately as "unknown type"),
+	 *  - this context has no expected `fqcn` to check against (e.g. a root file with no implicit
+	 *    folder type, or an unresolved field), or
+	 *  - `explicitTypeValue` really does inherit from this context's `fqcn`.
+	 */
+	checkSubclassMismatch(explicitTypeValue: string): string | undefined {
+		if (this.schemaFields.has('type') && !this.namesKnownClass(explicitTypeValue)) return undefined;
+		const resolved = this.registry.getBySimpleName(explicitTypeValue);
+		if (!resolved) return undefined;
+		if (!this.declaredFqcn) return undefined;
+		if (isSubclassOf(this.registry, resolved.fqcn, this.declaredFqcn)) return undefined;
+		return `Type '${explicitTypeValue}' is not a ${prettyType(this.declaredFqcn)}`;
+	}
+
+	/** Simple names of every registered class that inherits from this context's own *declared* type (see `declaredFqcn`), including itself - empty if this context has no declared type. Used to restrict `type: ` completion to actual valid subclasses. */
+	subclassSimpleNames(): string[] {
+		return this.declaredFqcn ? subclassSimpleNames(this.registry, this.declaredFqcn) : [];
 	}
 }
 
@@ -467,6 +526,54 @@ export function findExplicitTypeField(obj: JvalObject): string | undefined {
 		if (m.key === 'type' && m.value.type === 'string') return (m.value as any).value;
 	}
 	return undefined;
+}
+
+/** Like `findExplicitTypeField`, but returns the member itself (rather than just its string value), for callers that need its value's source range - e.g. to place a diagnostic. */
+export function findExplicitTypeMember(obj: JvalObject): JvalMember | undefined {
+	for (const m of obj.entries) {
+		if (m.key === 'type' && m.value.type === 'string') return m;
+	}
+	return undefined;
+}
+
+/**
+ * ---------------------------------------------------------------------
+ * Class-hierarchy ("is this actually a subclass?") checking.
+ *
+ * `type: X` is normally a polymorphic subclass selector (see
+ * `resolveObjectType`'s doc comment) - X is expected to actually inherit
+ * from whatever class was implied by its position (a field's declared
+ * type, an array/map element type, or a file's implicit folder type).
+ * Nothing above this point verifies that, though - `resolveObjectType`
+ * happily swaps in *any* known class's schema, valid ancestry or not, since
+ * it's also relied on by completion/hover to keep navigating a mistyped
+ * object's own fields as best-effort. The functions below add the actual
+ * ancestry check, used only by the diagnostics pass (`checkSubclassMismatch`)
+ * and by completion (`subclassSimpleNames`, to only offer real subclasses).
+ * ---------------------------------------------------------------------
+ */
+
+/** True if `fqcn`'s class (or any of its ancestors, walking `superclass`) is `ancestorFqcn` - i.e. whether `fqcn` is `ancestorFqcn` or inherits from it. Classes unknown to the registry are never considered subclasses of anything. */
+export function isSubclassOf(registry: SchemaRegistry, fqcn: string, ancestorFqcn: string): boolean {
+	if (fqcn === ancestorFqcn) return true;
+	let cur = registry.getByFqcn(fqcn);
+	const seen = new Set<string>();
+	while (cur && !seen.has(cur.fqcn)) {
+		seen.add(cur.fqcn);
+		if (cur.superclass === ancestorFqcn) return true;
+		cur = cur.superclass ? registry.getByFqcn(cur.superclass) : undefined;
+	}
+	return false;
+}
+
+/** Simple names of every registered class whose hierarchy includes `ancestorFqcn` (including `ancestorFqcn` itself). Used to restrict `type: ` completion to actual valid subclasses of an expected base type. */
+export function subclassSimpleNames(registry: SchemaRegistry, ancestorFqcn: string): string[] {
+	const names: string[] = [];
+	for (const name of registry.getAllSimpleNames()) {
+		const schema = registry.getBySimpleName(name);
+		if (schema && isSubclassOf(registry, schema.fqcn, ancestorFqcn)) names.push(name);
+	}
+	return names;
 }
 
 /**

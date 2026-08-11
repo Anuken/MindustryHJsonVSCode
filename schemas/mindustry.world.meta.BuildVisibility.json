@@ -1,0 +1,5 @@
+{
+  "doc": "Types of block build visibility.",
+  "superclass": "Enum",
+  "values": ["hidden", "shown", "debugOnly", "editorOnly", "coreZoneOnly", "worldProcessorOnly", "sandboxOnly", "campaignOnly", "legacyLaunchPadOnly", "notLegacyLaunchPadOnly", "lightingOnly", "fogOnly"]
+}

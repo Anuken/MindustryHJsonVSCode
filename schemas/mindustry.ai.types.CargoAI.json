@@ -1,7 +1,7 @@
 {
   "superclass": "mindustry.entities.units.AIController",
   "unloadTarget":{
-    "type": "mindustry.world.blocks.units.UnitCargoUnloadPoint$UnitCargoUnloadPointBuild",
+    "type": "mindustry.world.blocks.units.UnitCargoUnloadPoint.UnitCargoUnloadPointBuild",
     "nullable": true
   },
   "itemTarget":{

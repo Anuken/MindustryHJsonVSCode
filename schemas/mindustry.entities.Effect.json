@@ -4,7 +4,7 @@
     "type": "int"
   },
   "renderer":{
-    "type": "arc.func.Cons<mindustry.entities.Effect$EffectContainer>"
+    "type": "arc.func.Cons<mindustry.entities.Effect.EffectContainer>"
   },
   "lifetime":{
     "type": "float",

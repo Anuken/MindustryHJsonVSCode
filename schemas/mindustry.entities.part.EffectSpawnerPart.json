@@ -53,7 +53,7 @@
     "default": "true"
   },
   "progress":{
-    "type": "mindustry.entities.part.DrawPart$PartProgress",
+    "type": "mindustry.entities.part.DrawPart.PartProgress",
     "default": "warmup"
   },
   "debugDraw":{

@@ -28,7 +28,7 @@
     "default": "[]"
   },
   "plans":{
-    "type": "arc.struct.Seq<mindustry.world.blocks.units.UnitAssembler$AssemblerUnitPlan>"
+    "type": "arc.struct.Seq<mindustry.world.blocks.units.UnitAssembler.AssemblerUnitPlan>"
   },
   "createSound":{
     "type": "arc.audio.Sound",

@@ -1,4 +1,5 @@
 {
+  "abstract": true,
   "superclass": "mindustry.world.blocks.payloads.PayloadBlock",
   "doc": "Generic building that produces other buildings.\n",
   "buildSpeed":{

@@ -13,7 +13,7 @@
     "nullable": true
   },
   "lastPlan":{
-    "type": "mindustry.game.Teams$BlockPlan",
+    "type": "mindustry.game.Teams.BlockPlan",
     "nullable": true
   },
   "fleeRange":{

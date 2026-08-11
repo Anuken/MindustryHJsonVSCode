@@ -52,7 +52,7 @@
     "default": "5"
   },
   "lastBuild":{
-    "type": "mindustry.world.blocks.distribution.ItemBridge$ItemBridgeBuild",
+    "type": "mindustry.world.blocks.distribution.ItemBridge.ItemBridgeBuild",
     "nullable": true
   }
 }

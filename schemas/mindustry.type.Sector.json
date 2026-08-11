@@ -2,7 +2,7 @@
   "superclass": "java.lang.Object",
   "doc": "A small section of a planet.\n",
   "rect":{
-    "type": "mindustry.type.Sector$SectorRect"
+    "type": "mindustry.type.Sector.SectorRect"
   },
   "plane":{
     "type": "arc.math.geom.Plane"
@@ -11,13 +11,13 @@
     "type": "mindustry.type.Planet"
   },
   "tile":{
-    "type": "mindustry.graphics.g3d.PlanetGrid$Ptile"
+    "type": "mindustry.graphics.g3d.PlanetGrid.Ptile"
   },
   "id":{
     "type": "int"
   },
   "save":{
-    "type": "mindustry.game.Saves$SaveSlot",
+    "type": "mindustry.game.Saves.SaveSlot",
     "nullable": true
   },
   "preset":{

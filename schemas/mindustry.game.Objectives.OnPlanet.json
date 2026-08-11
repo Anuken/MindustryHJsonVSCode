@@ -1,5 +1,5 @@
 {
-  "superclass": "java.lang.Object",
+  "superclass": "mindustry.game.Objectives.Objective",
   "planet":{
     "type": "mindustry.type.Planet"
   }
