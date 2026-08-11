@@ -23,7 +23,7 @@ here; no further setup required for step 1/skeleton testing).
 ## Development
 
 ```
-npm install -g @vscode/vsce   # if you want to build a .vsix
+npm install -g @vscode/vsce
 vsce package
 ```
 
@@ -102,21 +102,7 @@ object."), independent of whatever schemas are loaded.
    over-warning).
 6. **Hover docs** — `src/features/hover.ts` shows the field's type, `doc`
    string, and default value (when present) on hover over a key.
-7. **`Effect` array shorthand** — a field declared as a bare (non-generic)
-   `Effect` type (e.g. `mindustry.entities.Effect`, not `Seq<Effect>`) that's
-   given a JSON array literal is treated as Mindustry's `MultiEffect`
-   shorthand: every element of the array resolves as its own `Effect`
-   (schema fields, completion, hover, diagnostics all apply per-element),
-   handled in `TypeContext.forArrayElement` (`src/schema/typeResolver.ts`).
-8. **`BulletType` default** — any field/array-element/map-value whose
-   declared type resolves to the abstract `mindustry.entities.bullet.BulletType`
-   resolves instead to `BasicBulletType` (`mindustry.entities.bullet.BasicBulletType`)
-   when there's no explicit `type: X` on the object — matching what Mindustry
-   itself instantiates. An explicit `type:` on the object still overrides
-   this. Handled centrally in `resolveClassForType` (`src/schema/typeResolver.ts`)
-   so it applies uniformly to plain fields, `Seq<BulletType>` elements, and
-   `ObjectMap<K, BulletType>` values.
-9. **Content resolution** (`src/schema/contentIndex.ts`) — any field whose
+7. **Content resolution** (`src/schema/contentIndex.ts`) — any field whose
    declared type (after unwrapping `Seq<...>`/`ObjectMap<K, V>`) is one of
    `Item`, `Block`, `Liquid`, `Planet`, `SectorPreset`, `StatusEffect`,
    `UnitType`, or `Weather` is treated as a reference to *named content*
